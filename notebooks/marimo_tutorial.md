@@ -27,11 +27,11 @@ Define the necessary information for your workload:
 -   Under "Templates" select "Start from scratch" (*i.e.* do not use any existing template)
 -   Provide a descriptive name for the workload
 
-![Project and Template](../fig/workload_definition.png)
+![Project and Template](../fig/workload_definition_marimo.png)
 
 -   Select an environment to create the container. The SIH team has set up the [marimo:latest container image](https://github.com/marimo-team/marimo/pkgs/container/marimo) (`ghcr.io/marimo-team/marimo:latest`) to run in [uv](https://docs.astral.sh/uv/) so that packages can be install automatically.
 
-![Software environment](../fig/workload_environment.png)
+![Software environment](../fig/workload_environment_marimo.png)
 
 -   Select the amount of compute resources to run the workload. In this tutorial, we will select the `small-fraction` option that requires 1 H200 GPU with 10% of its memory (\~14GB).
 
@@ -39,7 +39,7 @@ Define the necessary information for your workload:
 
 -   Configure the [data source](./data_sources.md) to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<dashr_project_shortcode>`.
 
-![Data resource](../fig/workload_datasource.png)
+![Data resource](../fig/workload_datasource_marimo.png)
 
 -   Lastly, Click on "CREATE WORKLOAD" to submit the workload to the cluster.
 
@@ -49,7 +49,12 @@ When the status changes to "Running", you can access the Marimo interface by sel
 
 ![Connect to the Marimo interface](../fig/workload_connect_marimo.png)
 
-## (Optional) Step 4: Inspect system logs
+## Step 4. Create New Notebook in Marimo
+
+You're ready to go!
+![Connect to the Marimo interface](../fig/workload_marimo_create_notebook.png)
+
+## (Optional) Step 5: Inspect system logs
 
 You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.
 
