@@ -32,7 +32,7 @@ The `jupyter-notebook-in-scratch` environment is configured to pull this image a
 
 ![Compute resource](../fig/workload_comp_resource.png)
 
-* Configure the [data source](./data_sources.md) to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<dashr_project_shortcode>`.
+* Configure the [data source](./data_sources.md) to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<runai-project-name>`.
 
 ![Data resource](../fig/workload_datasource.png)
 
