@@ -42,7 +42,7 @@ runai project set <my_project>
 3. To run an `sydneyinformaticshub/dgx-interactive-terminal` container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets `<...>` with values specific to your requirements):
 
 ```bash
-runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=<pvc-name>,path=/scratch --attach
+runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=<pvc-name>,path=/scratch/<my_project> --attach
 ```
 
 Here is a brief rundown of the arguments of the command above:
@@ -51,7 +51,7 @@ Here is a brief rundown of the arguments of the command above:
 
 - `--image sydneyinformaticshub/dgx-interactive-terminal` will run the base Docker image located at `sydneyinformaticshub/dgx-interactive-terminal`, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base
 
-- `--gpu-devices-request 1 --cpu-core-request 1.0` requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see [here](https://run-ai-docs.nvidia.com/self-hosted/2.22/reference/cli/runai/runai_workspace_submit) or use `runai wrkspace submit --help` for a full list of options
+- `--gpu-devices-request 1 --cpu-core-request 1.0` requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see [here](https://run-ai-docs.nvidia.com/self-hosted/2.22/reference/cli/runai/runai_workspace_submit) or use `runai workspace submit --help` for a full list of options
 
 - `--run-as-user` will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace
 

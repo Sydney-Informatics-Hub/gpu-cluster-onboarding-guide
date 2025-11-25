@@ -25,14 +25,14 @@ Define the necessary information for your workload:
 ![Project and Template](../fig/workload_definition.png)
 
 * Select an environment to create the container. The SIH team has prepared a [pre-built image](https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab) (`sydneyinformatics/dgx-interactive-jupyterlab`) with Jupyter Lab and commonly used data science packages installed.
-
+The `jupyter-notebook-in-scratch` environment is configured to pull this image and initialises the Jupyter Lab server from the [PVC scratch filesystem](data_sources.md).
 ![Software environment](../fig/workload_environment.png)
 
 * Select the amount of compute resources to run the workload. In this tutorial, we will select the `small-fraction` option that requires 1 H200 GPU with 10% of its memory (~14GB).
 
 ![Compute resource](../fig/workload_comp_resource.png)
 
-* Configure the [data source](./data_sources.md) to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<dashr_project_shortcode>`.
+* Configure the [data source](./data_sources.md) to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<runai-project-name>`.
 
 ![Data resource](../fig/workload_datasource.png)
 
