@@ -326,16 +326,8 @@ cookieconsent.run({
 </figure>
 </div>
 <ul>
-<li>Select an environment to create the container. The SIH team has prepared a <a href="https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab">pre-built image</a> (<code>sydneyinformatics/dgx-interactive-jupyterlab</code>) with Jupyter Lab and commonly used data science packages installed.</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../fig/workload_environment.png" class="img-fluid figure-img"></p>
-<figcaption>Software environment</figcaption>
-</figure>
-</div>
-<ul>
-<li>Select the amount of compute resources to run the workload. In this tutorial, we will select the <code>small-fraction</code> option that requires 1 H200 GPU with 10% of its memory (~14GB).</li>
+<li><p>Select an environment to create the container. The SIH team has prepared a <a href="https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab">pre-built image</a> (<code>sydneyinformatics/dgx-interactive-jupyterlab</code>) with Jupyter Lab and commonly used data science packages installed. The <code>jupyter-notebook-in-scratch</code> environment is configured to pull this image and initialises the Jupyter Lab server from the <a href="../notebooks/data_sources.html">PVC scratch filesystem</a>. <img src="../fig/workload_environment.png" class="img-fluid" alt="Software environment"></p></li>
+<li><p>Select the amount of compute resources to run the workload. In this tutorial, we will select the <code>small-fraction</code> option that requires 1 H200 GPU with 10% of its memory (~14GB).</p></li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -344,7 +336,7 @@ cookieconsent.run({
 </figure>
 </div>
 <ul>
-<li>Configure the <a href="../notebooks/data_sources.html">data source</a> to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to <code>/scratch/&lt;dashr_project_shortcode&gt;</code>.</li>
+<li>Configure the <a href="../notebooks/data_sources.html">data source</a> to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to <code>/scratch/&lt;runai-project-name&gt;</code>.</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
