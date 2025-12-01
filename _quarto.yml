@@ -39,8 +39,10 @@ website:
 
       - section: "Tutorials"
         contents:
-        - text: "Creating a basic Jupyter Lab workload"
+        - text: "Creating a Jupyter Lab workload"
           href: notebooks/jupyter_tutorial.html
+        - text: "Creating a Marimo Python workload"
+          href: notebooks/marimo_tutorial.html
         - text: "How to transfer data to/from the SIH GPU Cluster"
           href: notebooks/data_transfer.html
         - text: "How to run a terminal using the Command Line Interface (CLI)"
