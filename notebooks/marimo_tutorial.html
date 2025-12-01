@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
+<title>marimo_tutorial – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,26 +23,26 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/cookie-consent/cookie-consent.js"></script>
-<link href="site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-158a648770c71448c719961375919068.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-158a648770c71448c719961375919068.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -100,7 +100,7 @@ cookieconsent.run({
   
 
 
-<link rel="stylesheet" href="lesson.css">
+<link rel="stylesheet" href="../lesson.css">
 </head>
 
 <body class="nav-sidebar docked nav-fixed quarto-light">
@@ -110,11 +110,11 @@ cookieconsent.run({
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./fig/usyd-logo.png" alt="" class="navbar-logo light-content">
-    <img src="./fig/usyd-logo.png" alt="" class="navbar-logo dark-content">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../fig/usyd-logo.png" alt="" class="navbar-logo light-content">
+    <img src="../fig/usyd-logo.png" alt="" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Sydney Informatics Hub GPU Cluster Onboarding Guide</span>
     </a>
   </div>
@@ -128,7 +128,7 @@ cookieconsent.run({
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/marimo_tutorial.html">Creating a Marimo Python workload</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -150,7 +150,7 @@ cookieconsent.run({
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
@@ -165,13 +165,13 @@ cookieconsent.run({
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/cluster_intro.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/cluster_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction to the SIH GPU Cluster</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/access.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/access.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Accessing the SIH GPU Cluster</span></a>
   </div>
 </li>
@@ -188,13 +188,13 @@ cookieconsent.run({
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/login.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/login.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Login</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/user_interface.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/user_interface.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Navigating the User Interface</span></a>
   </div>
 </li>
@@ -211,25 +211,25 @@ cookieconsent.run({
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/dashboards.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/dashboards.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Dashboards</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/projects.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Projects</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/environments.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/environments.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Environments</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/data_sources.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/data_sources.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Sources</span></a>
   </div>
 </li>
@@ -246,25 +246,25 @@ cookieconsent.run({
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/jupyter_tutorial.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/jupyter_tutorial.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Creating a Jupyter Lab workload</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/marimo_tutorial.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/marimo_tutorial.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Creating a Marimo Python workload</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/data_transfer.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/data_transfer.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to transfer data to/from the SIH GPU Cluster</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./notebooks/CLI.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/CLI.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">How to run a terminal using the Command Line Interface (CLI)</span></a>
   </div>
 </li>
@@ -275,58 +275,122 @@ cookieconsent.run({
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#tutorial-running-a-marimo-notebook-workspace" id="toc-tutorial-running-a-marimo-notebook-workspace" class="nav-link active" data-scroll-target="#tutorial-running-a-marimo-notebook-workspace">Tutorial: Running a Marimo Notebook Workspace</a>
+  <ul class="collapse">
+  <li><a href="#step-1-create-a-workload" id="toc-step-1-create-a-workload" class="nav-link" data-scroll-target="#step-1-create-a-workload">Step 1: Create a workload</a></li>
+  <li><a href="#step-2-configure-the-workload-from-scratch" id="toc-step-2-configure-the-workload-from-scratch" class="nav-link" data-scroll-target="#step-2-configure-the-workload-from-scratch">Step 2: Configure the workload from scratch</a></li>
+  <li><a href="#step-3-connect-to-marimo" id="toc-step-3-connect-to-marimo" class="nav-link" data-scroll-target="#step-3-connect-to-marimo">Step 3: Connect to Marimo</a></li>
+  <li><a href="#step-4.-create-new-notebook-in-marimo" id="toc-step-4.-create-new-notebook-in-marimo" class="nav-link" data-scroll-target="#step-4.-create-new-notebook-in-marimo">Step 4. Create New Notebook in Marimo</a></li>
+  <li><a href="#optional-step-5-inspect-system-logs" id="toc-optional-step-5-inspect-system-logs" class="nav-link" data-scroll-target="#optional-step-5-inspect-system-logs">(Optional) Step 5: Inspect system logs</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/marimo_tutorial.html">Creating a Marimo Python workload</a></li></ol></nav></header>
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide</h1>
+
+
+
+<section id="tutorial-running-a-marimo-notebook-workspace" class="level1">
+<h1>Tutorial: Running a <a href="https://marimo.io">Marimo Notebook</a> Workspace</h1>
+<p>A workload is the actual job or task you want to run on the platform. This could be training an AI model, and running an inference model and exposing its endpoint, doing data preprocessing, or conducting a scientific simulation.</p>
+<p>Generally, the minimum requirements you need before creating the workload include:</p>
+<ul>
+<li>Being granted permission to an active project</li>
+<li>An <a href="../notebooks/environments.html">environment</a> to run such job</li>
+<li>Have created a data source, e.g.&nbsp;a PVC, to store your input and output data</li>
+<li>Understand the compute resources you need to run the job and have the option available under “Compute Resources”</li>
+</ul>
+<p>In this tutorial, we will create a simple Marimo workload that allows you to run python Marimo notebooks interactively on the SIH GPU cluster.</p>
+<p><a href="https://marimo.io/gallery">Marimo notebook example gallery</a></p>
+<section id="step-1-create-a-workload" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-create-a-workload">Step 1: Create a workload</h2>
+<p>Navigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/workload_create_workspace.png" class="img-fluid figure-img"></p>
+<figcaption>New workload</figcaption>
+</figure>
+</div>
+</section>
+<section id="step-2-configure-the-workload-from-scratch" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-configure-the-workload-from-scratch">Step 2: Configure the workload from scratch</h2>
+<p>Define the necessary information for your workload:</p>
+<ul>
+<li>Under “Projects” select the project it will be linked to</li>
+<li>Under “Templates” select “Start from scratch” (<em>i.e.</em> do not use any existing template)</li>
+<li>Provide a descriptive name for the workload</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/workload_definition_marimo.png" class="img-fluid figure-img"></p>
+<figcaption>Project and Template</figcaption>
+</figure>
+</div>
+<ul>
+<li>Select an environment to create the container. The SIH team has set up the <a href="https://github.com/marimo-team/marimo/pkgs/container/marimo">marimo:latest container image</a> (<code>ghcr.io/marimo-team/marimo:latest</code>) to run in <a href="https://docs.astral.sh/uv/">uv</a> so that packages can be install automatically.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/workload_environment_marimo.png" class="img-fluid figure-img"></p>
+<figcaption>Software environment</figcaption>
+</figure>
+</div>
+<ul>
+<li>Select the amount of compute resources to run the workload. In this tutorial, we will select the <code>small-fraction</code> option that requires 1 H200 GPU with 10% of its memory (~14GB).</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/workload_comp_resource.png" class="img-fluid figure-img"></p>
+<figcaption>Compute resource</figcaption>
+</figure>
+</div>
+<ul>
+<li>Configure the <a href="../notebooks/data_sources.html">data source</a> to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to <code>/scratch/&lt;dashr_project_shortcode&gt;</code>.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/workload_datasource_marimo.png" class="img-fluid figure-img"></p>
+<figcaption>Data resource</figcaption>
+</figure>
+</div>
+<ul>
+<li>Lastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.</li>
+</ul>
+</section>
+<section id="step-3-connect-to-marimo" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-connect-to-marimo">Step 3: Connect to Marimo</h2>
+<p>When the status changes to “Running”, you can access the Marimo interface by selecting “Marimo” under “CONNECT”.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/workload_connect_marimo.png" class="img-fluid figure-img"></p>
+<figcaption>Connect to the Marimo interface</figcaption>
+</figure>
+</div>
+</section>
+<section id="step-4.-create-new-notebook-in-marimo" class="level2">
+<h2 class="anchored" data-anchor-id="step-4.-create-new-notebook-in-marimo">Step 4. Create New Notebook in Marimo</h2>
+<p>You’re ready to go! <img src="../fig/workload_marimo_create_notebook.png" class="img-fluid" alt="Connect to the Marimo interface"></p>
+</section>
+<section id="optional-step-5-inspect-system-logs" class="level2">
+<h2 class="anchored" data-anchor-id="optional-step-5-inspect-system-logs">(Optional) Step 5: Inspect system logs</h2>
+<p>You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/workload_logs.png" class="img-fluid figure-img"></p>
+<figcaption>Workload logs</figcaption>
+</figure>
 </div>
 
 
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<p>This Onboarding Guide is structured as follows:</p>
-<table class="caption-top table">
-<tbody>
-<tr class="odd">
-<td><strong>Section</strong></td>
-<td style="text-align: left;"><strong>Content</strong></td>
-</tr>
-<tr class="even">
-<td>Getting Started with the SIH GPU Cluster</td>
-<td style="text-align: left;">Overview and basic information about the GPU Cluster</td>
-</tr>
-<tr class="odd">
-<td>Getting Started with Run:ai</td>
-<td style="text-align: left;">Introduction to Run:ai concepts and fundamentals</td>
-</tr>
-<tr class="even">
-<td>Run:ai Features</td>
-<td style="text-align: left;">Step-by-step instructions for using various Run:ai features. More details can be found in the <a href="https://docs.run.ai/v2.18/Researcher/overview-researcher/">official Run:ai user guide (version 2.18)</a></td>
-</tr>
-<tr class="odd">
-<td>Tutorials</td>
-<td style="text-align: left;">Practical examples and demonstrations of different use cases</td>
-</tr>
-</tbody>
-</table>
-
-
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

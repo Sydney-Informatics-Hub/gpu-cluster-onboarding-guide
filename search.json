@@ -99,15 +99,153 @@
     ]
   },
   {
-    "objectID": "notebooks/projects.html",
-    "href": "notebooks/projects.html",
-    "title": "Projects",
+    "objectID": "notebooks/marimo_tutorial.html",
+    "href": "notebooks/marimo_tutorial.html",
+    "title": "Tutorial: Running a Marimo Notebook Workspace",
     "section": "",
-    "text": "Projects\nIn Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.\nOnce you have been granted access to the SIH GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.\n\n\n\nListed Run:ai project\n\n\nApart from the basic information such as the number of allocated GPUs and total quota, you can also cutomise the project view. To do so, click the “COLUMNS” button and select the desired fields to display.\n\n\n\n\n\n\nNote\n\n\n\nAdjusting the project settings is restricted to system administrators only. If you require any changes to the project configuration, please contact the SIH support team.",
+    "text": "A workload is the actual job or task you want to run on the platform. This could be training an AI model, and running an inference model and exposing its endpoint, doing data preprocessing, or conducting a scientific simulation.\nGenerally, the minimum requirements you need before creating the workload include:\n\nBeing granted permission to an active project\nAn environment to run such job\nHave created a data source, e.g. a PVC, to store your input and output data\nUnderstand the compute resources you need to run the job and have the option available under “Compute Resources”\n\nIn this tutorial, we will create a simple Marimo workload that allows you to run python Marimo notebooks interactively on the SIH GPU cluster.\nMarimo notebook example gallery\n\n\nNavigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload\n\n\n\n\n\nDefine the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from scratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has set up the marimo:latest container image (ghcr.io/marimo-team/marimo:latest) to run in uv so that packages can be install automatically.\n\n\n\n\nSoftware environment\n\n\n\nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;dashr_project_shortcode&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.\n\n\n\n\nWhen the status changes to “Running”, you can access the Marimo interface by selecting “Marimo” under “CONNECT”.\n\n\n\nConnect to the Marimo interface\n\n\n\n\n\nYou’re ready to go! \n\n\n\nYou can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
     "crumbs": [
-      "Run:ai Features",
-      "Projects"
+      "Tutorials",
+      "Creating a Marimo Python workload"
     ]
+  },
+  {
+    "objectID": "notebooks/marimo_tutorial.html#step-1-create-a-workload",
+    "href": "notebooks/marimo_tutorial.html#step-1-create-a-workload",
+    "title": "Tutorial: Running a Marimo Notebook Workspace",
+    "section": "",
+    "text": "Navigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Marimo Python workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/marimo_tutorial.html#step-2-configure-the-workload-from-scratch",
+    "href": "notebooks/marimo_tutorial.html#step-2-configure-the-workload-from-scratch",
+    "title": "Tutorial: Running a Marimo Notebook Workspace",
+    "section": "",
+    "text": "Define the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from scratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has set up the marimo:latest container image (ghcr.io/marimo-team/marimo:latest) to run in uv so that packages can be install automatically.\n\n\n\n\nSoftware environment\n\n\n\nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;dashr_project_shortcode&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Marimo Python workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/marimo_tutorial.html#step-3-connect-to-marimo",
+    "href": "notebooks/marimo_tutorial.html#step-3-connect-to-marimo",
+    "title": "Tutorial: Running a Marimo Notebook Workspace",
+    "section": "",
+    "text": "When the status changes to “Running”, you can access the Marimo interface by selecting “Marimo” under “CONNECT”.\n\n\n\nConnect to the Marimo interface",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Marimo Python workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/marimo_tutorial.html#step-4.-create-new-notebook-in-marimo",
+    "href": "notebooks/marimo_tutorial.html#step-4.-create-new-notebook-in-marimo",
+    "title": "Tutorial: Running a Marimo Notebook Workspace",
+    "section": "",
+    "text": "You’re ready to go!",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Marimo Python workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/marimo_tutorial.html#optional-step-5-inspect-system-logs",
+    "href": "notebooks/marimo_tutorial.html#optional-step-5-inspect-system-logs",
+    "title": "Tutorial: Running a Marimo Notebook Workspace",
+    "section": "",
+    "text": "You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Marimo Python workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/cluster_intro.html",
+    "href": "notebooks/cluster_intro.html",
+    "title": "Introduction to the SIH GPU Cluster",
+    "section": "",
+    "text": "Introduction to the SIH GPU Cluster\nThe Sydney Informatics Hub (SIH) GPU Cluster is a high-performance research compute platform designed to accelerate AI workflows, scientific modelling, image processing, and other GPU-intensive research across the University of Sydney. This cluster is built with three NVIDIA DGX H200 nodes (24 H200 GPUs in total), high-speed InfiniBand networking, and 1 PB DDN EXAScaler parallel filesystem for fast shared storage.\nMore information about the SIH GPU Cluster can be found on the Sydney Informatics Hub’s Research Computing page.",
+    "crumbs": [
+      "Getting Started with the SIH GPU Cluster",
+      "Introduction to the SIH GPU Cluster"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html",
+    "href": "notebooks/jupyter_tutorial.html",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "A workload is the actual job or task you want to run on the platform. This could be training an AI model, and running an inference model and exposing its endpoint, doing data preprocessing, or conducting a scientific simulation.\nGenerally, the minimum requirements you need before creating the workload include:\n\nBeing granted permission to an active project\nAn environment to run such job\nHave created a data source, e.g. a PVC, to store your input and output data\nUnderstand the compute resources you need to run the job and have the option available under “Compute Resources”\n\nIn this tutorial, we will create a simple Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the SIH GPU cluster.\n\n\nNavigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload\n\n\n\n\n\nDefine the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.\n\n\n\n\nWhen the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface\n\n\n\n\n\nYou can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
+    "href": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "Navigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
+    "href": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "Define the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
+    "href": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "When the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
+    "href": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide",
+    "section": "",
+    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the SIH GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals\n\n\nRun:ai Features\nStep-by-step instructions for using various Run:ai features. More details can be found in the official Run:ai user guide (version 2.18)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Setup",
+    "section": "",
+    "text": "1. Get a client\nThese are the setup instructions…"
   },
   {
     "objectID": "notebooks/data_sources.html",
@@ -121,86 +259,14 @@
     ]
   },
   {
-    "objectID": "setup.html",
-    "href": "setup.html",
-    "title": "Setup",
+    "objectID": "notebooks/projects.html",
+    "href": "notebooks/projects.html",
+    "title": "Projects",
     "section": "",
-    "text": "1. Get a client\nThese are the setup instructions…"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide",
-    "section": "",
-    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the SIH GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals\n\n\nRun:ai Features\nStep-by-step instructions for using various Run:ai features. More details can be found in the official Run:ai user guide (version 2.18)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
+    "text": "Projects\nIn Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.\nOnce you have been granted access to the SIH GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.\n\n\n\nListed Run:ai project\n\n\nApart from the basic information such as the number of allocated GPUs and total quota, you can also cutomise the project view. To do so, click the “COLUMNS” button and select the desired fields to display.\n\n\n\n\n\n\nNote\n\n\n\nAdjusting the project settings is restricted to system administrators only. If you require any changes to the project configuration, please contact the SIH support team.",
     "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html",
-    "href": "notebooks/jupyter_tutorial.html",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "A workload is the actual job or task you want to run on the platform. This could be training an AI model, and running an inference model and exposing its endpoint, doing data preprocessing, or conducting a scientific simulation.\nGenerally, the minimum requirements you need before creating the workload include:\n\nBeing granted permission to an active project\nAn environment to run such job\nHave created a data source, e.g. a PVC, to store your input and output data\nUnderstand the compute resources you need to run the job and have the option available under “Compute Resources”\n\nIn this tutorial, we will create a simple Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the SIH GPU cluster.\n\n\nNavigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload\n\n\n\n\n\nDefine the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.\n\n\n\n\nWhen the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface\n\n\n\n\n\nYou can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
-    "crumbs": [
-      "Tutorials",
-      "Creating a basic Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
-    "href": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "Navigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload",
-    "crumbs": [
-      "Tutorials",
-      "Creating a basic Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
-    "href": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "Define the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.",
-    "crumbs": [
-      "Tutorials",
-      "Creating a basic Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
-    "href": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "When the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface",
-    "crumbs": [
-      "Tutorials",
-      "Creating a basic Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
-    "href": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
-    "crumbs": [
-      "Tutorials",
-      "Creating a basic Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/cluster_intro.html",
-    "href": "notebooks/cluster_intro.html",
-    "title": "Introduction to the SIH GPU Cluster",
-    "section": "",
-    "text": "Introduction to the SIH GPU Cluster\nThe Sydney Informatics Hub (SIH) GPU Cluster is a high-performance research compute platform designed to accelerate AI workflows, scientific modelling, image processing, and other GPU-intensive research across the University of Sydney. This cluster is built with three NVIDIA DGX H200 nodes (24 H200 GPUs in total), high-speed InfiniBand networking, and 1 PB DDN EXAScaler parallel filesystem for fast shared storage.\nMore information about the SIH GPU Cluster can be found on the Sydney Informatics Hub’s Research Computing page.",
-    "crumbs": [
-      "Getting Started with the SIH GPU Cluster",
-      "Introduction to the SIH GPU Cluster"
+      "Run:ai Features",
+      "Projects"
     ]
   },
   {
