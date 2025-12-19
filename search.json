@@ -66,36 +66,126 @@
     ]
   },
   {
-    "objectID": "notebooks/environments.html",
-    "href": "notebooks/environments.html",
-    "title": "Configure Environments",
+    "objectID": "notebooks/storage.html",
+    "href": "notebooks/storage.html",
+    "title": "How to manage the persistent volume claim",
     "section": "",
-    "text": "In Run:AI, an environment consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:\n\nBase Docker image (e.g., pytorch/pytorch, tensorflow/tensorflow:2.20.0-jupyter)\nTools (such as Jupyter, RStudio, etc.)\nCustom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)\n\n\n\nThe SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments\n\n\n\n\n\nYou can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup.",
+    "text": "How to manage the persistent volume claim"
+  },
+  {
+    "objectID": "notebooks/access.html",
+    "href": "notebooks/access.html",
+    "title": "Accessing the SIH GPU Cluster",
+    "section": "",
+    "text": "Accessing the SIH GPU Cluster\nEarly access to the GPU Cluster is now available. Please follow instructions on this page to submit your request.\nInformation that you will be asked to provide in the access request form includes:\n\nDashR Research Project Shortcode: Please log in to the DashR portal, click on the project you intend to work on, and locate the Project Short Code. This is essential for linking your compute usage to the correct research allocation.\nBilling Code: This should be the internal billing code associated with your project or department. If you are unsure, please consult your supervisor or finance administrator.\n\nYou will receive an email confirmation once your access has been granted, along with the project code and further instructions on how to connect to the SIH GPU Cluster.\n\n\n\n\n\n\nNote\n\n\n\nWork in Progress: Long term project provisioning and access to the SIH GPU Cluster will be streamlined and directly managed on the university’s Researcher Dashboard (DashR).",
     "crumbs": [
-      "Run:ai Features",
-      "Environments"
+      "Getting Started with the SIH GPU Cluster",
+      "Accessing the SIH GPU Cluster"
     ]
   },
   {
-    "objectID": "notebooks/environments.html#pre-defined-environments",
-    "href": "notebooks/environments.html#pre-defined-environments",
-    "title": "Configure Environments",
+    "objectID": "notebooks/projects.html",
+    "href": "notebooks/projects.html",
+    "title": "Projects",
     "section": "",
-    "text": "The SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments",
+    "text": "Projects\nIn Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.\nOnce you have been granted access to the SIH GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.\n\n\n\nListed Run:ai project\n\n\nApart from the basic information such as the number of allocated GPUs and total quota, you can also cutomise the project view. To do so, click the “COLUMNS” button and select the desired fields to display.\n\n\n\n\n\n\nNote\n\n\n\nAdjusting the project settings is restricted to system administrators only. If you require any changes to the project configuration, please contact the SIH support team.",
     "crumbs": [
       "Run:ai Features",
-      "Environments"
+      "Projects"
     ]
   },
   {
-    "objectID": "notebooks/environments.html#create-a-new-environment",
-    "href": "notebooks/environments.html#create-a-new-environment",
-    "title": "Configure Environments",
+    "objectID": "notebooks/data_sources.html",
+    "href": "notebooks/data_sources.html",
+    "title": "Data Sources",
     "section": "",
-    "text": "You can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup.",
+    "text": "Data Sources\nData sources in Run:ai allow you to connect additional storage systems to your Run:ai projects, enabling seamless access to datasets required for your workloads. Run:ai supports various types of data sources, including PVC (Persistent Volume Claim), NFS, S3-compatible storage, and more.\nWhen a Run:ai project is created, a default data source (PVC) is automatically set up for this project. You can find the data source under the “Data Sources”, listed as pvc-&lt;dashr_project_shortcode&gt;:\n\n\n\nDefault Data Source\n\n\nThis dedicated persistent storage can be accessable from any workload running within the same project. The default mount path inside the container is /scratch/&lt;dashr_project_shortcode&gt;. It is especially useful for storing intermediate results, model checkpoints, and uploading data to the cluster from external sources (e.g. RDS).",
     "crumbs": [
       "Run:ai Features",
-      "Environments"
+      "Data Sources"
+    ]
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Setup",
+    "section": "",
+    "text": "1. Get a client\nThese are the setup instructions…"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide",
+    "section": "",
+    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the SIH GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals\n\n\nRun:ai Features\nStep-by-step instructions for using various Run:ai features. More details can be found in the official Run:ai user guide (version 2.18)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html",
+    "href": "notebooks/jupyter_tutorial.html",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "A workload is the actual job or task you want to run on the platform. This could be training an AI model, and running an inference model and exposing its endpoint, doing data preprocessing, or conducting a scientific simulation.\nGenerally, the minimum requirements you need before creating the workload include:\n\nBeing granted permission to an active project\nAn environment to run such job\nHave created a data source, e.g. a PVC, to store your input and output data\nUnderstand the compute resources you need to run the job and have the option available under “Compute Resources”\n\nIn this tutorial, we will create a simple Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the SIH GPU cluster.\n\n\nNavigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload\n\n\n\n\n\nDefine the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.\n\n\n\n\nWhen the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface\n\n\n\n\n\nYou can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
+    "href": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "Navigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
+    "href": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "Define the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
+    "href": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "When the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
+    "href": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
+    "title": "Tutorial: Running a Jupyter Lab Workload",
+    "section": "",
+    "text": "You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
+    "crumbs": [
+      "Tutorials",
+      "Creating a Jupyter Lab workload"
+    ]
+  },
+  {
+    "objectID": "notebooks/cluster_intro.html",
+    "href": "notebooks/cluster_intro.html",
+    "title": "Introduction to the SIH GPU Cluster",
+    "section": "",
+    "text": "Introduction to the SIH GPU Cluster\nThe Sydney Informatics Hub (SIH) GPU Cluster is a high-performance research compute platform designed to accelerate AI workflows, scientific modelling, image processing, and other GPU-intensive research across the University of Sydney. This cluster is built with three NVIDIA DGX H200 nodes (24 H200 GPUs in total), high-speed InfiniBand networking, and 1 PB DDN EXAScaler parallel filesystem for fast shared storage.\nMore information about the SIH GPU Cluster can be found on the Sydney Informatics Hub’s Research Computing page.",
+    "crumbs": [
+      "Getting Started with the SIH GPU Cluster",
+      "Introduction to the SIH GPU Cluster"
     ]
   },
   {
@@ -165,127 +255,81 @@
     ]
   },
   {
-    "objectID": "notebooks/cluster_intro.html",
-    "href": "notebooks/cluster_intro.html",
-    "title": "Introduction to the SIH GPU Cluster",
+    "objectID": "notebooks/environments.html",
+    "href": "notebooks/environments.html",
+    "title": "Configure Environments",
     "section": "",
-    "text": "Introduction to the SIH GPU Cluster\nThe Sydney Informatics Hub (SIH) GPU Cluster is a high-performance research compute platform designed to accelerate AI workflows, scientific modelling, image processing, and other GPU-intensive research across the University of Sydney. This cluster is built with three NVIDIA DGX H200 nodes (24 H200 GPUs in total), high-speed InfiniBand networking, and 1 PB DDN EXAScaler parallel filesystem for fast shared storage.\nMore information about the SIH GPU Cluster can be found on the Sydney Informatics Hub’s Research Computing page.",
-    "crumbs": [
-      "Getting Started with the SIH GPU Cluster",
-      "Introduction to the SIH GPU Cluster"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html",
-    "href": "notebooks/jupyter_tutorial.html",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "A workload is the actual job or task you want to run on the platform. This could be training an AI model, and running an inference model and exposing its endpoint, doing data preprocessing, or conducting a scientific simulation.\nGenerally, the minimum requirements you need before creating the workload include:\n\nBeing granted permission to an active project\nAn environment to run such job\nHave created a data source, e.g. a PVC, to store your input and output data\nUnderstand the compute resources you need to run the job and have the option available under “Compute Resources”\n\nIn this tutorial, we will create a simple Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the SIH GPU cluster.\n\n\nNavigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload\n\n\n\n\n\nDefine the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.\n\n\n\n\nWhen the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface\n\n\n\n\n\nYou can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
-    "crumbs": [
-      "Tutorials",
-      "Creating a Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
-    "href": "notebooks/jupyter_tutorial.html#step-1-create-a-workload",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "Navigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.\n\n\n\nNew workload",
-    "crumbs": [
-      "Tutorials",
-      "Creating a Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
-    "href": "notebooks/jupyter_tutorial.html#step-2-configure-the-workload-from-scratch",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "Define the necessary information for your workload:\n\nUnder “Projects” select the project it will be linked to\nUnder “Templates” select “Start from sratch” (i.e. do not use any existing template)\nProvide a descriptive name for the workload\n\n\n\n\nProject and Template\n\n\n\nSelect an environment to create the container. The SIH team has prepared a pre-built image (sydneyinformatics/dgx-interactive-jupyterlab) with Jupyter Lab and commonly used data science packages installed. The jupyter-notebook-in-scratch environment is configured to pull this image and initialises the Jupyter Lab server from the PVC scratch filesystem. \nSelect the amount of compute resources to run the workload. In this tutorial, we will select the small-fraction option that requires 1 H200 GPU with 10% of its memory (~14GB).\n\n\n\n\nCompute resource\n\n\n\nConfigure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to /scratch/&lt;runai-project-name&gt;.\n\n\n\n\nData resource\n\n\n\nLastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.",
-    "crumbs": [
-      "Tutorials",
-      "Creating a Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
-    "href": "notebooks/jupyter_tutorial.html#step-3-connect-to-jupyter-lab",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "When the status changes to “Running”, you can access the Jupyter Lab interface by selecting “Jupyter” under “CONNECT”.\n\n\n\nConnect to the Jupyter Lab interface",
-    "crumbs": [
-      "Tutorials",
-      "Creating a Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
-    "href": "notebooks/jupyter_tutorial.html#optional-step-4-inspect-system-logs",
-    "title": "Tutorial: Running a Jupyter Lab Workload",
-    "section": "",
-    "text": "You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.\n\n\n\nWorkload logs",
-    "crumbs": [
-      "Tutorials",
-      "Creating a Jupyter Lab workload"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide",
-    "section": "",
-    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the SIH GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals\n\n\nRun:ai Features\nStep-by-step instructions for using various Run:ai features. More details can be found in the official Run:ai user guide (version 2.18)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "setup.html",
-    "href": "setup.html",
-    "title": "Setup",
-    "section": "",
-    "text": "1. Get a client\nThese are the setup instructions…"
-  },
-  {
-    "objectID": "notebooks/data_sources.html",
-    "href": "notebooks/data_sources.html",
-    "title": "Data Sources",
-    "section": "",
-    "text": "Data Sources\nData sources in Run:ai allow you to connect additional storage systems to your Run:ai projects, enabling seamless access to datasets required for your workloads. Run:ai supports various types of data sources, including PVC (Persistent Volume Claim), NFS, S3-compatible storage, and more.\nWhen a Run:ai project is created, a default data source (PVC) is automatically set up for this project. You can find the data source under the “Data Sources”, listed as pvc-&lt;dashr_project_shortcode&gt;:\n\n\n\nDefault Data Source\n\n\nThis dedicated persistent storage can be accessable from any workload running within the same project. The default mount path inside the container is /scratch/&lt;dashr_project_shortcode&gt;. It is especially useful for storing intermediate results, model checkpoints, and uploading data to the cluster from external sources (e.g. RDS).",
+    "text": "In Run:AI, an environment consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:\n\nBase Docker image (e.g., pytorch/pytorch, tensorflow/tensorflow:2.20.0-jupyter)\nTools (such as Jupyter, RStudio, etc.)\nCustom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)\n\n\n\nThe SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments\n\n\n\n\n\nYou can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup.",
     "crumbs": [
       "Run:ai Features",
-      "Data Sources"
+      "Environments"
     ]
   },
   {
-    "objectID": "notebooks/projects.html",
-    "href": "notebooks/projects.html",
-    "title": "Projects",
+    "objectID": "notebooks/environments.html#pre-defined-environments",
+    "href": "notebooks/environments.html#pre-defined-environments",
+    "title": "Configure Environments",
     "section": "",
-    "text": "Projects\nIn Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.\nOnce you have been granted access to the SIH GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.\n\n\n\nListed Run:ai project\n\n\nApart from the basic information such as the number of allocated GPUs and total quota, you can also cutomise the project view. To do so, click the “COLUMNS” button and select the desired fields to display.\n\n\n\n\n\n\nNote\n\n\n\nAdjusting the project settings is restricted to system administrators only. If you require any changes to the project configuration, please contact the SIH support team.",
+    "text": "The SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments",
     "crumbs": [
       "Run:ai Features",
-      "Projects"
+      "Environments"
     ]
   },
   {
-    "objectID": "notebooks/access.html",
-    "href": "notebooks/access.html",
-    "title": "Accessing the SIH GPU Cluster",
+    "objectID": "notebooks/environments.html#create-a-new-environment",
+    "href": "notebooks/environments.html#create-a-new-environment",
+    "title": "Configure Environments",
     "section": "",
-    "text": "Accessing the SIH GPU Cluster\nEarly access to the GPU Cluster is now available. Please follow instructions on this page to submit your request.\nInformation that you will be asked to provide in the access request form includes:\n\nDashR Research Project Shortcode: Please log in to the DashR portal, click on the project you intend to work on, and locate the Project Short Code. This is essential for linking your compute usage to the correct research allocation.\nBilling Code: This should be the internal billing code associated with your project or department. If you are unsure, please consult your supervisor or finance administrator.\n\nYou will receive an email confirmation once your access has been granted, along with the project code and further instructions on how to connect to the SIH GPU Cluster.\n\n\n\n\n\n\nNote\n\n\n\nWork in Progress: Long term project provisioning and access to the SIH GPU Cluster will be streamlined and directly managed on the university’s Researcher Dashboard (DashR).",
+    "text": "You can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup.",
     "crumbs": [
-      "Getting Started with the SIH GPU Cluster",
-      "Accessing the SIH GPU Cluster"
+      "Run:ai Features",
+      "Environments"
     ]
   },
   {
-    "objectID": "notebooks/storage.html",
-    "href": "notebooks/storage.html",
-    "title": "How to manage the persistent volume claim",
+    "objectID": "notebooks/R_tutorial.html",
+    "href": "notebooks/R_tutorial.html",
+    "title": "Tutorial: Self-installing R packages",
     "section": "",
-    "text": "How to manage the persistent volume claim"
+    "text": "In this tutorial, we will demonstrate how to install R packages in your Run:AI workload. This is particularly useful when you need specific packages that are not included in the pre-installed image.\n\n\nFollow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.\n\n\n\n\nOpen a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.\n\n\n\n\nYou can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
+    "href": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "Follow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
+    "href": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "Open a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#verify-the-installation",
+    "href": "notebooks/R_tutorial.html#verify-the-installation",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "You can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
   },
   {
     "objectID": "notebooks/CLI.html",

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>user_interface – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
+<title>r_tutorial – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -128,7 +163,7 @@ cookieconsent.run({
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/login.html">Getting Started with Run:ai</a></li><li class="breadcrumb-item"><a href="../notebooks/user_interface.html">Navigating the User Interface</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/R_tutorial.html">How to self-install R packages</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -194,7 +229,7 @@ cookieconsent.run({
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/user_interface.html" class="sidebar-item-text sidebar-link active">
+  <a href="../notebooks/user_interface.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Navigating the User Interface</span></a>
   </div>
 </li>
@@ -270,7 +305,7 @@ cookieconsent.run({
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/R_tutorial.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/R_tutorial.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">How to self-install R packages</span></a>
   </div>
 </li>
@@ -286,39 +321,82 @@ cookieconsent.run({
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#navigating-the-user-interface" id="toc-navigating-the-user-interface" class="nav-link active" data-scroll-target="#navigating-the-user-interface">Navigating the User Interface</a></li>
+  <li><a href="#tutorial-self-installing-r-packages" id="toc-tutorial-self-installing-r-packages" class="nav-link active" data-scroll-target="#tutorial-self-installing-r-packages">Tutorial: Self-installing R packages</a>
+  <ul class="collapse">
+  <li><a href="#create-a-runai-jupyter-lab-workload" id="toc-create-a-runai-jupyter-lab-workload" class="nav-link" data-scroll-target="#create-a-runai-jupyter-lab-workload">Create a Run:AI Jupyter Lab workload</a></li>
+  <li><a href="#install-r-packages-via-terminal" id="toc-install-r-packages-via-terminal" class="nav-link" data-scroll-target="#install-r-packages-via-terminal">Install R packages via Terminal</a></li>
+  <li><a href="#verify-the-installation" id="toc-verify-the-installation" class="nav-link" data-scroll-target="#verify-the-installation">Verify the installation</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/login.html">Getting Started with Run:ai</a></li><li class="breadcrumb-item"><a href="../notebooks/user_interface.html">Navigating the User Interface</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/R_tutorial.html">How to self-install R packages</a></li></ol></nav></header>
 
 
 
 
-<section id="navigating-the-user-interface" class="level1">
-<h1>Navigating the User Interface</h1>
-<p>The Run:ai user interface is designed to be intuitive and user-friendly, allowing users to easily access and manage their resources and workloads.</p>
+<section id="tutorial-self-installing-r-packages" class="level1">
+<h1>Tutorial: Self-installing R packages</h1>
+<p>In this tutorial, we will demonstrate how to install R packages in your Run:AI workload. This is particularly useful when you need specific packages that are not included in the pre-installed image.</p>
+<section id="create-a-runai-jupyter-lab-workload" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-runai-jupyter-lab-workload">Create a Run:AI Jupyter Lab workload</h2>
+<p>Follow the instructions in the <a href="../notebooks/jupyter_tutorial.html">Jupyter Lab tutorial</a> to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../fig/navigation_panel.png" class="img-fluid figure-img"></p>
-<figcaption>Run:ai navigation panel</figcaption>
+<p><img src="../fig/jupyter_landing_page.png" class="img-fluid figure-img"></p>
+<figcaption>Jupyter Lab Landing Page</figcaption>
 </figure>
 </div>
-<p>On the left panel, there are several options to select:</p>
+<p>There are three ways of accessing R in this default Jupyter Lab environment:</p>
 <ul>
-<li><p><strong>Dashboards</strong>: Two system dashboards, namely “Overview” and “Analytics”, are accessible to users. They provide both system- and project-level information including system summaries, real-time resource allocation, cluster load, etc.</p></li>
-<li><p><strong>Projects</strong>: This lists out the projects the user has been assigned to.</p></li>
-<li><p><strong>Workloads</strong>: This page provides a summary of the current workloads and allows users to create and configure new workloads.</p></li>
-<li><p><strong>Environments</strong>: Both platform-wide and customised environments can be found in this page.</p></li>
-<li><p><strong>Data Sources</strong>: This page allows users to configure new data sources and view existing ones.</p></li>
-<li><p><strong>Compute Resources</strong>: This page summaries all compute resources (similar to choosing the “flavours” in a cloud computing environment) and allows users to create new compute resources for their specific needs.</p></li>
-<li><p><strong>Templates</strong>: This feature allows users to manage bespoke templates configured for their specific workloads.</p></li>
-<li><p><strong>Credentials</strong>: This space allows users to define secrets including access keys, passwords, or other sensitive information essential to the execution of workloads during runtime.</p></li>
+<li>R notebook</li>
+<li>R Console</li>
+<li>Terminal</li>
 </ul>
-<p>The instructions on how to use these features will be covered in the following “Run:ai Features” section.</p>
+<p>In this tutorial, we will demonstrate how to use the Terminal application to install R packages.</p>
+</section>
+<section id="install-r-packages-via-terminal" class="level2">
+<h2 class="anchored" data-anchor-id="install-r-packages-via-terminal">Install R packages via Terminal</h2>
+<ol type="1">
+<li><p>Open a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.</p></li>
+<li><p>Create a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.</p>
+<p>You can do this by creating a subdirectory in <code>/scratch/${RUNAI_PROJECT}</code>. For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/my_username/R_libs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>which will create a directory named <code>R_libs</code> in the project PVC. You may want to change <code>my_username</code> to your own username (<em>e.g.</em>, your unikey) or preferred directory name.</p></li>
+<li><p>Set the <code>R_LIBS_USER</code> environment variable to point to this new directory.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">R_LIBS_USER</span><span class="op">=</span>/scratch/<span class="va">${RUNAI_PROJECT}</span>/my_username/R_libs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Start R by executing the command <code>R</code> in the terminal.</p></li>
+<li><p>Check if the libary has already been installed in the image. You can either run</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">installed.packages</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>to print out the full list of installed packages, or try loading the package using</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(package)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You need to replace <code>package</code> with the name of the package you want to check. If the package is not installed, you will receive an error message:</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="../fig/r_load_xgboost_failed.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>check if the xgboost library is installed</figcaption>
+</figure>
+</div></li>
+<li><p>Install the desired R package using the <code>install.packages()</code> function. For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"xgboost"</span>, <span class="at">repos=</span><span class="st">"http://cran.ms.unimelb.edu.au/"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This command will download and install the <code>xgboost</code> package into the directory specified by <code>R_LIBS_USER</code>.</p></li>
+</ol>
+</section>
+<section id="verify-the-installation" class="level2">
+<h2 class="anchored" data-anchor-id="verify-the-installation">Verify the installation</h2>
+<p>You can verify the installation by loading the package in R:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"xgboost"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You can also use the libary in an R notebook or R console by setting the <code>lib</code> variable (<em>e.g.</em>, <code>lib="/scratch/sihnextgen/jfan0290/R_libs"</code>) when loading the library:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/r_run_xgboost.png" class="img-fluid figure-img"></p>
+<figcaption>load xgboost library in an R notebook</figcaption>
+</figure>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
