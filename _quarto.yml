@@ -47,6 +47,8 @@ website:
           href: notebooks/data_transfer.html
         - text: "How to run a terminal using the Command Line Interface (CLI)"
           href: notebooks/CLI.html
+        - text: "How to self-install R packages"
+          href: notebooks/R_tutorial.html
   cookie-consent: 
     type: express
     style: simple
