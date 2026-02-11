@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -39,7 +39,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-158a648770c71448c719961375919068.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -301,8 +301,34 @@ cookieconsent.run({
 <p>Early access to the GPU Cluster is now available. Please follow instructions on <a href="https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3579674625/GPU+Cluster#Sydney-GPU-Cluster---Early-access-available">this page</a> to submit your request.</p>
 <p>Information that you will be asked to provide in the access request form includes:</p>
 <ul>
-<li><strong>DashR Research Project Shortcode</strong>: Please log in to the <a href="https://dashr.sydney.edu.au/projects">DashR portal</a>, click on the project you intend to work on, and locate the <em>Project Short Code</em>. This is essential for linking your compute usage to the correct research allocation.</li>
-<li><strong>Billing Code</strong>: This should be the internal billing code associated with your project or department. If you are unsure, please consult your supervisor or finance administrator.</li>
+<li><p><strong>DashR Research Project Shortcode</strong>: Please log in to the university’s <a href="https://dashr.sydney.edu.au/projects">Researcher Dashboard (DashR)</a>, click on the project you intend to work on, and locate the “Project code”. This is essential for linking your compute usage to the correct research allocation. <strong><em>All existing members of the DashR project</em></strong> will automatically gain access to the GPU Cluster once the request is approved. The Chief Investigator or other project administrators can manage project membership via the DashR portal, including adding new users or removing users that no longer need acccess to the cluster under this project.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Please make sure RDS is enabled for the selected DashR project. For existing projects, you can confirm this by navigating to the “Resources Services” section and checking if “Research Data Storage” is listed as an active service:</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="../fig/access_rds_enabled.png" class="border img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Confirm RDS is enabled</figcaption>
+</figure>
+</div>
+<p>If you want to create a separate new project for managing cluster access, ensure that you select “Research Data Storage” when creating the project:</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="../fig/access_rds_new_project.png" class="border img-fluid figure-img"></p>
+<figcaption>Select RDS for a new project</figcaption>
+</figure>
+</div>
+</div>
+</div></li>
+<li><p><strong>Billing Code</strong>: This should be the internal billing code associated with your project or department. If you are unsure, please consult your supervisor or finance administrator.</p></li>
 </ul>
 <p>You will receive an email confirmation once your access has been granted, along with the project code and further instructions on how to connect to the SIH GPU Cluster.</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -315,7 +341,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>Work in Progress</strong>: Long term project provisioning and access to the SIH GPU Cluster will be streamlined and directly managed on the university’s <a href="https://dashr.sydney.edu.au/">Researcher Dashboard (DashR)</a>.</p>
+<p><strong>Work in Progress</strong>: Long-term project provisioning and cluster access will be streamlined and centrally managed on DashR.</p>
 </div>
 </div>
 
