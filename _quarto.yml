@@ -49,6 +49,8 @@ website:
           href: notebooks/CLI.html
         - text: "How to self-install R packages"
           href: notebooks/R_tutorial.html
+        - text: "Running a Triton Inference Server"
+          href: notebooks/tutorial-triton-quickstart.html
   cookie-consent: 
     type: express
     style: simple
