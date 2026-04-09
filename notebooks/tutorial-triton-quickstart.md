@@ -181,16 +181,18 @@ Your model repository should now look like this:
 ├── model_weights/
 │   └── opt-125m/          ← downloaded weights
 └── model_repository/
-    └── opt_125m/          ← Triton model entry
+    └── opt-125m/          ← Triton model entry
         ├── config.pbtxt
         └── 1/
             └── model.json
 ```
 
-TODO: note that 1 = version one. when you add more versions of the model you create e.g. 2
+::: {.callout-note}
+The `1/` subdirectory represents version 1 of your model. Triton supports multiple versions: if you update the weights later, add a `2/` directory alongside `1/` without removing the old one. By default, Triton serves the latest version.
+:::
 
 ::: {.callout-warning}
-Triton will attempt to load every subdirectory in the model repository as a model. Do not place extra files or the weights directory inside `model_repository/`, only properly configured model entries should live there.
+Triton treats every subdirectory inside `model_repository/` as a model and will fail to start if any of them is not a valid model entry. Two common causes: placing your weights directory inside `model_repository/` by mistake, or Jupyter creating a hidden `.ipynb_checkpoints` folder there if you open the directory in a notebook. If the server fails to start, check for unexpected subdirectories and remove them.
 :::
 
 
@@ -269,7 +271,7 @@ Select **Create inference**. Wait until the workload status shows **Running** be
 Back in your Jupyter notebook, install the Triton client library:
 
 ```python
-%pip install tritonclient[http]
+%pip install tritonclient[http] requests
 ```
 
 ## Step 9: Connect to the server
@@ -289,7 +291,7 @@ client = httpclient.InferenceServerClient(url=TRITON_URL, verbose=True)
 
 print("Server:", client.is_server_live())
 print("Ready:", client.is_server_ready())
-print("Models:", client.get_model_repository_index())
+print("Available models:", client.get_model_repository_index())
 ```
 
 A successful response looks like this:
@@ -297,14 +299,54 @@ A successful response looks like this:
 ```
 Server: True
 Ready: True
-Models: ['opt-125m']
+Available models: [{'name': 'opt-125m', 'version': '1', 'state': 'READY'}]
 ```
 
----
+## Step 10: Send your first inference request
 
-## What's next
+With the server confirmed live and the model ready, you can now send a prompt and receive a completion.
 
-You now have a running Triton Inference Server with a model loaded from your project's shared storage.
+The `tritonclient.http` client handles server management (health checks, model listing), but for inference with the vLLM backend we use Triton's **generate endpoint** via the standard `requests` library.
 
-- To add further models - including larger HuggingFace models with gated access — see [How-to: Add a HuggingFace model to your Triton server](howto-triton-add-model.md)
-- To send your first inference request via the Triton client, see the [Triton vLLM quickstart](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/tutorials/Quick_Deploy/vLLM/README.html#step-3-use-a-triton-client-to-send-your-first-inference-request)
+The generate endpoint (`POST /v2/models/{model_name}/generate`) is a REST extension designed for LLM inference. It accepts a JSON body with a `text_input` field and an optional `parameters` block, and returns a JSON response with a `text_output` field. Unlike the standard `client.infer()` call, it handles Triton's internal streaming protocol transparently, so you get a simple request-response interaction over plain HTTP.
+
+Define a helper function in a new notebook cell:
+
+```python
+import requests
+
+def generate(model_name, prompt, max_tokens=10, **kwargs):
+    # Uses the Triton generate HTTP endpoint
+    response = requests.post(
+        f"http://{TRITON_URL}/v2/models/{model_name}/generate",
+        json={
+            "text_input": prompt,
+            "parameters": {"max_tokens": max_tokens, **kwargs}
+        }
+    )
+    response.raise_for_status()
+    return response.json()["text_output"]
+```
+
+- `model_name`: must match the subdirectory name you created in Step 5 (e.g. `"opt-125m"`).
+- `max_tokens`: the maximum number of new tokens to generate. Keep this small while testing.
+- `**kwargs`: any additional vLLM parameter is passed through directly, such as `temperature` to control randomness (0 = deterministic, 1 = more varied).
+
+Now send some requests:
+
+```python
+msg = "Triton inference server is"
+
+generate("opt-125m", prompt=msg)
+# 'Triton inference server is a Python based inference library. The Mobileathef'
+
+generate("opt-125m", prompt=msg, temperature=0.8)
+# 'Triton inference server is designed to provide a visual representation of the model by'
+
+generate("opt-125m", prompt=msg, max_tokens=20, temperature=0.4)
+# 'Triton inference server is a set of tools that are used to perform Triton inference. It is a set of tools'
+```
+
+The model is completing your prompt. `opt-125m` is a small general-purpose model so output quality is limited - this is expected.
+
+You now have a working Triton Inference Server serving a model from your project's shared storage and responding to inference requests!
