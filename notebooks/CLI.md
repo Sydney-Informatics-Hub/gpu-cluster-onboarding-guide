@@ -1,6 +1,6 @@
 # The Run:AI Command Line Interface (CLI)
 
-The Run:AI [Command Line Interface](https://run-ai-docs.nvidia.com/self-hosted/2.22/reference/cli) (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.
+The Run:AI [Command Line Interface](https://run-ai-docs.nvidia.com/self-hosted/2.23/reference/cli) (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.
 
 ## Setting up the Run:AI CLI
 
