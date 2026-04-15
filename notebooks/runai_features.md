@@ -1,4 +1,16 @@
-# Main Run:ai Features
+# Key Run:ai Features
+
+## Projects
+In Run:ai, users are organised into [projects](https://run-ai-docs.nvidia.com/self-hosted/2.23/platform-management/aiinitiatives/organization/projects). This allows cluster users to work collaboratively and access shared resources including GPU devices and scratch disk space.
+
+Once a DashR project has been provisioned access to the SIH GPU cluster, all members of the project will automatically be added to a Run:ai project resembling the DashR project shortcode (e.g. "rds-core-sih4hpc-rw"). Users may be added to multiple Run:ai projects if the corresponding DashR projects have been granted access.
+
+![List of Run:ai projects](../fig/project_example.png)
+
+
+:::{.callout-note}
+Creating new projects and adjusting project settings in Run:ai are restricted to **system administrators only**. Chief Investigators of the DashR project can administrate user access to the GPU cluster by adding or removing them from the [DashR project](https://dashr.sydney.edu.au/projects).
+:::
 
 ## Workloads
 
@@ -25,7 +37,7 @@ We provide a list of predefined Compute Resources such as "one-gpu", "two-gpu-16
 
 You may also further adjust the requested resources during workload configuration to better suit your purposes.
 
-## Data sources
+## Data sources {#data-sources}
 [**Data sources**](https://run-ai-docs.nvidia.com/self-hosted/2.23/workloads-in-nvidia-run-ai/assets/datasources) in Run:ai provide a way to connect storage to your workloads, making datasets, model weights, and output directories accessible inside the container at runtime.
 
 Persistent Volume Claims (PVCs) are currently the only supported data source type. By default, 1 TB of PVC is provisioned when the Run:ai project is created and can be reused across multiple workloads, avoiding the need to reconfigure storage paths each time. When submitting a workload, users attach the PVC at a specified path within the container.
