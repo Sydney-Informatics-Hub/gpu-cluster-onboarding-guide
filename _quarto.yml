@@ -20,23 +20,10 @@ website:
           href: notebooks/cluster_intro.html
         - text: "Accessing the SIH GPU Cluster"
           href: notebooks/access.html
-      - section: "Getting Started with Run:ai"
-        contents:
         - text: "Login"
           href: notebooks/login.html
-        - text: "Navigating the User Interface"
-          href: notebooks/user_interface.html
-      - section: "Run:ai Features"
-        contents:
-        - text: "Dashboards"
-          href: notebooks/dashboards.html
-        - text: "Projects"
-          href: notebooks/projects.html
-        - text: "Environments"
-          href: notebooks/environments.html
-        - text: "Data Sources"
-          href: notebooks/data_sources.html
-
+        - text: "Key Run:ai features"
+          href: notebooks/runai_features.html
       - section: "Tutorials"
         contents:
         - text: "Creating a Jupyter Lab workload"
