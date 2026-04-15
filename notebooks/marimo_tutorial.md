@@ -4,10 +4,10 @@ A workload is the actual job or task you want to run on the platform. This could
 
 Generally, the minimum requirements you need before creating the workload include:
 
--   Being granted permission to an active project
--   An [environment](environments.md) to run such job
--   Have created a data source, e.g. a PVC, to store your input and output data
--   Understand the compute resources you need to run the job and have the option available under "Compute Resources"
+* Being granted permission to an [active project](runai_features.md#runai-projects)
+* An [environment](runai_features.md#runai-environments) to run such job
+* Have a [data source](runai_features.md#runai-data-sources), e.g. a PVC, to store your input and output data
+* Understand the [compute resources](runai_features.md#runai-compute-resources) requirements you need to run the job
 
 In this tutorial, we will create a simple Marimo workload that allows you to run python Marimo notebooks interactively on the SIH GPU cluster.
 
@@ -37,9 +37,9 @@ Define the necessary information for your workload:
 
 ![Compute resource](../fig/workload_comp_resource.png)
 
--   Configure the [data source](./data_sources.md) to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<dashr_project_shortcode>`.
+-   Configure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<dashr_project_shortcode>`.
 
-![Data resource](../fig/workload_datasource_marimo.png)
+![Data resource](../fig/workload_datasource.png)
 
 -   Lastly, Click on "CREATE WORKLOAD" to submit the workload to the cluster.
 
