@@ -1,7 +1,7 @@
 ---
-title: "Tutorial: Running a Triton Inference Server"
+title: "Deploying a model with Triton Inference Server"
 description: "A step-by-step introduction to downloading a model from HuggingFace, launching a Triton Inference Server on the SIH GPU cluster, and connecting to it from a Jupyter notebook."
-categories: [triton, inference, run-ai]
+categories: [triton, inference, huggingface]
 ---
 
 Running a large model directly inside a Jupyter notebook works for quick experiments, but it keeps the GPU occupied for as long as your notebook is open, even when you're not actively using the model. A dedicated inference server changes this: your notebook (or a web interface built in tools like [Marimo](marimo_tutorial.md) or Gradio) sends requests to the server over the network, and the GPU is only engaged while those requests are being processed. **This makes cluster usage more efficient for your whole research group and keeps your analysis code separate from the model serving layer.**
@@ -63,19 +63,19 @@ Next, create a read-scoped access token:
 Save the token to a file and **restrict its permissions so only your user account can read it**:
 
 ```bash
-echo "hf_your_token_here" > ~/.hf-token
-chmod 600 ~/.hf-token
+echo "hf_your_token_here" > .hf-token
+chmod 600 .hf-token
 ```
 
 Authenticate the CLI:
 
 ```bash
-hf auth login --token $(cat ~/.hf-token)
+hf auth login --token $(cat .hf-token)
 ```
 
 You should see:
 
-```
+```bash
 Token is valid (permission: read).
 Login successful.
 ```
@@ -94,7 +94,7 @@ hf download facebook/opt-125m \
 
 The output lists every file and the total download size:
 
-```
+```bash
 [dry-run] Fetching 12 files: 100%|██████████████████████████████████████████████| 12/12 [00:00<00:00, 25.70it/s]
 Download complete: : 0.00B [00:00, ?B/s]              [dry-run] Will download 12 files (out of 12) totalling 753.1M.
 File                    Bytes to download
@@ -152,9 +152,8 @@ instance_group [
 ]
 ```
 
-`backend: "vllm"` selects the vLLM serving engine. `instance_group` controls how many copies of the model to run.
-
-`count: 1` with `kind: KIND_MODEL` means one instance on the GPU. For most single-GPU research use cases this is the right setting. See the [Triton model configuration reference](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html) for other options.
+* `backend: "vllm"` selects the vLLM serving engine. `instance_group` controls how many copies of the model to run.
+* `count: 1` with `kind: KIND_MODEL` means one instance on the GPU. For most single-GPU research use cases this is the right setting. See the [Triton model configuration reference](https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/user_guide/model_configuration.html) for other options.
 
 ### `model.json`: tells vLLM which model to load and how
 
@@ -176,7 +175,7 @@ Any parameter accepted by vLLM's engine arguments (such as `max_model_len` to ca
 
 Your model repository should now look like this:
 
-```
+```bash
 /scratch/YOUR_PROJECT_ID/
 ├── model_weights/
 │   └── opt-125m/          ← downloaded weights
@@ -296,7 +295,7 @@ print("Available models:", client.get_model_repository_index())
 
 A successful response looks like this:
 
-```
+```python
 Server: True
 Ready: True
 Available models: [{'name': 'opt-125m', 'version': '1', 'state': 'READY'}]
