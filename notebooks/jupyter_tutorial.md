@@ -18,6 +18,7 @@ Navigate to the "Workload manager" section, select "Workloads", and click on the
 ## Step 2: Configure the workload from scratch
 Define the necessary information for your workload:
 
+* The "Cluster" section will be set automatically, you do not need to change this
 * Under "Projects" select the project it will be linked to
 * Under "Templates" select "Start from scratch" (*i.e.* do not use any existing template)
 * Provide a descriptive name for the workload
