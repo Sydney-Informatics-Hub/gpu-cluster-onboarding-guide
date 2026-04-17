@@ -24,18 +24,18 @@ Define the necessary information for your workload:
 
     ![Project and Template](../fig/workload_definition.png)
 
-* Select the `jupyter-notebook` environment to create the workload. This environment pulls a [pre-built image](https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab) (`sydneyinformatics/dgx-interactive-jupyterlab`) that has Jupyter Lab and commonly used data science/AI packages installed, including Tensorflow, pytorch, pandas, and ollama. The `jupyter-notebook` environment is also configured to intialise the Jupyter Lab server directly from the PVC.
+* Under "Environment", select the `jupyter-notebook` environment to create the workload. This environment pulls a [pre-built image](https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab) (`sydneyinformatics/dgx-interactive-jupyterlab`) that has Jupyter Lab and commonly used data science/AI packages installed, including Tensorflow, pytorch, pandas, and ollama. The `jupyter-notebook` environment is also configured to intialise the Jupyter Lab server directly from the PVC.
     ![Software environment](../fig/workload_environment.png)
 
-* Select the amount of compute resources to run the workload. In this tutorial, we will select the `small-fraction` option that requires 1 H200 GPU with 10% of its memory (~14GB). Depending on the actual workload you're running, this option can be adjusted accordingly.
+* Under "Compute resources", select the amount of compute resources to run the workload. In this tutorial, we will select the `small-fraction` option that requires 1 H200 GPU with 10% of its memory (~14GB). Depending on the actual workload you're running, this option can be adjusted accordingly.
 
     ![Compute resource](../fig/workload_comp_resource.png)
 
-* Configure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<runai-project-name>`.
+* Click "Data & sources" to expand this section and configure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<runai-project-name>`.
 
     ![Data resource](../fig/workload_datasource.png)
 
-* Lastly, Click on "CREATE WORKLOAD" to submit the workload to the cluster.
+* Finally, click on "CREATE WORSPACE" to submit the workload to the cluster. The workspace can take a few minutes to initialise.
 
 ## Step 3: Connect to Jupyter Lab
 
