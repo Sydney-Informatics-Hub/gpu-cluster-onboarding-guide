@@ -14,7 +14,7 @@ To run the `data-transfer` environment from a template:
 
 2. Click the 'Workload manager' icon in the left panel and then select 'Workloads' in the menu. Next select the green '+ NEW WORKLOAD' icon in the top left of the workloads screen and select 'Workspace'.
 
-![New Workload](../fig/workload_new.png)
+![New Workload](../fig/workload_create_workspace.png)
 
 3. Select your project from the projects available and select the `data-transfer-workspace` template and give your workspace a name before selecting 'Advanced Setup' on the bottom right.
 
@@ -22,11 +22,11 @@ To run the `data-transfer` environment from a template:
 
 5. Expand the `Data & storage` box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.
 
-![Data Sources](../fig/data_sources.png)
+![Select a PVC in Data & storage](../fig/data_transfer_pvc.png)
 
 6. When you are happy with everything, click CREATE WORKSPACE and your data transfer environment will be created. When this is provisioned click the CONNECT icon above the list of workloads. 
 
-![Connect](../fig/connect_jupyterlab.png)
+![Connect](../fig/workload_connect_jupyter.png)
 
 7. You will again be prompted for your Run:ai login and your newly created JupyterLab session will appear in a new tab in your browser. Select the 'Terminal' app there.
 
