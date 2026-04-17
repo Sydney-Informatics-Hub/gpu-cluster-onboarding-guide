@@ -12,15 +12,15 @@ To run the `data-transfer` environment from a template:
 
 1. Log into the Run:ai dashboard at [gpu.sydney.edu.au](https://gpu.sydney.edu.au) and use Okta to login with your credentials via the "CONTINUE WITH SSO" sign in option.
 
-2. Click 'workloads' in the left panel and then the blue 'new workload' icon in the top left of the workloads screen and select 'workspace'.
+2. Click the 'Workload manager' icon in the left panel and then select 'Workloads' in the menu. Next select the green '+ NEW WORKLOAD' icon in the top left of the workloads screen and select 'Workspace'.
 
 ![New Workload](../fig/workload_new.png)
 
-3. Select your project from the projects available and select the `data-transfer` template and give your workspace a name before clicking with your mouse cursor on CONTINUE.
+3. Select your project from the projects available and select the `data-transfer-workspace` template and give your workspace a name before selecting 'Advanced Setup' on the bottom right.
 
-4. If you have selected the `data-transfer` template, you should now have pre-populated the required `data-transfer` environment and the `data-transfer` compute resource fields on the following page. You can double check this now.
+4. If you have selected the `data-transfer-workspace` template, you should now have pre-populated the required `Environment` and `Compute resources` fields on the following page. You can double check this now.
 
-5. Expand the `Data sources` box and select the PVC associated with your project from the list.
+5. Expand the `Data & storage` box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.
 
 ![Data Sources](../fig/data_sources.png)
 
