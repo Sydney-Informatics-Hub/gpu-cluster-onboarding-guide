@@ -42,7 +42,7 @@ runai project set <my_project>
 3. To run an `sydneyinformaticshub/dgx-interactive-terminal` container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets `<...>` with values specific to your requirements):
 
 ```bash
-runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=<pvc-name>,path=/scratch/<my_project> --attach
+runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=<pvc-name>,path=/scratch/<my_project> --pod-running-timeout 10m --attach
 ```
 
 Here is a brief rundown of the arguments of the command above:
@@ -56,6 +56,8 @@ Here is a brief rundown of the arguments of the command above:
 - `--run-as-user` will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace
 
 - `--existing-pvc claimname=<pvc-name>,path=/scratch` will mount an existing PVC associated with your project into the running workload. Replace <pvc-name> with the name of your PVC. This will mount the PVC into `/scratch` inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.
+
+- `--pod-running-timeout 10m` will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.
 
 - `--attach` will run the container and attach to it, which in this case will provide an interactive shell session inside it.
 
