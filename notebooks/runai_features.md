@@ -48,11 +48,11 @@ Persistent Volume Claims (PVCs) are currently the only supported data source typ
 :::
 
 :::{.callout-note}
-Please [contact the SIH team](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3579674625/GPU+Cluster) if you do not see a PVC data source on your account.
+Please [contact the SIH team](https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyhFZsPIwZDBs?SupportType=Platforms&Q_PopulateResponse={%22QID10%22:%224%22}) if you do not see a PVC data source on your account.
 :::
 
 ## User roles
 
 Run:ai uses a [role-based access control system](https://run-ai-docs.nvidia.com/self-hosted/2.23/infrastructure-setup/authentication/roles) to manage what users can see and do within the platform. On the SIH GPU platform, newly onboarded researchers are assigned the [**L2 Researcher**](https://run-ai-docs.nvidia.com/self-hosted/2.23/infrastructure-setup/authentication/roles#roles-in-nvidia-run-ai) role, which allows them to submit and manage their own workloads within their projects.
 
-Administrative tasks, such as managing projects, configuring environments, and setting resource quotas, are handled by the SIH team with elevated roles. If you require additional permissions, please [submit a support request](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3579674625/GPU+Cluster).
+Administrative tasks, such as managing projects, configuring environments, and setting resource quotas, are handled by the SIH team with elevated roles. If you require additional permissions, please [submit a support request](https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyhFZsPIwZDBs?SupportType=Platforms&Q_PopulateResponse={%22QID10%22:%224%22}).
