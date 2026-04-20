@@ -38,11 +38,11 @@ Define the necessary information for your workload:
 
 ![Compute resource](../fig/workload_comp_resource.png)
 
--   Configure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<dashr_project_shortcode>`.
+* Click "Data & sources" to expand this section and configure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to `/scratch/<runai-project-name>`.
 
 ![Data resource](../fig/workload_datasource.png)
 
--   Lastly, Click on "CREATE WORKLOAD" to submit the workload to the cluster.
+* Finally, click on "CREATE WORSPACE" to submit the workload to the cluster. The workspace can take a few minutes to initialise.
 
 ## Step 3: Connect to Marimo
 
