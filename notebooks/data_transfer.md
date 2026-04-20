@@ -2,31 +2,31 @@
 
 In this section we will describe methods of transferring data between the Research Data Store (RDS) and Gadi. For now, while we await the implementation of [Globus](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer) for fast and efficient transfer to and from your Persistent Volume Claim (PVC), we will describe an interactive method for transferring data using a JupyterLab environment in the Run:ai web interface. In the future we will include instructions for copying data using the Run:AI CLI at the command line.
 
-Here we assume you already have set up a [project](projects.md) and have some Persistent Volume Claim (PVC) [storage](storage.md) available.
+Here we assume you already have set up a [project](runai_features.md#runai-projects) and have some Persistent Volume Claim (PVC) [storage](runai_features.md#runai-data-sources) available.
 
 ## Interactive data transfer to/from RDS from a web-browser
 
-You can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an [environment](environments.md) called `data-transfer` for you to do this.
+You can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an [environment](runai_features.md#runai-environments) called `data-transfer` for you to do this.
 
 To run the `data-transfer` environment from a template:
 
 1. Log into the Run:ai dashboard at [gpu.sydney.edu.au](https://gpu.sydney.edu.au) and use Okta to login with your credentials via the "CONTINUE WITH SSO" sign in option.
 
-2. Click 'workloads' in the left panel and then the blue 'new workload' icon in the top left of the workloads screen and select 'workspace'.
+2. Click the 'Workload manager' icon in the left panel and then select 'Workloads' in the menu. Next select the green '+ NEW WORKLOAD' icon in the top left of the workloads screen and select 'Workspace'.
 
-![New Workload](../fig/workload_new.png)
+![New Workload](../fig/workload_create_workspace.png)
 
-3. Select your project from the projects available and select the `data-transfer` template and give your workspace a name before clicking with your mouse cursor on CONTINUE.
+3. Select your project from the projects available and select the `data-transfer-workspace` template and give your workspace a name before selecting 'Advanced Setup' on the bottom right.
 
-4. If you have selected the `data-transfer` template, you should now have pre-populated the required `data-transfer` environment and the `data-transfer` compute resource fields on the following page. You can double check this now.
+4. If you have selected the `data-transfer-workspace` template, you should now have pre-populated the required `Environment` and `Compute resources` fields on the following page. You can double check this now.
 
-5. Expand the `Data sources` box and select the PVC associated with your project from the list.
+5. Expand the `Data & storage` box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.
 
-![Data Sources](../fig/data_sources.png)
+![Select a PVC in Data & storage](../fig/data_transfer_pvc.png)
 
 6. When you are happy with everything, click CREATE WORKSPACE and your data transfer environment will be created. When this is provisioned click the CONNECT icon above the list of workloads. 
 
-![Connect](../fig/connect_jupyterlab.png)
+![Connect](../fig/workload_connect_jupyter.png)
 
 7. You will again be prompted for your Run:ai login and your newly created JupyterLab session will appear in a new tab in your browser. Select the 'Terminal' app there.
 
