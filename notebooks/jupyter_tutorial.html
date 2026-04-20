@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>jupyter_tutorial – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -34,15 +37,14 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-158a648770c71448c719961375919068.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d64aae01f46f7de7cc72406685484290.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -175,17 +177,6 @@ cookieconsent.run({
  <span class="menu-text">Accessing the SIH GPU Cluster</span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Getting Started with Run:ai</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/login.html" class="sidebar-item-text sidebar-link">
@@ -194,56 +185,21 @@ cookieconsent.run({
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/user_interface.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Navigating the User Interface</span></a>
+  <a href="../notebooks/runai_features.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Run:ai features</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Run:ai Features</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/dashboards.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dashboards</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/projects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Projects</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/environments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Environments</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/data_sources.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Sources</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/jupyter_tutorial.html" class="sidebar-item-text sidebar-link active">
@@ -307,19 +263,19 @@ cookieconsent.run({
 <p>A workload is the actual job or task you want to run on the platform. This could be training an AI model, and running an inference model and exposing its endpoint, doing data preprocessing, or conducting a scientific simulation.</p>
 <p>Generally, the minimum requirements you need before creating the workload include:</p>
 <ul>
-<li>Being granted permission to an active project</li>
-<li>An <a href="../notebooks/environments.html">environment</a> to run such job</li>
-<li>Have created a data source, e.g.&nbsp;a PVC, to store your input and output data</li>
-<li>Understand the compute resources you need to run the job and have the option available under “Compute Resources”</li>
+<li>Being granted permission to an <a href="../notebooks/runai_features.html#runai-projects">active project</a></li>
+<li>An <a href="../notebooks/runai_features.html#runai-environments">environment</a> to run such job</li>
+<li>Have a <a href="../notebooks/runai_features.html#runai-data-sources">data source</a>, e.g.&nbsp;a PVC, to store your input and output data</li>
+<li>Understand the <a href="../notebooks/runai_features.html#runai-compute-resources">compute resources</a> requirements you need to run the job</li>
 </ul>
-<p>In this tutorial, we will create a simple Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the SIH GPU cluster.</p>
+<p>In this tutorial, we will create a basic Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the SIH GPU cluster.</p>
 <section id="step-1-create-a-workload" class="level2">
 <h2 class="anchored" data-anchor-id="step-1-create-a-workload">Step 1: Create a workload</h2>
-<p>Navigate to the Workloads section of the platform and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.</p>
+<p>Navigate to the “Workload manager” section, select “Workloads”, and click on the “NEW WORKLOAD” button. Select “Workspace” from the dropdown menu.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../fig/workload_create_workspace.png" class="img-fluid figure-img"></p>
-<figcaption>New workload</figcaption>
+<figcaption>Create a new workload</figcaption>
 </figure>
 </div>
 </section>
@@ -327,37 +283,32 @@ cookieconsent.run({
 <h2 class="anchored" data-anchor-id="step-2-configure-the-workload-from-scratch">Step 2: Configure the workload from scratch</h2>
 <p>Define the necessary information for your workload:</p>
 <ul>
-<li>Under “Projects” select the project it will be linked to</li>
-<li>Under “Templates” select “Start from sratch” (<em>i.e.</em> do not use any existing template)</li>
-<li>Provide a descriptive name for the workload</li>
-</ul>
+<li><p>The “Cluster” section will be set automatically, you do not need to change this</p></li>
+<li><p>Under “Projects” select the project it will be linked to</p></li>
+<li><p>Under “Templates” select “Start from scratch” (<em>i.e.</em> do not use any existing template)</p></li>
+<li><p>Provide a descriptive name for the workload</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../fig/workload_definition.png" class="img-fluid figure-img"></p>
 <figcaption>Project and Template</figcaption>
 </figure>
-</div>
-<ul>
-<li><p>Select an environment to create the container. The SIH team has prepared a <a href="https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab">pre-built image</a> (<code>sydneyinformatics/dgx-interactive-jupyterlab</code>) with Jupyter Lab and commonly used data science packages installed. The <code>jupyter-notebook-in-scratch</code> environment is configured to pull this image and initialises the Jupyter Lab server from the <a href="../notebooks/data_sources.html">PVC scratch filesystem</a>. <img src="../fig/workload_environment.png" class="img-fluid" alt="Software environment"></p></li>
-<li><p>Select the amount of compute resources to run the workload. In this tutorial, we will select the <code>small-fraction</code> option that requires 1 H200 GPU with 10% of its memory (~14GB).</p></li>
-</ul>
+</div></li>
+<li><p>Under “Environment”, select the <code>jupyter-notebook</code> environment to create the workload. This environment pulls a <a href="https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab">pre-built image</a> (<code>sydneyinformatics/dgx-interactive-jupyterlab</code>) that has Jupyter Lab and commonly used data science/AI packages installed, including Tensorflow, pytorch, pandas, and ollama. The <code>jupyter-notebook</code> environment is also configured to intialise the Jupyter Lab server directly from the PVC. <img src="../fig/workload_environment.png" class="img-fluid" alt="Software environment"></p></li>
+<li><p>Under “Compute resources”, select the amount of compute resources to run the workload. In this tutorial, we will select the <code>small-fraction</code> option that requires 1 H200 GPU with 10% of its memory (~14GB). Depending on the actual workload you’re running, this option can be adjusted accordingly.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../fig/workload_comp_resource.png" class="img-fluid figure-img"></p>
 <figcaption>Compute resource</figcaption>
 </figure>
-</div>
-<ul>
-<li>Configure the <a href="../notebooks/data_sources.html">data source</a> to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to <code>/scratch/&lt;runai-project-name&gt;</code>.</li>
-</ul>
+</div></li>
+<li><p>Click “Data &amp; sources” to expand this section and configure the data source to be mounted to the container. Here we select the default PVC created for the project. The mount path inside the container is set to <code>/scratch/&lt;runai-project-name&gt;</code>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../fig/workload_datasource.png" class="img-fluid figure-img"></p>
 <figcaption>Data resource</figcaption>
 </figure>
-</div>
-<ul>
-<li>Lastly, Click on “CREATE WORKLOAD” to submit the workload to the cluster.</li>
+</div></li>
+<li><p>Finally, click on “CREATE WORSPACE” to submit the workload to the cluster. The workspace can take a few minutes to initialise.</p></li>
 </ul>
 </section>
 <section id="step-3-connect-to-jupyter-lab" class="level2">
@@ -372,7 +323,13 @@ cookieconsent.run({
 </section>
 <section id="optional-step-4-inspect-system-logs" class="level2">
 <h2 class="anchored" data-anchor-id="optional-step-4-inspect-system-logs">(Optional) Step 4: Inspect system logs</h2>
-<p>You can review the system logs to access details about event history, workload metrics, and real-time container output. This information is especially useful for debugging issues when a workload fails to start.</p>
+<p>You can also further view details of the workload including</p>
+<ul>
+<li>Event history: This information is especially useful for debugging issues when a workload fails to start or is pending for a long time.</li>
+<li>Metrics: This contains real time GPU and CPU usage, which helps optimise resource utilisation.</li>
+<li>Logs: This provides an easy access to the container’s outputs and any error messages.</li>
+<li>Details: This tab includes all container runtime settings.</li>
+</ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="../fig/workload_logs.png" class="img-fluid figure-img"></p>

@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.37">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>data_transfer – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -69,15 +72,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-158a648770c71448c719961375919068.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d64aae01f46f7de7cc72406685484290.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -210,17 +212,6 @@ cookieconsent.run({
  <span class="menu-text">Accessing the SIH GPU Cluster</span></a>
   </div>
 </li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Getting Started with Run:ai</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/login.html" class="sidebar-item-text sidebar-link">
@@ -229,56 +220,21 @@ cookieconsent.run({
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/user_interface.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Navigating the User Interface</span></a>
+  <a href="../notebooks/runai_features.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Run:ai features</span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Run:ai Features</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/dashboards.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Dashboards</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/projects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Projects</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/environments.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Environments</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/data_sources.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Data Sources</span></a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Tutorials</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/jupyter_tutorial.html" class="sidebar-item-text sidebar-link">
@@ -337,30 +293,30 @@ cookieconsent.run({
 <section id="how-to-transfer-data-to-and-from-the-persistent-volume-claim" class="level1">
 <h1>How to transfer data to and from the Persistent volume claim</h1>
 <p>In this section we will describe methods of transferring data between the Research Data Store (RDS) and Gadi. For now, while we await the implementation of <a href="https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer">Globus</a> for fast and efficient transfer to and from your Persistent Volume Claim (PVC), we will describe an interactive method for transferring data using a JupyterLab environment in the Run:ai web interface. In the future we will include instructions for copying data using the Run:AI CLI at the command line.</p>
-<p>Here we assume you already have set up a <a href="../notebooks/projects.html">project</a> and have some Persistent Volume Claim (PVC) <a href="../notebooks/storage.html">storage</a> available.</p>
+<p>Here we assume you already have set up a <a href="../notebooks/runai_features.html#runai-projects">project</a> and have some Persistent Volume Claim (PVC) <a href="../notebooks/runai_features.html#runai-data-sources">storage</a> available.</p>
 <section id="interactive-data-transfer-tofrom-rds-from-a-web-browser" class="level2">
 <h2 class="anchored" data-anchor-id="interactive-data-transfer-tofrom-rds-from-a-web-browser">Interactive data transfer to/from RDS from a web-browser</h2>
-<p>You can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an <a href="../notebooks/environments.html">environment</a> called <code>data-transfer</code> for you to do this.</p>
+<p>You can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an <a href="../notebooks/runai_features.html#runai-environments">environment</a> called <code>data-transfer</code> for you to do this.</p>
 <p>To run the <code>data-transfer</code> environment from a template:</p>
 <ol type="1">
 <li><p>Log into the Run:ai dashboard at <a href="https://gpu.sydney.edu.au">gpu.sydney.edu.au</a> and use Okta to login with your credentials via the “CONTINUE WITH SSO” sign in option.</p></li>
-<li><p>Click ‘workloads’ in the left panel and then the blue ‘new workload’ icon in the top left of the workloads screen and select ‘workspace’.</p></li>
+<li><p>Click the ‘Workload manager’ icon in the left panel and then select ‘Workloads’ in the menu. Next select the green ‘+ NEW WORKLOAD’ icon in the top left of the workloads screen and select ‘Workspace’.</p></li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../fig/workload_new.png" class="img-fluid figure-img"></p>
+<p><img src="../fig/workload_create_workspace.png" class="img-fluid figure-img"></p>
 <figcaption>New Workload</figcaption>
 </figure>
 </div>
 <ol start="3" type="1">
-<li><p>Select your project from the projects available and select the <code>data-transfer</code> template and give your workspace a name before clicking with your mouse cursor on CONTINUE.</p></li>
-<li><p>If you have selected the <code>data-transfer</code> template, you should now have pre-populated the required <code>data-transfer</code> environment and the <code>data-transfer</code> compute resource fields on the following page. You can double check this now.</p></li>
-<li><p>Expand the <code>Data sources</code> box and select the PVC associated with your project from the list.</p></li>
+<li><p>Select your project from the projects available and select the <code>data-transfer-workspace</code> template and give your workspace a name before selecting ‘Advanced Setup’ on the bottom right.</p></li>
+<li><p>If you have selected the <code>data-transfer-workspace</code> template, you should now have pre-populated the required <code>Environment</code> and <code>Compute resources</code> fields on the following page. You can double check this now.</p></li>
+<li><p>Expand the <code>Data &amp; storage</code> box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.</p></li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../fig/data_sources.png" class="img-fluid figure-img"></p>
-<figcaption>Data Sources</figcaption>
+<p><img src="../fig/data_transfer_pvc.png" class="img-fluid figure-img"></p>
+<figcaption>Select a PVC in Data &amp; storage</figcaption>
 </figure>
 </div>
 <ol start="6" type="1">
@@ -368,7 +324,7 @@ cookieconsent.run({
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../fig/connect_jupyterlab.png" class="img-fluid figure-img"></p>
+<p><img src="../fig/workload_connect_jupyter.png" class="img-fluid figure-img"></p>
 <figcaption>Connect</figcaption>
 </figure>
 </div>
