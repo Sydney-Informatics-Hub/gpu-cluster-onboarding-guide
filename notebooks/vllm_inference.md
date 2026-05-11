@@ -16,23 +16,19 @@ Model weights (~276 GB) must be downloaded to the PVC before submitting the infe
 
 This ensures that model weights do not need to be downloaded during the inference workload initialisation.
 
-**1. Authenticate with HuggingFace**
+**1. Set environment variables**
 
 ```bash
-hf auth login
+export HF_TOKEN_PATH="/scratch/pvc-rds-core-sih4hpc-rw/fred_scratch/.hf_token"
+export HF_HUB_DISABLE_XET=1
+export HF_HOME="/scratch/pvc-rds-core-sih4hpc-rw"
 ```
 
-Follow the prompts to paste your HuggingFace token.
+- `HF_TOKEN_PATH` — points `huggingface_hub` to your token file on the PVC; no interactive login needed
+- `HF_HUB_DISABLE_XET=1` — disables the XET transfer protocol which can cause downloads to hang ([huggingface/hf_transfer#30](https://github.com/huggingface/hf_transfer/issues/30#issuecomment-2878604131))
+- `HF_HOME` — sets the cache root; weights are saved here and vLLM reads from the same path
 
-**2. Set the cache directory**
-
-```bash
-export HF_HOME="/scratch/pvc-rds-core-sih4hpc-rw/huggingface"
-```
-
-This matches the `HF_HOME` set in the inference workload so vLLM finds the weights automatically.
-
-**3. Dry-run to confirm files and size**
+**2. Dry-run to confirm files and size**
 
 ```bash
 hf download unsloth/Qwen3.5-397B-A17B-GGUF --include "Q5_K_S/*" --dry-run
@@ -52,13 +48,13 @@ Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            48.8G
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            31.9G
 ```
 
-**4. Download**
+**3. Download**
 
 ```bash
-hf download unsloth/Qwen3.5-397B-A17B-GGUF --include "Q5_K_S/*" --local-dir "${HF_HOME}"
+hf download unsloth/Qwen3.5-397B-A17B-GGUF --include "Q5_K_S/*"
 ```
 
-Files are saved to `${HF_HOME}/Q5_K_S/` and persist on the PVC across jobs. 
+No `--local-dir` needed — `HF_HOME` is set so `huggingface_hub` caches files there automatically. Files persist on the PVC across jobs.
 
 ## Submitting the Run.ai inference workload
 

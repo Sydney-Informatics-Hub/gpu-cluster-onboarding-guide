@@ -6,11 +6,8 @@
 
 PROJECT_ID='rds-core-sih4hpc-rw'
 
-export HF_HOME="/scratch/pvc-${PROJECT_ID}/huggingface"
+export HF_TOKEN_PATH="/scratch/pvc-${PROJECT_ID}/fred_scratch/.hf_token"
+export HF_HUB_DISABLE_XET=1
+export HF_HOME="/scratch/pvc-${PROJECT_ID}"
 
-pip install -q hf_transfer
-export HF_HUB_ENABLE_HF_TRANSFER=1
-
-hf download unsloth/Qwen3.5-397B-A17B-GGUF \
-  --include "Q5_K_S/*" \
-  --local-dir "${HF_HOME}"
+hf download unsloth/Qwen3.5-397B-A17B-GGUF --include "Q5_K_S/*"

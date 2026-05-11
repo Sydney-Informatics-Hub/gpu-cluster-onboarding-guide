@@ -2,7 +2,7 @@
 
 # Qwen3.5-397B-A17B (MoE) — vLLM GGUF endpoint
 # Model: https://huggingface.co/unsloth/Qwen3.5-397B-A17B-GGUF
-# Quantisation: Q5_K_S (~273 GB); requires 4× 80 GB GPUs
+# Quantisation: Q5_K_S (~273 GB); requires 2× 141 GB GPUs
 
 PROJECT_ID='rds-core-sih4hpc-rw'
 
@@ -14,7 +14,7 @@ runai inference submit vllm-qwen35-397b \
   --gpu-devices-request 2 \
   --existing-pvc claimname="pvc-${PROJECT_ID}",path="/scratch/pvc-${PROJECT_ID}" \
   -e HF_HOME="/scratch/pvc-${PROJECT_ID}/huggingface" \
-  -e HF_TOKEN_PATH="/scratch/pvc-${PROJECT_ID}/fred_scratch/.hf_token" \
+  -e HF_TOKEN_PATH="<PATH_TO_HF_TOKEN>" \
   -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
   --serving-port container=8000,protocol=http \
   --large-shm \
@@ -27,5 +27,4 @@ runai inference submit vllm-qwen35-397b \
     --reasoning-parser qwen3 \
     --tokenizer Qwen/Qwen3.5-397B-A17B \
     --enable-prefix-caching \
-    --enforce-eager \
     --max-model-len 32768
