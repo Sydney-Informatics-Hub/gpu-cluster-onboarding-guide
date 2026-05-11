@@ -14,7 +14,7 @@ runai inference submit vllm-qwen35-397b \
   --gpu-devices-request 2 \
   --existing-pvc claimname="pvc-${PROJECT_ID}",path="/scratch/pvc-${PROJECT_ID}" \
   -e HF_HOME="/scratch/pvc-${PROJECT_ID}/huggingface" \
-  -e HF_TOKEN_PATH="<PATH_TO_HF_TOKEN>" \
+  -e HF_HUB_OFFLINE=1 \
   -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
   --serving-port container=8000,protocol=http \
   --large-shm \
