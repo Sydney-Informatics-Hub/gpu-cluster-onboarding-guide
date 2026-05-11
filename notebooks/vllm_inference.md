@@ -31,14 +31,20 @@ export HF_HOME="/scratch/rds-core-sih4hpc-rw/huggingface"
 **2. Dry-run to confirm files and size**
 
 ```bash
-hf download unsloth/Qwen3.5-397B-A17B-GGUF --include "Q5_K_S/*" --dry-run
+hf download unsloth/Qwen3.5-397B-A17B-GGUF \
+  --include "config.json" \
+  --include "mmproj-BF16.gguf" \
+  --include "Q5_K_S/*" \
+  --dry-run
 ```
 
-Expected output — 7 files totalling 276.6 GB:
+Expected output — 9 files totalling ~277.5 GB:
 
 ```
 FILE                                            SIZE
 ----------------------------------------------- -----
+config.json                                     3.7K
+mmproj-BF16.gguf                                922M
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            10.9M
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            49.5G
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            48.8G
@@ -48,13 +54,35 @@ Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            48.8G
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            31.9G
 ```
 
+`mmproj-BF16.gguf` is the vision encoder (multimodal projector). Only the BF16 variant is downloaded — the GGUF repo also contains F16 and F32 variants, but vLLM auto-selects the alphabetically first `mmproj-*.gguf` file in the cache; downloading only one removes ambiguity.
+
 **3. Download**
 
 ```bash
-hf download unsloth/Qwen3.5-397B-A17B-GGUF --include "Q5_K_S/*"
+hf download unsloth/Qwen3.5-397B-A17B-GGUF \
+  --include "config.json" \
+  --include "mmproj-BF16.gguf" \
+  --include "Q5_K_S/*"
 ```
 
 No `--local-dir` needed — `HF_HOME` is set so `huggingface_hub` caches files there automatically. Files persist on the PVC across jobs.
+
+**4. Download the tokenizer and image processor**
+
+The GGUF repo lacks the `<think>`/`</think>` special tokens needed by the reasoning parser, and the `preprocessor_config.json` needed by the vision encoder. Both come from the base model. vLLM loads the image processor from the `--tokenizer` path for GGUF models, so downloading these files to the same cache is sufficient — no manual path manipulation required.
+
+```bash
+hf download Qwen/Qwen3.5-397B-A17B \
+  --include "tokenizer.json" \
+  --include "tokenizer_config.json" \
+  --include "vocab.json" \
+  --include "merges.txt" \
+  --include "chat_template.jinja" \
+  --include "preprocessor_config.json" \
+  --include "video_preprocessor_config.json"
+```
+
+Each file needs its own `--include` flag — passing multiple patterns after a single `--include` causes the extras to be treated as positional file arguments, which aborts the download if any are missing.
 
 ## Submitting the Run.ai inference workload
 
@@ -85,8 +113,7 @@ The full submission script is at `scripts/qwen3.5-397b.sh`:
 
 | Variable | Purpose |
 |----------|---------|
-| `HF_HOME` | HuggingFace cache directory; must match where weights were pre-downloaded on the PVC |
-| `HF_HUB_OFFLINE` | Set to `1` to load from cache only; prevents any HF Hub network calls at inference time |
+| `HF_HOME` | HuggingFace cache directory; must match where weights were pre-downloaded on the PVC. vLLM finds the cached GGUF shards here and will not re-download them. |
 | `VLLM_WORKER_MULTIPROC_METHOD` | Set to `spawn` to avoid CUDA context inheritance errors in multi-GPU worker processes |
 
 ### `vllm serve` flags
@@ -95,7 +122,7 @@ Derived from the [vLLM Qwen3.5 multimodal recipe](https://docs.vllm.ai/projects/
 
 | Flag | Value | Purpose |
 |------|-------|---------|
-| *(model)* | `unsloth/Qwen3.5-397B-A17B-GGUF:Q5_K_S` | HuggingFace repo + revision specifier for the Q5_K_S quantisation |
+| *(model)* | `unsloth/Qwen3.5-397B-A17B-GGUF` | HuggingFace GGUF repo; vLLM resolves the default branch and loads the Q5_K_S shards from the HF cache |
 | `--tensor-parallel-size` | `2` | Shards weights across 2 GPUs (~137 GB each); must match `--gpu-devices-request` |
 | `--enable-expert-parallel` | *(flag)* | Distributes MoE experts across GPUs; this model has 512 experts (10 routed + 1 shared per token) |
 | `--mm-encoder-tp-mode` | `data` | Runs a full vision encoder copy per tensor-parallel rank rather than sharding it |
@@ -127,7 +154,7 @@ runai inference delete vllm-qwen35-397b -p rds-core-sih4hpc-rw
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `CrashLoopBackOff` during init | `--initialization-timeout-seconds` too low | Increase to `1800` or above |
-| `FileNotFoundError` or model not found at startup | `HF_HUB_OFFLINE=1` set but weights not in cache | Run the pre-download script first; `HF_HUB_OFFLINE=1` prevents any runtime download |
+| `Can't load image processor … preprocessor_config.json` | `preprocessor_config.json` not downloaded; vLLM loads the image processor from the `--tokenizer` path for GGUF models | Re-run step 4 of the download to include `preprocessor_config.json` and `video_preprocessor_config.json` |
 | `Qwen3ReasoningParser could not locate think tokens` | External tokenizer missing special tokens | Point `--tokenizer` to `Qwen/Qwen3.5-397B-A17B` (base model), not the GGUF repo |
 | `unrecognized arguments: --gguf-file` | Flag not supported in this vLLM version | Remove `--gguf-file`; pass the model as `repo:revision` instead |
 | Startup takes 60–90 min | CUDA graph compilation across 51 batch sizes | Add `--enforce-eager` to skip graph capture |

@@ -14,12 +14,11 @@ runai inference submit vllm-qwen35-397b \
   --gpu-devices-request 2 \
   --existing-pvc claimname="pvc-${PROJECT_ID}",path="/scratch/pvc-${PROJECT_ID}" \
   -e HF_HOME="/scratch/pvc-${PROJECT_ID}/huggingface" \
-  -e HF_HUB_OFFLINE=1 \
   -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
   --serving-port container=8000,protocol=http \
   --large-shm \
   --initialization-timeout-seconds 1800 \
-  -- vllm serve unsloth/Qwen3.5-397B-A17B-GGUF:Q5_K_S \
+  -- vllm serve unsloth/Qwen3.5-397B-A17B-GGUF \
     --tensor-parallel-size 2 \
     --enable-expert-parallel \
     --mm-encoder-tp-mode data \
