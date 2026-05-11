@@ -36,6 +36,8 @@ website:
           href: notebooks/CLI.html
         - text: "How to self-install R packages"
           href: notebooks/R_tutorial.html
+        - text: "Serving LLMs with vLLM"
+          href: notebooks/vllm_inference.html
   cookie-consent: 
     type: express
     style: simple
