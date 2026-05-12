@@ -12,7 +12,7 @@ This notebook walks through submitting a vLLM inference workload on the SIH GPU 
 
 ## Pre-downloading model weights
 
-Model weights (~276 GB) must be downloaded to the PVC before submitting the inference workload. Do this once from a [JupyterLab terminal workload](jupyter_tutorial.html) with your PVC mounted.
+Model weights (~273 GB) must be downloaded to the PVC before submitting the inference workload. Do this once from a [JupyterLab terminal workload](jupyter_tutorial.html) with your PVC mounted.
 
 This ensures that model weights do not need to be downloaded during the inference workload initialisation.
 
@@ -24,7 +24,7 @@ export HF_HUB_DISABLE_XET=1
 export HF_HOME="/scratch/rds-core-sih4hpc-rw/huggingface"
 ```
 
-- `HF_TOKEN_PATH` — points `huggingface_hub` to your token file on the PVC; no interactive login needed
+- `HF_TOKEN_PATH` — path to your HuggingFace token file on the PVC; used by `hf download` for authenticated requests
 - `HF_HUB_DISABLE_XET=1` — disables the XET transfer protocol which can cause downloads to hang ([huggingface/hf_transfer#30](https://github.com/huggingface/hf_transfer/issues/30#issuecomment-2878604131))
 - `HF_HOME` — sets the cache root; weights are saved here and the vLLM container reads from the same location via its own mount path (`/scratch/pvc-rds-core-sih4hpc-rw/huggingface`)
 
@@ -33,18 +33,16 @@ export HF_HOME="/scratch/rds-core-sih4hpc-rw/huggingface"
 ```bash
 hf download unsloth/Qwen3.5-397B-A17B-GGUF \
   --include "config.json" \
-  --include "mmproj-BF16.gguf" \
   --include "Q5_K_S/*" \
   --dry-run
 ```
 
-Expected output — 9 files totalling ~277.5 GB:
+Expected output — 8 files totalling ~273 GB:
 
-```
+```bash
 FILE                                            SIZE
 ----------------------------------------------- -----
 config.json                                     3.7K
-mmproj-BF16.gguf                                922M
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            10.9M
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            49.5G
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            48.8G
@@ -54,22 +52,19 @@ Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            48.8G
 Q5_K_S/Qwen3.5-397B-A17B-Q5_K_S-...            31.9G
 ```
 
-`mmproj-BF16.gguf` is the vision encoder (multimodal projector). Only the BF16 variant is downloaded — the GGUF repo also contains F16 and F32 variants, but vLLM auto-selects the alphabetically first `mmproj-*.gguf` file in the cache; downloading only one removes ambiguity.
-
-**3. Download**
+**3. Download model weights and config**
 
 ```bash
 hf download unsloth/Qwen3.5-397B-A17B-GGUF \
   --include "config.json" \
-  --include "mmproj-BF16.gguf" \
   --include "Q5_K_S/*"
 ```
 
 No `--local-dir` needed — `HF_HOME` is set so `huggingface_hub` caches files there automatically. Files persist on the PVC across jobs.
 
-**4. Download the tokenizer and image processor**
+**4. Download the tokenizer**
 
-The GGUF repo lacks the `<think>`/`</think>` special tokens needed by the reasoning parser, and the `preprocessor_config.json` needed by the vision encoder. Both come from the base model. vLLM loads the image processor from the `--tokenizer` path for GGUF models, so downloading these files to the same cache is sufficient — no manual path manipulation required.
+The GGUF repo lacks the `<think>`/`</think>` special tokens needed by the reasoning parser. Download the tokenizer from the base model:
 
 ```bash
 hf download Qwen/Qwen3.5-397B-A17B \
@@ -77,9 +72,7 @@ hf download Qwen/Qwen3.5-397B-A17B \
   --include "tokenizer_config.json" \
   --include "vocab.json" \
   --include "merges.txt" \
-  --include "chat_template.jinja" \
-  --include "preprocessor_config.json" \
-  --include "video_preprocessor_config.json"
+  --include "chat_template.jinja"
 ```
 
 Each file needs its own `--include` flag — passing multiple patterns after a single `--include` causes the extras to be treated as positional file arguments, which aborts the download if any are missing.
@@ -105,7 +98,7 @@ The full submission script is at `scripts/qwen3.5-397b.sh`:
 | `-c` | *(flag)* | Connects stdout/stderr to your terminal so you can watch startup logs directly |
 | `--gpu-devices-request` | `2` | Number of physical GPUs to allocate; must match `--tensor-parallel-size` |
 | `--existing-pvc` | `claimname=pvc-${PROJECT_ID},path=/scratch/pvc-${PROJECT_ID}` | Mounts a pre-existing PVC; keeps model weights cached across job restarts |
-| `--large-shm` | *(flag)* | Allocates a larger `/dev/shm`; required for tensor parallelism and `--mm-processor-cache-type shm` |
+| `--large-shm` | *(flag)* | Allocates a larger `/dev/shm`; required for tensor parallelism |
 | `--serving-port` | `container=8000,protocol=http` | Exposes port 8000 as an HTTP endpoint via the Run:AI service layer |
 | `--initialization-timeout-seconds` | `1800` | Time allowed for the container to become ready; too low causes `CrashLoopBackOff` during model load |
 
@@ -114,21 +107,21 @@ The full submission script is at `scripts/qwen3.5-397b.sh`:
 | Variable | Purpose |
 |----------|---------|
 | `HF_HOME` | HuggingFace cache directory; must match where weights were pre-downloaded on the PVC. vLLM finds the cached GGUF shards here and will not re-download them. |
+| `HF_TOKEN` | HuggingFace API token passed into the container; read from `HF_TOKEN_PATH` at submit time. Required to avoid unauthenticated rate limits when vLLM resolves model metadata from the Hub. |
 | `VLLM_WORKER_MULTIPROC_METHOD` | Set to `spawn` to avoid CUDA context inheritance errors in multi-GPU worker processes |
+| `PYTORCH_CUDA_ALLOC_CONF` | Set to `expandable_segments:True` to reduce memory fragmentation during model weight allocation |
 
 ### `vllm serve` flags
-
-Derived from the [vLLM Qwen3.5 multimodal recipe](https://docs.vllm.ai/projects/recipes/en/latest/Qwen/Qwen3.5.html#multimodal).
 
 | Flag | Value | Purpose |
 |------|-------|---------|
 | *(model)* | `unsloth/Qwen3.5-397B-A17B-GGUF` | HuggingFace GGUF repo; vLLM resolves the default branch and loads the Q5_K_S shards from the HF cache |
+| `--task` | `generate` | Forces text-generation mode; skips vision encoder initialisation which requires files not present in the GGUF repo |
 | `--tensor-parallel-size` | `2` | Shards weights across 2 GPUs (~137 GB each); must match `--gpu-devices-request` |
 | `--enable-expert-parallel` | *(flag)* | Distributes MoE experts across GPUs; this model has 512 experts (10 routed + 1 shared per token) |
-| `--mm-encoder-tp-mode` | `data` | Runs a full vision encoder copy per tensor-parallel rank rather than sharding it |
-| `--mm-processor-cache-type` | `shm` | Stores the multimodal processor cache in `/dev/shm`; requires `--large-shm` |
 | `--reasoning-parser` | `qwen3` | Parses Qwen3 chain-of-thought `<think>` blocks and exposes them separately in the API response |
 | `--tokenizer` | `Qwen/Qwen3.5-397B-A17B` | Points to the base model tokenizer, which includes the `<think>`/`</think>` special tokens required by the reasoning parser |
+| `--cpu-offload-gb` | `5` | Offloads 5 GiB of model weights per GPU to CPU RAM; the Q5_K_S weights (~136.5 GiB/GPU) marginally exceed the 139.72 GiB GPU capacity, so a small CPU offload avoids OOM during model loading with minimal throughput impact |
 | `--enable-prefix-caching` | *(flag)* | Reuses KV cache entries for shared prompt prefixes; reduces latency on repeated system prompts |
 | `--enforce-eager` | *(flag)* | Disables CUDA graph compilation; reduces startup from 60–90 min to ~25 min at a small throughput cost. Omitted from the default script — add it if startup time matters more than peak throughput |
 | `--max-model-len` | `32768` | Maximum sequence length; the model supports 262,144 tokens but full context would exhaust VRAM on 2 GPUs |
@@ -154,7 +147,9 @@ runai inference delete vllm-qwen35-397b -p rds-core-sih4hpc-rw
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `CrashLoopBackOff` during init | `--initialization-timeout-seconds` too low | Increase to `1800` or above |
-| `Can't load image processor … preprocessor_config.json` | `preprocessor_config.json` not downloaded; vLLM loads the image processor from the `--tokenizer` path for GGUF models | Re-run step 4 of the download to include `preprocessor_config.json` and `video_preprocessor_config.json` |
+| `CUDA out of memory` during model load | Q5_K_S weights (~136.5 GiB/GPU) plus CUDA context overhead marginally exceed the 139.72 GiB GPU capacity. Increasing to 4 GPUs does not help — vLLM loads approximately the same per-GPU footprint regardless of TP size for this GGUF MoE model | Use `--cpu-offload-gb 5` to spill the excess ~5 GiB per GPU to CPU RAM, and set `PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` to reduce allocation fragmentation |
+| `Can't load image processor … preprocessor_config.json` | vLLM attempting multimodal init; `preprocessor_config.json` not present in the GGUF repo | Add `--task generate` to skip vision encoder initialisation |
+| Multimodal (image inputs) not supported | The GGUF repo omits `preprocessor_config.json` and the vision encoder weights (`mmproj-*.gguf`). vLLM loads the image processor from the GGUF snapshot path — symlinking these files in from the base model repo is unreliable because symlinks created in JupyterLab (`/scratch/rds-core-sih4hpc-rw/…`) resolve to a different path inside inference containers (`/scratch/pvc-rds-core-sih4hpc-rw/…`). Use `--task generate` for text-only serving, or switch to the native HF model format (see [Serving LLMs with vLLM (native HF)](vllm_inference_native.html)) |
 | `Qwen3ReasoningParser could not locate think tokens` | External tokenizer missing special tokens | Point `--tokenizer` to `Qwen/Qwen3.5-397B-A17B` (base model), not the GGUF repo |
 | `unrecognized arguments: --gguf-file` | Flag not supported in this vLLM version | Remove `--gguf-file`; pass the model as `repo:revision` instead |
 | Startup takes 60–90 min | CUDA graph compilation across 51 batch sizes | Add `--enforce-eager` to skip graph capture |

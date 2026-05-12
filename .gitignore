@@ -12,3 +12,5 @@ __pycache__/
 docs
 *.swp
 *.swo
+
+**/*.quarto_ipynb
