@@ -2,10 +2,9 @@
 
 # Qwen3.5-397B-A17B (MoE) — vLLM GGUF endpoint
 # Model: https://huggingface.co/unsloth/Qwen3.5-397B-A17B-GGUF
-# Quantisation: Q4_K_S (~224 GB); requires 2× 141 GB GPUs
+# Quantisation: Q3_K_S (~164 GB); requires 2× 141 GB GPUs
 
 PROJECT_ID='rds-core-sih4hpc-rw'
-HF_TOKEN=$(cat "/scratch/${PROJECT_ID}/fred_scratch/.hf-token")
 NGPUS=2
 
 runai inference submit vllm-qwen35-397b \
@@ -16,16 +15,17 @@ runai inference submit vllm-qwen35-397b \
   --gpu-devices-request "$NGPUS" \
   --existing-pvc claimname="pvc-${PROJECT_ID}",path="/scratch/pvc-${PROJECT_ID}" \
   -e HF_HOME="/scratch/pvc-${PROJECT_ID}/huggingface" \
-  -e HF_TOKEN="${HF_TOKEN}" \
+  -e HF_TOKEN_PATH="/scratch/pvc-${PROJECT_ID}/fred_scratch/.hf-token" \
   -e VLLM_WORKER_MULTIPROC_METHOD=spawn \
   --serving-port container=8000,protocol=http \
   --large-shm \
   --initialization-timeout-seconds 1800 \
-  -- vllm serve unsloth/Qwen3.5-397B-A17B-GGUF:Q4_K_S \
+  -- vllm serve unsloth/Qwen3.5-397B-A17B-GGUF \
     --language-model-only \
     --tensor-parallel-size "$NGPUS" \
     --enable-expert-parallel \
     --reasoning-parser qwen3 \
     --tokenizer Qwen/Qwen3.5-397B-A17B \
+    --gpu-memory-utilization 0.95 \
     --enable-prefix-caching \
     --max-model-len 32768
