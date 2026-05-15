@@ -30,6 +30,7 @@ ENV PACKAGES="package1 \
 
 RUN apt-get update && apt-get install -y $PACKAGES
 # Create a separate requirements.txt file in the same folder with a list of python packages to install
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 ```
 
