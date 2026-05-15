@@ -7,7 +7,7 @@ If you are new to workloads and Jupyter Lab on the cluster, read [Tutorial: Runn
 ::: {.callout-important}
 The exact steps in this tutorial may not cover every use case. Depending on the application you are building, you may need to adjust the Dockerfile, the environment configuration, or other workload settings. 
 
-**The GPU cluster base image (`sydneyinformaticshub/dgx-interactive-jupyterlab`) may also be updated in the future.** If you are unsure how to proceed or run into issues, please reach out to the SIH team for assistance.
+**The GPU cluster base image (`sydneyinformaticshub/dgx-interactive-jupyterlab`) will be updated from time to time.** If you are unsure how to proceed or run into issues, please reach out to the SIH team for assistance.
 :::
 
 ## Prerequisites
