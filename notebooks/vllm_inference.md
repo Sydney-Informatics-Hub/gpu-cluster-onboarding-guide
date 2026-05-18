@@ -1,6 +1,6 @@
 # Serving LLMs with vLLM on the GPU Cluster
 
-The SIH GPU cluster supports two inference backends: [Triton Inference Server](triton_tutorial.html) and vLLM. Triton is the preferred choice for stable, production deployments — it is highly optimised and supports concurrent model serving, but its model support is tied to version releases and lags behind the latest architectures. 
+The SIH GPU cluster supports two inference backends: Triton Inference Server and vLLM. Triton is the preferred choice for stable, production deployments — it is highly optimised and supports concurrent model serving, but its model support is tied to version releases and lags behind the latest architectures. 
 
 **vLLM is the better choice when you need to serve a recently released model that a cluster-compatible Triton release does not yet support.**
 
