@@ -1,15 +1,13 @@
 #!/bin/bash
 
-# THIS CURRENTLY FAILS 
-
-# Qwen3.5-397B-A17B (MoE) — vLLM GGUF endpoint
-# Model: https://huggingface.co/unsloth/Qwen3.5-397B-A17B-GGUF
-# Quantisation: Q3_K_S (~164 GB); requires 2× 141 GB GPUs
+# Qwen3.5-122B-A10B — vLLM FP8 endpoint
+# Model: https://huggingface.co/Qwen/Qwen3.5-122B-A10B-FP8
+# Format: FP8 (official Qwen quantisation, ~127 GB); requires 2× 141 GiB GPUs
 
 PROJECT_ID='rds-core-sih4hpc-rw'
 NGPUS=2
 
-runai inference submit vllm-qwen35-397b \
+runai inference submit vllm-qwen35-122b \
   -p "${PROJECT_ID}" \
   --image vllm/vllm-openai:cu129-nightly-1acd67a795ebccdf9b9db7697ae9082058301657 \
   --image-pull-policy IfNotPresent \
@@ -22,12 +20,10 @@ runai inference submit vllm-qwen35-397b \
   --serving-port container=8000,protocol=http \
   --large-shm \
   --initialization-timeout-seconds 1800 \
-  -- vllm serve unsloth/Qwen3.5-397B-A17B-GGUF \
-    --language-model-only \
+  -- vllm serve Qwen/Qwen3.5-122B-A10B-FP8 \
     --tensor-parallel-size "$NGPUS" \
     --enable-expert-parallel \
     --reasoning-parser qwen3 \
-    --tokenizer Qwen/Qwen3.5-397B-A17B \
-    --gpu-memory-utilization 0.95 \
+    --gpu-memory-utilization 0.90 \
     --enable-prefix-caching \
     --max-model-len 32768
