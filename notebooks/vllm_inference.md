@@ -125,6 +125,19 @@ To update the retention window on a running job:
 runai inference update vllm-qwen35-122b -p <PROJECT_ID> --scale-to-zero-retention-seconds <seconds>
 ```
 
+## Connecting to Open WebUI
+
+Open WebUI can use any OpenAI-compatible API as a backend. To add the vLLM endpoint:
+
+1. In Open WebUI go to **Admin Panel → Settings → Connections → Manage OpenAI API Connections → Add Connection**
+2. Set the **API URL** to the internal cluster domain with the `/v1` suffix appended:
+   - `http://vllm-qwen35-122b.runai-<project_id>.svc.cluster.local/v1`
+3. Select **Verify Connection** to confirm the URL is correct and functional
+3. Set **Auth** to **None** and select **Save**
+4. The model will appear as `Qwen/Qwen3.5-122B-A10B-FP8` in the model selector
+
+The `/v1` suffix is required because vLLM serves the OpenAI-compatible routes under `/v1` (e.g. `/v1/chat/completions`), not at the root. The `svc.cluster.local` routes directly to the service within the cluster, which avoids public internet round-trips and is unaffected by external DNS propagation.
+
 ## Troubleshooting
 
 | Symptom | Cause | Fix |
