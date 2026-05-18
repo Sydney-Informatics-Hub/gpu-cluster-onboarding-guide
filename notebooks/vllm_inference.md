@@ -1,5 +1,9 @@
 # Serving LLMs with vLLM on the GPU Cluster
 
+The SIH GPU cluster supports two inference backends: [Triton Inference Server](triton_tutorial.html) and vLLM. Triton is the preferred choice for stable, production deployments — it is highly optimised and supports concurrent model serving, but its model support is tied to version releases and lags behind the latest architectures. 
+
+**vLLM is the better choice when you need to serve a recently released model that a cluster-compatible Triton release does not yet support.**
+
 [vLLM](https://docs.vllm.ai) is an open-source library for fast LLM inference. It exposes an OpenAI-compatible REST API, so any tool that works with the OpenAI SDK can be pointed at a vLLM endpoint instead.
 
 This notebook walks through submitting a vLLM inference workload on the SIH GPU cluster using the Run:AI CLI, using [Qwen3.5-122B-A10B-FP8](https://huggingface.co/Qwen/Qwen3.5-122B-A10B-FP8) (a 122B Mixture-of-Experts model, officially FP8-quantised to ~127 GB) as an example.
@@ -7,6 +11,7 @@ This notebook walks through submitting a vLLM inference workload on the SIH GPU 
 ## Prerequisites
 
 - Run:AI CLI configured and logged in (`runai login`)
+- Sufficient permissions to create Inference workloads
 - A project PVC with sufficient storage (~130 GB free) for model weights
 - Model weights pre-downloaded to the PVC (see [Pre-downloading model weights] below)
 
@@ -17,14 +22,16 @@ Model weights (~127 GB) must be downloaded to the PVC before submitting the infe
 **1. Set environment variables**
 
 ```bash
-export HF_TOKEN_PATH="/scratch/rds-core-sih4hpc-rw/<path_to_hf_token>"
+export HF_TOKEN_PATH="<path_to_hf_token>"
 export HF_HUB_DISABLE_XET=1
-export HF_HOME="/scratch/rds-core-sih4hpc-rw/huggingface"
+export HF_HOME="/scratch/<project_id>/huggingface"
 ```
 
-- `HF_TOKEN_PATH` — path to your HuggingFace token file on the PVC; used by `hf download` for authenticated requests
-- `HF_HUB_DISABLE_XET=1` — disables the XET transfer protocol which can cause downloads to hang ([huggingface/hf_transfer#30](https://github.com/huggingface/hf_transfer/issues/30#issuecomment-2878604131))
-- `HF_HOME` — sets the cache root; weights are saved here and the vLLM container reads from the same location via its own mount path (`/scratch/pvc-rds-core-sih4hpc-rw/huggingface`)
+| Variable | Purpose |
+|----------|---------|
+| `HF_TOKEN_PATH` | Path to your HuggingFace token file on the PVC; used by `hf download` for authenticated requests |
+| `HF_HUB_DISABLE_XET` | Set to `1` to disable the XET transfer protocol, which can cause downloads to hang ([huggingface/hf_transfer#30](https://github.com/huggingface/hf_transfer/issues/30#issuecomment-2878604131)) |
+| `HF_HOME` | Cache root directory; weights are saved here and the vLLM container reads from the same path via its own mount (`/scratch/pvc-<project_id>/huggingface`) |
 
 **2. Dry-run to confirm size**
 
@@ -40,7 +47,7 @@ This will list all files in the repo (model shards, tokenizer, config) and the t
 hf download Qwen/Qwen3.5-122B-A10B-FP8
 ```
 
-No `--include` flags needed — the entire repo (weights, tokenizer, config) is required and downloaded together. Files persist on the PVC across jobs.
+No `--include` flags needed as the entire repo (weights, tokenizer, config) is required and downloaded together. Files persist on the PVC across jobs.
 
 No separate tokenizer download is needed; the tokenizer is bundled in the same HuggingFace repo.
 
@@ -58,23 +65,26 @@ The full submission script is at `scripts/qwen3.5-122b.sh`:
 
 | Flag | Value | Purpose |
 |------|-------|---------|
-| `vllm-qwen35-122b` | *(job name)* | Unique name for the inference job within the project |
+| *(job name)*| `vllm-qwen35-122b` | Unique name for the inference job within the project |
 | `-p` | `${PROJECT_ID}` | Run:AI project to bill and schedule the job under |
-| `--image` | `vllm/vllm-openai:cu129-nightly-...` | Docker image targeting CUDA 12.9; pin to a specific tag for reproducibility |
-| `--image-pull-policy` | `IfNotPresent` | Reuses a locally cached image rather than re-pulling on every submission |
-| `-c` | *(flag)* | Connects stdout/stderr to your terminal so you can watch startup logs directly |
+| `--image` | `vllm/vllm-openai:cu129-nightly-...` | Official docker image for vLLM, pin to a specific tag for reproducibility |
+| `--image-pull-policy` | `IfNotPresent` | Reuses a locally cached image rather than re-pulling on every submission. Required for quick load times during replica autoscaling. |
+| `-c` | *(flag)* | Overrides the container image's default entrypoint with the command supplied after `--`; used here to pass the `vllm serve` command and its flags directly |
 | `--gpu-devices-request` | `2` | Number of physical GPUs to allocate; must match `--tensor-parallel-size` |
 | `--existing-pvc` | `claimname=pvc-${PROJECT_ID},path=/scratch/pvc-${PROJECT_ID}` | Mounts a pre-existing PVC; keeps model weights cached across job restarts |
-| `--large-shm` | *(flag)* | Allocates a larger `/dev/shm`; required for tensor parallelism |
+| `--large-shm` | *(boolean)* | Allocates a larger `/dev/shm`; required for tensor parallelism |
 | `--serving-port` | `container=8000,protocol=http` | Exposes port 8000 as an HTTP endpoint via the Run:AI service layer |
 | `--initialization-timeout-seconds` | `1800` | Time allowed for the container to become ready; too low causes `CrashLoopBackOff` during model load |
+| `--min-replicas` | `0` | Allows the workload to scale to zero when idle; GPUs are released until the next request arrives |
+| `--max-replicas` | `1` | Caps the workload at one active replica (2 GPUs); no horizontal scale-out |
+| `--scale-to-zero-retention-seconds` | `1800` | Keeps the last replica alive for 30 minutes after the final request before releasing GPUs; balances cost against cold-start latency |
 
 ### Environment variables
 
 | Variable | Purpose |
 |----------|---------|
 | `HF_HOME` | HuggingFace cache directory; must match where weights were pre-downloaded on the PVC. vLLM finds the cached weights here and will not re-download them. |
-| `HF_TOKEN_PATH` | Path to the HuggingFace token file **inside the container** (i.e. the PVC mount path). `huggingface_hub` reads the token from this file at runtime — no local file access or pre-export needed. |
+| `HF_TOKEN_PATH` | Path to the HuggingFace token file **inside the container** (i.e. the PVC mount path). The huggingface CLI reads the token from this file at runtime — no local file access or pre-export needed. |
 | `VLLM_WORKER_MULTIPROC_METHOD` | Set to `spawn` to avoid CUDA context inheritance errors in multi-GPU worker processes |
 
 ### `vllm serve` flags
@@ -82,12 +92,12 @@ The full submission script is at `scripts/qwen3.5-122b.sh`:
 | Flag | Value | Purpose |
 |------|-------|---------|
 | *(model)* | `Qwen/Qwen3.5-122B-A10B-FP8` | HuggingFace model repo; vLLM loads the FP8-quantised weights (~127 GB) directly in their native format — no conversion step. FP8 weights occupy ~59 GiB/GPU with TP=2, leaving ~68 GiB per GPU for KV cache |
-| `--tensor-parallel-size` | `2` | Shards weights across 2 GPUs (~59 GiB each); must match `--gpu-devices-request` |
-| `--enable-expert-parallel` | *(flag)* | Distributes MoE experts across GPUs; this model has 128 experts (8 routed per token) |
+| `--tensor-parallel-size` | `2` | Shards the model weights across 2 GPUs (~59 GiB each); must match `--gpu-devices-request` |
+| `--enable-expert-parallel` | *(boolean)* | Distributes MoE experts across GPUs; this model has 128 experts (8 routed per token) |
 | `--reasoning-parser` | `qwen3` | Parses Qwen3/3.5 chain-of-thought `<think>` blocks and exposes them separately in the API response |
 | `--gpu-memory-utilization` | `0.90` | Fraction of GPU memory reserved for model weights + KV cache. FP8 weights occupy ~42% of VRAM; `0.90` gives ~68 GiB per GPU for KV cache |
-| `--enable-prefix-caching` | *(flag)* | Reuses KV cache entries for shared prompt prefixes; reduces latency on repeated system prompts |
-| `--max-model-len` | `32768` | Maximum sequence length; the model supports 131,072 tokens but longer contexts require more KV cache budget |
+| `--enable-prefix-caching` | *(boolean)* | Reuses KV cache entries for shared prompt prefixes; reduces latency on repeated system prompts |
+| `--max-model-len` | `131072` | Maximum sequence length (the model's full native context window). FP8 weights occupy ~59 GiB/GPU, leaving ~67 GiB for KV cache — sufficient for 131,072-token contexts (~20 GiB/GPU at BF16) |
 
 ## Submitting and monitoring
 
@@ -102,7 +112,17 @@ runai inference describe vllm-qwen35-122b
 runai inference logs vllm-qwen35-122b -f
 
 # Delete
-runai inference delete vllm-qwen35-122b -p rds-core-sih4hpc-rw
+runai inference delete vllm-qwen35-122b -p <PROJECT_ID>
+```
+
+## Scale-to-zero behaviour
+
+The workload is configured with `--min-replicas 0`. After 30 minutes of no incoming requests, Run:AI scales the replica to zero and releases the 2 H200 GPUs. The endpoint URL remains valid — the next request triggers a cold start, which takes approximately 15–20 minutes for the model to load before the first response is returned.
+
+To update the retention window on a running job:
+
+```bash
+runai inference update vllm-qwen35-122b -p <PROJECT_ID> --scale-to-zero-retention-seconds <seconds>
 ```
 
 ## Troubleshooting
@@ -117,4 +137,4 @@ runai inference delete vllm-qwen35-122b -p rds-core-sih4hpc-rw
 | `unrecognized arguments: --gguf-file` | Flag not supported in this vLLM version | Remove `--gguf-file`; pass the model as the base repo ID without a revision suffix |
 | Startup takes 60–90 min | CUDA graph compilation across 51 batch sizes | Add `--enforce-eager` to skip graph capture |
 | `hf download` hangs partway through | XET transfer protocol stalling | Set `HF_HUB_DISABLE_XET=1` before downloading (see [hf_transfer#30](https://github.com/huggingface/hf_transfer/issues/30#issuecomment-2878604131)) |
-| vLLM cannot find cached weights even though download succeeded | PVC mount path differs between workloads: JupyterLab mounts at `/scratch/rds-core-sih4hpc-rw`, inference containers at `/scratch/pvc-rds-core-sih4hpc-rw` | Ensure `HF_HOME` in both contexts appends the same relative path (e.g. `/huggingface`) to their respective mount roots |
+| vLLM cannot find cached weights even though download succeeded | PVC mount path differs between workloads: JupyterLab mounts at `/scratch/<project_id>`, inference containers at `/scratch/pvc-<project_id>` | Ensure `HF_HOME` in both contexts appends the same relative path (e.g. `/huggingface`) to their respective mount roots |
