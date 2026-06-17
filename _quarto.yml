@@ -36,12 +36,8 @@ website:
           href: notebooks/CLI.html
         - text: "How to self-install R packages"
           href: notebooks/R_tutorial.html
-  cookie-consent: 
-    type: express
-    style: simple
-    palette: light
-    policy-url: https://www.sydney.edu.au/privacy-statement.html
-  google-analytics: "G-TNWWV3HK57"
+    plausible-analytics: |
+        <script data-goatcounter="https://sih.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
   page-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
 
