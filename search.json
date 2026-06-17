@@ -1,24 +1,13 @@
 [
   {
-    "objectID": "notebooks/dashboards.html",
-    "href": "notebooks/dashboards.html",
-    "title": "Run:ai Dashboards",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide",
     "section": "",
-    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads\n\n\n\n\n\n\nThis dashboard provides more detailed breakdowns of the SIH GPU running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
-  },
-  {
-    "objectID": "notebooks/dashboards.html#overview",
-    "href": "notebooks/dashboards.html#overview",
-    "title": "Run:ai Dashboards",
-    "section": "",
-    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads"
-  },
-  {
-    "objectID": "notebooks/dashboards.html#analytics",
-    "href": "notebooks/dashboards.html#analytics",
-    "title": "Run:ai Dashboards",
-    "section": "",
-    "text": "This dashboard provides more detailed breakdowns of the SIH GPU running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
+    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the SIH GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals. More details can be found on the official Run:ai user guide (version 2.23)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
+    "crumbs": [
+      "Home"
+    ]
   },
   {
     "objectID": "notebooks/data_transfer.html",
@@ -43,26 +32,55 @@
     ]
   },
   {
-    "objectID": "notebooks/access.html",
-    "href": "notebooks/access.html",
-    "title": "Accessing the SIH GPU Cluster",
+    "objectID": "notebooks/CLI.html",
+    "href": "notebooks/CLI.html",
+    "title": "The Run:AI Command Line Interface (CLI)",
     "section": "",
-    "text": "Accessing the SIH GPU Cluster\nEarly access to the GPU Cluster is now available. Please follow instructions on this page to submit your request.\nInformation that you will be asked to provide in the access request form includes:\n\nDashR Research Project Shortcode: Please log in to the University’s Researcher Dashboard (DashR), click on the project you intend to work on, and locate the “Project code”. This is essential for linking your compute usage to the correct research allocation. All existing members of the DashR project will automatically gain access to the GPU Cluster once the request is approved. The Chief Investigator or other project administrators can manage project membership via the DashR portal, including adding new users or removing users that no longer need acccess to the cluster under this project.\n\n\n\n\n\n\nImportantEnable Research Data Store (RDS) for the selected DashR project\n\n\n\n\n\nPlease make sure RDS is enabled for the selected DashR project. For existing projects, you can confirm this by navigating to the “Data Services” section and checking if “Research Data Store” is marked as on:\n\n\n\nConfirm RDS is enabled\n\n\nIf you want to create a separate new project for managing cluster access, ensure that you select “Research Data Store” when creating the project:\n\n\n\nSelect RDS for a new project\n\n\n\n\n\nBilling Code: This should be the internal billing code associated with your project or department. If you are unsure, please consult your supervisor or finance administrator.\n\nYou will receive an email confirmation once your access has been granted, along with the project code and further instructions on how to connect to the SIH GPU Cluster.\n\n\n\n\n\n\nNote\n\n\n\nWork in Progress: Long-term project provisioning and cluster access will be streamlined and centrally managed on DashR.",
+    "text": "The Run:AI Command Line Interface (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.\n\n\nTo set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).\n\n\n\nYou can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the SIH GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.\n\n\n\n\n\nUsing the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
     "crumbs": [
-      "Getting Started with the SIH GPU Cluster",
-      "Accessing the SIH GPU Cluster"
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
     ]
   },
   {
-    "objectID": "notebooks/login.html",
-    "href": "notebooks/login.html",
-    "title": "Login",
+    "objectID": "notebooks/CLI.html#setting-up-the-runai-cli",
+    "href": "notebooks/CLI.html#setting-up-the-runai-cli",
+    "title": "The Run:AI Command Line Interface (CLI)",
     "section": "",
-    "text": "Login\n\n\n\n\n\n\nNote\n\n\n\nBefore logging in, please make sure you are part of a DashR project that has been granted access to the SIH GPU Cluster. If you have not done so, please refer to the Accessing the SIH GPU Cluster page for instructions on how to request access\n\n\n\nIf you are not on the Sydney university network (e.g. working from home), you will need to connect to the VPN to see the login page.\nGo to: https://gpu.sydney.edu.au/.\n\n\n\n\nRun:ai login page\n\n\n\nClick “🔑 CONTINUE WITH SSO”. This will prompt you to use Okta to authenticate your login.\nOnce the login is successful, you’ll be presented with the landing (“Workloads”) page.\n\n\n\n\nRun:ai Workloads page",
+    "text": "To set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).",
     "crumbs": [
-      "Getting Started with the SIH GPU Cluster",
-      "Login"
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
     ]
+  },
+  {
+    "objectID": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
+    "href": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
+    "title": "The Run:AI Command Line Interface (CLI)",
+    "section": "",
+    "text": "You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the SIH GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.",
+    "crumbs": [
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
+    ]
+  },
+  {
+    "objectID": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
+    "href": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
+    "title": "The Run:AI Command Line Interface (CLI)",
+    "section": "",
+    "text": "Using the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
+    "crumbs": [
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
+    ]
+  },
+  {
+    "objectID": "notebooks/data_sources_deprecated.html",
+    "href": "notebooks/data_sources_deprecated.html",
+    "title": "Data Sources",
+    "section": "",
+    "text": "Data Sources\nData sources in Run:ai allow you to connect additional storage systems to your Run:ai projects, enabling seamless access to datasets required for your workloads. Run:ai supports various types of data sources, including PVC (Persistent Volume Claim), NFS, S3-compatible storage, and more.\nWhen a Run:ai project is created, a default data source (PVC) is automatically set up for this project. You can find the data source under the “Data Sources”, listed as pvc-&lt;dashr_project_shortcode&gt;:\n\n\n\nDefault Data Source\n\n\nThis dedicated persistent storage can be accessable from any workload running within the same project. The default mount path inside the container is /scratch/&lt;dashr_project_shortcode&gt;. It is especially useful for storing intermediate results, model checkpoints, and uploading data to the cluster from external sources (e.g. RDS)."
   },
   {
     "objectID": "notebooks/marimo_tutorial.html",
@@ -138,139 +156,6 @@
     "text": "Navigating the User Interface\nThe Run:ai user interface is designed to be intuitive and user-friendly, allowing users to easily access and manage their resources and workloads.\n\n\n\nRun:ai navigation panel\n\n\nOn the left panel, there are several options to select:\n\nDashboards: Two system dashboards, namely “Overview” and “Analytics”, are accessible to users. They provide both system- and project-level information including system summaries, real-time resource allocation, cluster load, etc.\nProjects: This lists out the projects the user has been assigned to.\nWorkloads: This page provides a summary of the current workloads and allows users to create and configure new workloads.\nEnvironments: Both platform-wide and customised environments can be found in this page.\nData Sources: This page allows users to configure new data sources and view existing ones.\nCompute Resources: This page summaries all compute resources (similar to choosing the “flavours” in a cloud computing environment) and allows users to create new compute resources for their specific needs.\nTemplates: This feature allows users to manage bespoke templates configured for their specific workloads.\nCredentials: This space allows users to define secrets including access keys, passwords, or other sensitive information essential to the execution of workloads during runtime.\n\nThe instructions on how to use these features will be covered in the following “Run:ai Features” section."
   },
   {
-    "objectID": "notebooks/R_tutorial.html",
-    "href": "notebooks/R_tutorial.html",
-    "title": "Tutorial: Self-installing R packages",
-    "section": "",
-    "text": "In this tutorial, we will demonstrate how to install R packages in your Run:AI workload. This is particularly useful when you need specific packages that are not included in the pre-installed image.\n\n\nFollow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.\n\n\n\n\nOpen a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.\n\n\n\n\nYou can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
-    "crumbs": [
-      "Tutorials",
-      "How to self-install R packages"
-    ]
-  },
-  {
-    "objectID": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
-    "href": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
-    "title": "Tutorial: Self-installing R packages",
-    "section": "",
-    "text": "Follow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.",
-    "crumbs": [
-      "Tutorials",
-      "How to self-install R packages"
-    ]
-  },
-  {
-    "objectID": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
-    "href": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
-    "title": "Tutorial: Self-installing R packages",
-    "section": "",
-    "text": "Open a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.",
-    "crumbs": [
-      "Tutorials",
-      "How to self-install R packages"
-    ]
-  },
-  {
-    "objectID": "notebooks/R_tutorial.html#verify-the-installation",
-    "href": "notebooks/R_tutorial.html#verify-the-installation",
-    "title": "Tutorial: Self-installing R packages",
-    "section": "",
-    "text": "You can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
-    "crumbs": [
-      "Tutorials",
-      "How to self-install R packages"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide",
-    "section": "",
-    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the SIH GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals. More details can be found on the official Run:ai user guide (version 2.23)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
-    "crumbs": [
-      "Home"
-    ]
-  },
-  {
-    "objectID": "setup.html",
-    "href": "setup.html",
-    "title": "Setup",
-    "section": "",
-    "text": "1. Get a client\nThese are the setup instructions…"
-  },
-  {
-    "objectID": "notebooks/projects_deprecated.html",
-    "href": "notebooks/projects_deprecated.html",
-    "title": "Projects",
-    "section": "",
-    "text": "Projects\nIn Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.\nOnce you have been granted access to the SIH GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.\n\n\n\nListed Run:ai project\n\n\nApart from the basic information such as the number of allocated GPUs and total quota, you can also cutomise the project view. To do so, click the “COLUMNS” button and select the desired fields to display.\n\n\n\n\n\n\nNote\n\n\n\nAdjusting the project settings is restricted to system administrators only. If you require any changes to the project configuration, please contact the SIH support team."
-  },
-  {
-    "objectID": "notebooks/CLI.html",
-    "href": "notebooks/CLI.html",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "The Run:AI Command Line Interface (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.\n\n\nTo set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).\n\n\n\nYou can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the SIH GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.\n\n\n\n\n\nUsing the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/CLI.html#setting-up-the-runai-cli",
-    "href": "notebooks/CLI.html#setting-up-the-runai-cli",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "To set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
-    "href": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the SIH GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
-    "href": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "Using the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/environments_deprecated.html",
-    "href": "notebooks/environments_deprecated.html",
-    "title": "Configure Environments",
-    "section": "",
-    "text": "In Run:AI, an environment consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:\n\nBase Docker image (e.g., pytorch/pytorch, tensorflow/tensorflow:2.20.0-jupyter)\nTools (such as Jupyter, RStudio, etc.)\nCustom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)\n\n\n\nThe SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments\n\n\n\n\n\nYou can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
-  },
-  {
-    "objectID": "notebooks/environments_deprecated.html#pre-defined-environments",
-    "href": "notebooks/environments_deprecated.html#pre-defined-environments",
-    "title": "Configure Environments",
-    "section": "",
-    "text": "The SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments"
-  },
-  {
-    "objectID": "notebooks/environments_deprecated.html#create-a-new-environment",
-    "href": "notebooks/environments_deprecated.html#create-a-new-environment",
-    "title": "Configure Environments",
-    "section": "",
-    "text": "You can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
-  },
-  {
     "objectID": "notebooks/jupyter_tutorial.html",
     "href": "notebooks/jupyter_tutorial.html",
     "title": "Tutorial: Running a Jupyter Lab Workload",
@@ -324,6 +209,66 @@
       "Tutorials",
       "Creating a Jupyter Lab workload"
     ]
+  },
+  {
+    "objectID": "notebooks/environments_deprecated.html",
+    "href": "notebooks/environments_deprecated.html",
+    "title": "Configure Environments",
+    "section": "",
+    "text": "In Run:AI, an environment consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:\n\nBase Docker image (e.g., pytorch/pytorch, tensorflow/tensorflow:2.20.0-jupyter)\nTools (such as Jupyter, RStudio, etc.)\nCustom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)\n\n\n\nThe SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments\n\n\n\n\n\nYou can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
+  },
+  {
+    "objectID": "notebooks/environments_deprecated.html#pre-defined-environments",
+    "href": "notebooks/environments_deprecated.html#pre-defined-environments",
+    "title": "Configure Environments",
+    "section": "",
+    "text": "The SIH GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments"
+  },
+  {
+    "objectID": "notebooks/environments_deprecated.html#create-a-new-environment",
+    "href": "notebooks/environments_deprecated.html#create-a-new-environment",
+    "title": "Configure Environments",
+    "section": "",
+    "text": "You can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
+  },
+  {
+    "objectID": "setup.html",
+    "href": "setup.html",
+    "title": "Setup",
+    "section": "",
+    "text": "1. Get a client\nThese are the setup instructions…"
+  },
+  {
+    "objectID": "notebooks/access.html",
+    "href": "notebooks/access.html",
+    "title": "Accessing the SIH GPU Cluster",
+    "section": "",
+    "text": "Accessing the SIH GPU Cluster\nEarly access to the GPU Cluster is now available. Please follow instructions on this page to submit your request.\nInformation that you will be asked to provide in the access request form includes:\n\nDashR Research Project Shortcode: Please log in to the University’s Researcher Dashboard (DashR), click on the project you intend to work on, and locate the “Project code”. This is essential for linking your compute usage to the correct research allocation. All existing members of the DashR project will automatically gain access to the GPU Cluster once the request is approved. The Chief Investigator or other project administrators can manage project membership via the DashR portal, including adding new users or removing users that no longer need acccess to the cluster under this project.\n\n\n\n\n\n\nImportantEnable Research Data Store (RDS) for the selected DashR project\n\n\n\n\n\nPlease make sure RDS is enabled for the selected DashR project. For existing projects, you can confirm this by navigating to the “Data Services” section and checking if “Research Data Store” is marked as on:\n\n\n\nConfirm RDS is enabled\n\n\nIf you want to create a separate new project for managing cluster access, ensure that you select “Research Data Store” when creating the project:\n\n\n\nSelect RDS for a new project\n\n\n\n\n\nBilling Code: This should be the internal billing code associated with your project or department. If you are unsure, please consult your supervisor or finance administrator.\n\nYou will receive an email confirmation once your access has been granted, along with the project code and further instructions on how to connect to the SIH GPU Cluster.\n\n\n\n\n\n\nNote\n\n\n\nWork in Progress: Long-term project provisioning and cluster access will be streamlined and centrally managed on DashR.",
+    "crumbs": [
+      "Getting Started with the SIH GPU Cluster",
+      "Accessing the SIH GPU Cluster"
+    ]
+  },
+  {
+    "objectID": "notebooks/dashboards.html",
+    "href": "notebooks/dashboards.html",
+    "title": "Run:ai Dashboards",
+    "section": "",
+    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads\n\n\n\n\n\n\nThis dashboard provides more detailed breakdowns of the SIH GPU running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
+  },
+  {
+    "objectID": "notebooks/dashboards.html#overview",
+    "href": "notebooks/dashboards.html#overview",
+    "title": "Run:ai Dashboards",
+    "section": "",
+    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads"
+  },
+  {
+    "objectID": "notebooks/dashboards.html#analytics",
+    "href": "notebooks/dashboards.html#analytics",
+    "title": "Run:ai Dashboards",
+    "section": "",
+    "text": "This dashboard provides more detailed breakdowns of the SIH GPU running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
   },
   {
     "objectID": "notebooks/runai_features.html",
@@ -403,6 +348,68 @@
     ]
   },
   {
+    "objectID": "notebooks/login.html",
+    "href": "notebooks/login.html",
+    "title": "Login",
+    "section": "",
+    "text": "Login\n\n\n\n\n\n\nNote\n\n\n\nBefore logging in, please make sure you are part of a DashR project that has been granted access to the SIH GPU Cluster. If you have not done so, please refer to the Accessing the SIH GPU Cluster page for instructions on how to request access\n\n\n\nIf you are not on the Sydney university network (e.g. working from home), you will need to connect to the VPN to see the login page.\nGo to: https://gpu.sydney.edu.au/.\n\n\n\n\nRun:ai login page\n\n\n\nClick “🔑 CONTINUE WITH SSO”. This will prompt you to use Okta to authenticate your login.\nOnce the login is successful, you’ll be presented with the landing (“Workloads”) page.\n\n\n\n\nRun:ai Workloads page",
+    "crumbs": [
+      "Getting Started with the SIH GPU Cluster",
+      "Login"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html",
+    "href": "notebooks/R_tutorial.html",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "In this tutorial, we will demonstrate how to install R packages in your Run:AI workload. This is particularly useful when you need specific packages that are not included in the pre-installed image.\n\n\nFollow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.\n\n\n\n\nOpen a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.\n\n\n\n\nYou can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
+    "href": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "Follow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
+    "href": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "Open a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#verify-the-installation",
+    "href": "notebooks/R_tutorial.html#verify-the-installation",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "You can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/projects_deprecated.html",
+    "href": "notebooks/projects_deprecated.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Projects\nIn Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.\nOnce you have been granted access to the SIH GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.\n\n\n\nListed Run:ai project\n\n\nApart from the basic information such as the number of allocated GPUs and total quota, you can also cutomise the project view. To do so, click the “COLUMNS” button and select the desired fields to display.\n\n\n\n\n\n\nNote\n\n\n\nAdjusting the project settings is restricted to system administrators only. If you require any changes to the project configuration, please contact the SIH support team."
+  },
+  {
     "objectID": "notebooks/cluster_intro.html",
     "href": "notebooks/cluster_intro.html",
     "title": "Introduction to the SIH GPU Cluster",
@@ -412,12 +419,5 @@
       "Getting Started with the SIH GPU Cluster",
       "Introduction to the SIH GPU Cluster"
     ]
-  },
-  {
-    "objectID": "notebooks/data_sources_deprecated.html",
-    "href": "notebooks/data_sources_deprecated.html",
-    "title": "Data Sources",
-    "section": "",
-    "text": "Data Sources\nData sources in Run:ai allow you to connect additional storage systems to your Run:ai projects, enabling seamless access to datasets required for your workloads. Run:ai supports various types of data sources, including PVC (Persistent Volume Claim), NFS, S3-compatible storage, and more.\nWhen a Run:ai project is created, a default data source (PVC) is automatically set up for this project. You can find the data source under the “Data Sources”, listed as pvc-&lt;dashr_project_shortcode&gt;:\n\n\n\nDefault Data Source\n\n\nThis dedicated persistent storage can be accessable from any workload running within the same project. The default mount path inside the container is /scratch/&lt;dashr_project_shortcode&gt;. It is especially useful for storing intermediate results, model checkpoints, and uploading data to the cluster from external sources (e.g. RDS)."
   }
 ]
