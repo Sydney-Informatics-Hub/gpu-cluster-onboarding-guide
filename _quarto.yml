@@ -40,14 +40,14 @@ website:
 
 format:
   html:
-  include-in-header: 
+    include-in-header: 
       - text: |
           <script data-goatcounter="https://sih.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-   link-external-newwindow: true
-   link-external-icon: true # displays an icon next to external links
-   toc: true
-   css: [lesson.css]
-   theme: cosmo
-   code-link: true
-   code-fold: false
+    link-external-newwindow: true
+    link-external-icon: true
+    toc: true
+    css: [lesson.css]
+    theme: cosmo
+    code-link: true
+    code-fold: false
    
