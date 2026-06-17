@@ -40,8 +40,9 @@ website:
 
 format:
   html:
-  include-in-header:
-    - text: <script data-goatcounter="https://sih.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  include-in-header: 
+      - text: |
+          <script data-goatcounter="https://sih.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
    link-external-newwindow: true
    link-external-icon: true # displays an icon next to external links
    toc: true
