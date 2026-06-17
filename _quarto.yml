@@ -36,13 +36,12 @@ website:
           href: notebooks/CLI.html
         - text: "How to self-install R packages"
           href: notebooks/R_tutorial.html
-    plausible-analytics: |
-        <script data-goatcounter="https://sih.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-
   page-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
 
 format:
   html:
+  include-in-header:
+    - text: <script data-goatcounter="https://sih.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
    link-external-newwindow: true
    link-external-icon: true # displays an icon next to external links
    toc: true
