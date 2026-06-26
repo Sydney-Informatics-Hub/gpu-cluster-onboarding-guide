@@ -1,13 +1,13 @@
 # How to run AlphaFold3 on the SIH GPU Cluster
 
-[AlphaFold3](https://github.com/google-deepmind/alphafold3) predicts the 3D structure of proteins, nucleic acids, and small molecules. You describe your molecules in a simple text file and AlphaFold3 returns predicted 3D structures with confidence scores.
+[AlphaFold3](https://github.com/google-deepmind/alphafold3) predicts the 3D structure of proteins, nucleic acids, and small molecules. You describe your molecules in a text file and AlphaFold3 returns predicted 3D structures with confidence scores.
 
 In this guide, AlphaFold3 will be run as two separate jobs:
 
 1. **Alignment job (CPU only):** searches large sequence databases to find proteins related to yours. No GPU required.
 2. **Structure prediction job (GPU):** uses those alignment results to generate 3D structure predictions.
 
-Splitting the work this way means the GPU is only reserved for the short prediction step, keeping your compute costs low.
+Splitting the work this way means the GPU is only reserved for the shorter prediction step, keeping your compute costs low.
 
 :::{.callout-note}
 **What SIH provides (no action needed):**
@@ -16,29 +16,43 @@ Splitting the work this way means the GPU is only reserved for the short predict
 
 **What you need to set up once before your first prediction:**
 
-- AlphaFold3 model weights (`af3.bin`) from Google DeepMind - [Step 1](#step-1-request-model-weights)
+- AlphaFold3 model weights (`af3.bin`) from Google DeepMind - [Step 1](#step-1-download-model-weights)
 - Sequence databases downloaded to your PVC (~394 GB) - [Step 2](#step-2-download-sequence-databases)
 :::
 
-## Prerequisite
+## Prerequisites
 
-- An active Run:AI project and PVC (see [Accessing the SIH GPU Cluster](access.html))
-- A running [JupyterLab workload](jupyter_tutorial.html) - you will use the JupyterLab terminal to run the setup commands in Steps 1 and 2
+### 1. Request model weights
 
-## Step 1: Request model weights
+AlphaFold3's model weights are provided by Google DeepMind under a non-commercial licence. Start your request now. Approval typically takes around 3 business days at the earliest. You will download the weights in Step 1 once approved.
 
-AlphaFold3's model weights are provided by Google DeepMind under a non-commercial licence. You must request access individually. Approval typically takes around 3 business days at the fastest.
+Follow the request instructions on the [AlphaFold3 GitHub page](https://github.com/google-deepmind/alphafold3). You will fill in a short form and receive an email with a download link when access is approved.
 
-1. Follow the request instructions on the [AlphaFold3 GitHub page](https://github.com/google-deepmind/alphafold3). You will fill in a short form and receive an email when access is approved.
-2. Once you receive the approval email, open a terminal in JupyterLab (**File → New → Terminal**) and run the following commands. Replace `<PROJECT_ID>` with your Run:AI project name and `<DOWNLOAD_URL>` with the link in the approval email:
+### 2. Set up a JupyterLab workload
+
+You will use a JupyterLab session throughout this guide to run setup commands, manage files, and view outputs. Follow the [Creating a JupyterLab workload](jupyter_tutorial.html) guide with these settings:
+
+- **Compute resources**: select CPU only as no GPU is needed for this session
+- **Data & sources**: attach your PVC to access your databases, weights, and input files
+
+:::{.callout-tip}
+This JupyterLab session is for file management and setup only. Tasks include preparing inputs, running download commands, and viewing results. The AlphaFold3 jobs themselves run as separate Training workloads in later steps.
+:::
+
+## Step 1: Download model weights
+
+Once you receive the approval email from Google DeepMind, open a terminal in JupyterLab (**File → New → Terminal**) and run the following commands. 
+
+Ensure to replace `<DOWNLOAD_URL>` with the link provided in the approval email:
+
+:::{.callout-tip}
+The `${PROJECT_ID}` will automatically be populated with your Run:AI project name.
+:::
 
 ```bash
-# Install the tool needed to decompress the weights file
-apt install -y -q zstd
-
 # Create a folder for the weights on your PVC
-mkdir -p /scratch/pvc-<PROJECT_ID>/alphafold3/params
-cd /scratch/pvc-<PROJECT_ID>/alphafold3/params
+mkdir -p /scratch/${RUNAI_PROJECT}/alphafold3/params
+cd /scratch/${RUNAI_PROJECT}/alphafold3/params
 
 # Download the weights (this may take a few minutes)
 wget -O af3.bin.zst <DOWNLOAD_URL>
@@ -61,7 +75,7 @@ The decompressed `af3.bin` file is approximately 1.1 GB.
 Shared databases available to all cluster users are coming soon. Once live, this step will no longer be needed.
 :::
 
-The alignment job (Step 4) searches several large sequence databases. These must be downloaded once to your PVC. The full set is approximately 394 GB; allow several hours for the download to complete. The script is resumable if interrupted.
+The alignment job (Step 4) searches several large sequence databases. These must be downloaded once to your PVC. The full set is approximately 394 GB; **allow several hours for the download to complete**. The script is resumable if interrupted.
 
 In your JupyterLab terminal, run:
 
@@ -70,23 +84,48 @@ In your JupyterLab terminal, run:
 git clone https://github.com/google-deepmind/alphafold3.git
 
 # Download all sequence databases to your PVC (takes several hours)
-bash alphafold3/fetch_databases.sh /scratch/pvc-<PROJECT_ID>/alphafold3/db
+bash alphafold3/fetch_databases.sh /scratch/${PROJECT_ID}/alphafold3/db
 ```
 
 :::{.callout-important}
-Leave the terminal running until the download completes. Closing the JupyterLab session will interrupt it. You can work through Step 3 in a separate terminal tab while the download runs.
+Do not close your JupyterLab session while the download is running. Closing the session will interrupt the download. You can however close the browser tab and reopen it later, but the JupyterLab workload itself must remain active.
+
+You can work through Step 3 in a separate terminal tab while the download runs.
 :::
 
-* Add that you can close the browser, but the terminal jobs needs to persist.
+Once the download finishes, verify the databases are in place:
+
+```bash
+ls -lh /scratch/${PROJECT_ID}/alphafold3/db
+```
+
+Expected contents (~394 GB total):
+
+```bash
+total 394G
+drwxr-x---  mmcif_files                                              (9.7M files - PDB structures)
+-rw-r--r--  mgy_clusters_2022_05.fa                                  120G  MGnify protein clusters
+-rw-r--r--  uniprot_all_2021_04.fa                                   102G  UniProt (TrEMBL + Swiss-Prot)
+-rw-r--r--  nt_rna_2023_02_23_clust_seq_id_90_cov_80_rep_seq.fasta    76G  NT-RNA clusters
+-rw-r--r--  uniref90_2022_05.fa                                       67G  UniRef90
+-rw-r--r--  bfd-first_non_consensus_sequences.fasta                   17G  BFD
+-rw-r--r--  rnacentral_active_seq_id_90_cov_80_linclust.fasta         13G  RNAcentral
+-rw-r--r--  pdb_seqres_2022_09_28.fasta                              223M  PDB sequence clusters
+-rw-r--r--  rfam_14_9_clust_seq_id_90_cov_80_rep_seq.fasta           218M  Rfam RNA families
+```
 
 ## Step 3: Create your input file
 
 AlphaFold3 reads a JSON file - a structured text file that describes the molecules you want to model. Create this file in JupyterLab before submitting your jobs.
 
-1. In the JupyterLab file browser (left panel), navigate to `/scratch/pvc-<PROJECT_ID>/alphafold3/`
+This guide uses [oxytocin](https://www.uniprot.org/uniprotkb/P01178) as an example. It is a 9-residue protein with a disulfide bond between cysteines at positions 1 and 6. 
+
+For your own proteins, replace the `sequence` value with your amino-acid sequence in single-letter code and remove `bondedAtomPairs` unless you are specifying bonds explicitly. The full input format is described in the [official documentation](https://github.com/google-deepmind/alphafold3/blob/main/docs/input.md).
+
+1. In the JupyterLab file browser (left panel), navigate to `/scratch/${PROJECT_ID}/alphafold3/`
 2. Select **File → New → Text File** to create a new empty file
-3. Right-click the new file and rename it to `oxytocin.json`
-4. Paste the following content into the file and save:
+3. Right-click the new file and rename it to to something informative. In this guide, we will fold oxytocin as an example and call the file `oxytocin.json`
+4. Paste the following content into the file and save with **Ctrl+S**:
 
 ```json
 {
@@ -108,8 +147,6 @@ AlphaFold3 reads a JSON file - a structured text file that describes the molecul
 }
 ```
 
-This example describes [oxytocin](https://www.uniprot.org/uniprotkb/P01178), a 9-residue protein with a disulfide bond between cysteines at positions 1 and 6. For your own proteins, replace the `sequence` value with your amino-acid sequence in single-letter code and remove `bondedAtomPairs` unless you are specifying bonds explicitly. The full input format is described in the [official documentation](https://github.com/google-deepmind/alphafold3/blob/main/docs/input.md).
-
 :::{.callout-note collapse="true"}
 ## JSON field reference
 
@@ -123,7 +160,7 @@ This example describes [oxytocin](https://www.uniprot.org/uniprotkb/P01178), a 9
 | `dialect` / `version` | Always `"alphafold3"` and `2` |
 :::
 
-## Step 4: Run the alignment job
+## Step 4: Run the alignment job [CPU-only]
 
 The alignment job searches the sequence databases and produces pre-computed features used in Step 5. It runs on CPU only and does not need a GPU.
 
@@ -133,28 +170,29 @@ The alignment job searches the sequence databases and produces pre-computed feat
 <!-- TODO: screenshot fig/af3_new_training_workload.png — Run:AI new workload dialog with Training selected -->
 
 3. Configure the workload:
-    - **Cluster**: set automatically - no change needed
+    - **Cluster**: set automatically — no change needed
     - **Project**: select your project
     - **Templates**: select *Start from scratch*
     - **Name**: give the job a unique name, e.g. `oxytocin-align`
 
 4. Under **Environment**, enter the image URL:
     ```
-    sydneyinformaticshub/alphafold3:v3.0.2-26060624
+    sydneyinformaticshub/alphafold3:v3.0.2-20260604
     ```
-5. Under **Command**, enter (replacing `<PROJECT_ID>` throughout):
+5. Under **Command**, enter the following — replacing `<PROJECT_ID>` with your Run:AI project name throughout:
     ```
-    python run_alphafold.py --json_path=/scratch/pvc-<PROJECT_ID>/alphafold3/oxytocin.json --model_dir=/scratch/pvc-<PROJECT_ID>/alphafold3/params --db_dir=/scratch/pvc-<PROJECT_ID>/alphafold3/db --output_dir=/scratch/pvc-<PROJECT_ID>/alphafold3/output --run_inference=false
+    python run_alphafold.py --json_path=/scratch/<PROJECT_ID>/alphafold3/oxytocin.json --model_dir=/scratch/<PROJECT_ID>/alphafold3/params --db_dir=/scratch/<PROJECT_ID>/alphafold3/db --output_dir=/scratch/<PROJECT_ID>/alphafold3/output --run_inference=false
     ```
 
-* I think PROJECT_ID can be replaced as a variable?
+6. Under **Compute resources**, configure:
 
-6. Under **Compute resources**, set: GPU fraction — none (0), CPU cores — 8, Memory — 64 GB
+    | Resource | Value |
+    |---|---|
+    | GPU | None (0) |
+    | CPU cores | 8 |
+    | Memory | 64 GB |
 
-* Convert to table
-
-7. Under **Data & sources**, attach your PVC with mount path `/scratch/pvc-<PROJECT_ID>`
-* Note that this is an important step to access the databases, weights, and inputs
+7. Under **Data & sources**, attach your PVC with mount path `/scratch/<PROJECT_ID>`. This gives the job access to your databases, model weights, and input file.
 
 8. Click **Create** to submit
 
@@ -162,9 +200,9 @@ The alignment job searches the sequence databases and produces pre-computed feat
 
 Wait for the job status to show **Completed** before continuing to Step 5. This typically takes around 7 minutes.
 
-* Need an output, what does success look like?
+To verify the alignment completed successfully, open the JupyterLab file browser and confirm the folder `/scratch/<PROJECT_ID>/alphafold3/output/oxytocin/` exists and contains files.
 
-## Step 5: Run the structure prediction job
+## Step 5: Run the structure prediction job [GPU]
 
 Once the alignment job has completed, submit the GPU step. This reads the pre-computed features written by Step 4.
 
@@ -172,13 +210,13 @@ Once the alignment job has completed, submit the GPU step. This reads the pre-co
 2. Configure the workload:
     - **Project**: same project as Step 4
     - **Name**: a unique name, e.g. `oxytocin-inference`
-    - **Environment** image: `sydneyinformaticshub/alphafold3:26060604`
+    - **Environment** image: `sydneyinformaticshub/alphafold3:v3.0.2-20260604`
 3. Under **Command**, enter (replacing `<PROJECT_ID>` throughout):
     ```
-    python run_alphafold.py --json_path=/scratch/pvc-<PROJECT_ID>/alphafold3/oxytocin.json --model_dir=/scratch/pvc-<PROJECT_ID>/alphafold3/params --output_dir=/scratch/pvc-<PROJECT_ID>/alphafold3/output --run_data_pipeline=false --num_diffusion_samples=5
+    python run_alphafold.py --json_path=/scratch/<PROJECT_ID>/alphafold3/oxytocin.json --model_dir=/scratch/<PROJECT_ID>/alphafold3/params --output_dir=/scratch/<PROJECT_ID>/alphafold3/output --run_data_pipeline=false --num_diffusion_samples=5
     ```
 4. Under **Compute resources**, set the GPU fraction to 0.5 (half an H200, ~70 GB VRAM), CPU cores to 8, and memory to 64 GB
-5. Under **Data & sources**, attach your PVC with mount path `/scratch/pvc-<PROJECT_ID>`
+5. Under **Data & sources**, attach your PVC with mount path `/scratch/<PROJECT_ID>`
 6. Click **Create** to submit
 
 <!-- TODO: screenshot fig/af3_inference_complete.png — Run:AI Workloads page showing inference job Completed -->
@@ -188,7 +226,7 @@ Once the alignment job has completed, submit the GPU step. This reads the pre-co
 Once the inference job shows **Completed**, your output files are in:
 
 ```
-/scratch/pvc-<PROJECT_ID>/alphafold3/output/oxytocin/
+/scratch/<PROJECT_ID>/alphafold3/output/oxytocin/
 ```
 
 This folder contains predicted structure files (`.cif` format) and JSON confidence score files for each predicted model. Structure files can be viewed in [Mol\*](https://molstar.org/viewer/) or [PyMOL](https://pymol.org/).
@@ -210,4 +248,4 @@ A 9-residue peptide (oxytocin) takes approximately 8 minutes total: ~7 minutes f
 ## Coming soon
 
 - **Shared databases** — sequence databases will be available on a shared cluster path for all users, removing the need for [Step 2](#step-2-download-sequence-databases)
-- **PyMol** to visualise output data on the cluster https://hub.docker.com/r/pegi3s/pymol
+- **PyMOL on the cluster** — visualise predicted structures directly on the cluster without downloading them locally
