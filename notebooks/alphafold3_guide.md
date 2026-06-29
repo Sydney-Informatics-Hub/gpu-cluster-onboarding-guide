@@ -46,7 +46,7 @@ Once you receive the approval email from Google DeepMind, open a terminal in Jup
 Ensure to replace `<DOWNLOAD_URL>` with the link provided in the approval email:
 
 :::{.callout-tip}
-The `${PROJECT_ID}` will automatically be populated with your Run:AI project name.
+The `${RUNAI_PROJECT}` will automatically be populated with your Run:AI project name, so you can copy and paste the code directly from this guide.
 :::
 
 ```bash
@@ -69,6 +69,13 @@ rm af3.bin.zst
 
 The decompressed `af3.bin` file is approximately 1.1 GB.
 
+TODO: Alternatively, transfer from the RDS:
+
+```bash
+sftp <unikey>@research-data-ext.sydney.edu.au:/rds/PRJ-<Project Short ID>/<Path to af3.bin>
+get af3.bin
+```
+
 ## Step 2: Download sequence databases
 
 :::{.callout-note}
@@ -80,11 +87,15 @@ The alignment job (Step 4) searches several large sequence databases. These must
 In your JupyterLab terminal, run:
 
 ```bash
+# Create a folder for the databases on your PVC
+mkdir -p /scratch/${RUNAI_PROJECT}/alphafold3/db
+cd /scratch/${RUNAI_PROJECT}/alphafold3/db
+
 # Download the AlphaFold3 setup scripts
-git clone https://github.com/google-deepmind/alphafold3.git
+git clone https://github.com/google-deepmind/alphafold3.git af3_repo
 
 # Download all sequence databases to your PVC (takes several hours)
-bash alphafold3/fetch_databases.sh /scratch/${PROJECT_ID}/alphafold3/db
+bash af3_repo/fetch_databases.sh /scratch/${RUNAI_PROJECT}/alphafold3/db
 ```
 
 :::{.callout-important}
@@ -96,7 +107,7 @@ You can work through Step 3 in a separate terminal tab while the download runs.
 Once the download finishes, verify the databases are in place:
 
 ```bash
-ls -lh /scratch/${PROJECT_ID}/alphafold3/db
+ls -lh /scratch/${RUNAI_PROJECT}/alphafold3/db
 ```
 
 Expected contents (~394 GB total):
@@ -114,6 +125,13 @@ drwxr-x---  mmcif_files                                              (9.7M files
 -rw-r--r--  rfam_14_9_clust_seq_id_90_cov_80_rep_seq.fasta           218M  Rfam RNA families
 ```
 
+Update the permissions of the database files and delete the git repository folder.
+
+```bash
+chmod -R 550 *
+rm -rfv af3_repo/
+```
+
 ## Step 3: Create your input file
 
 AlphaFold3 reads a JSON file - a structured text file that describes the molecules you want to model. Create this file in JupyterLab before submitting your jobs.
@@ -122,7 +140,7 @@ This guide uses [oxytocin](https://www.uniprot.org/uniprotkb/P01178) as an examp
 
 For your own proteins, replace the `sequence` value with your amino-acid sequence in single-letter code and remove `bondedAtomPairs` unless you are specifying bonds explicitly. The full input format is described in the [official documentation](https://github.com/google-deepmind/alphafold3/blob/main/docs/input.md).
 
-1. In the JupyterLab file browser (left panel), navigate to `/scratch/${PROJECT_ID}/alphafold3/`
+1. In the JupyterLab file browser (left panel), navigate to `/alphafold3/`
 2. Select **File → New → Text File** to create a new empty file
 3. Right-click the new file and rename it to to something informative. In this guide, we will fold oxytocin as an example and call the file `oxytocin.json`
 4. Paste the following content into the file and save with **Ctrl+S**:
@@ -147,6 +165,10 @@ For your own proteins, replace the `sequence` value with your amino-acid sequenc
 }
 ```
 
+Your files should look similar to:
+
+* TODO add image
+
 :::{.callout-note collapse="true"}
 ## JSON field reference
 
@@ -170,29 +192,40 @@ The alignment job searches the sequence databases and produces pre-computed feat
 <!-- TODO: screenshot fig/af3_new_training_workload.png — Run:AI new workload dialog with Training selected -->
 
 3. Configure the workload:
-    - **Cluster**: set automatically — no change needed
+    - **Cluster**: set automatically, no change needed
     - **Project**: select your project
+    - **Workload architecture**: select *Standard*
     - **Templates**: select *Start from scratch*
     - **Name**: give the job a unique name, e.g. `oxytocin-align`
 
-4. Under **Environment**, enter the image URL:
-    ```
-    sydneyinformaticshub/alphafold3:v3.0.2-20260604
-    ```
-5. Under **Command**, enter the following — replacing `<PROJECT_ID>` with your Run:AI project name throughout:
-    ```
-    python run_alphafold.py --json_path=/scratch/<PROJECT_ID>/alphafold3/oxytocin.json --model_dir=/scratch/<PROJECT_ID>/alphafold3/params --db_dir=/scratch/<PROJECT_ID>/alphafold3/db --output_dir=/scratch/<PROJECT_ID>/alphafold3/output --run_inference=false
-    ```
+TODO screnshots
 
-6. Under **Compute resources**, configure:
+4. Under **Environment**, copy and paste the **Image URL**:
 
-    | Resource | Value |
-    |---|---|
-    | GPU | None (0) |
-    | CPU cores | 8 |
-    | Memory | 64 GB |
+```bash
+sydneyinformaticshub/alphafold3:v3.0.2-20260604
+```
 
-7. Under **Data & sources**, attach your PVC with mount path `/scratch/<PROJECT_ID>`. This gives the job access to your databases, model weights, and input file.
+5. Under **Runtime settings**, select **COMMAND & ARGUMENTS**.
+
+6. Under **Command**, copy and paste the following:
+
+```bash
+python run_alphafold.py \
+    --json_path=/scratch/${RUNAI_PROJECT}/alphafold3/oxytocin.json \
+    --model_dir=/scratch/${RUNAI_PROJECT}/alphafold3/params \
+    --db_dir=/scratch/${RUNAI_PROJECT}/alphafold3/db \
+    --output_dir=/scratch/${RUNAI_PROJECT}/alphafold3/output \
+    --run_inference=false
+```
+
+TODO: Add folded params field reference again.
+
+7. Under **Compute resources -> Extended resources**, toggle **Increased shared memory size**.
+
+This configuration will automatically assign CPU and CPU memory resources, and no GPUs.
+
+7. Under **Data & sources**, attach your PVC with mount path `/scratch/${RUNAI_PROJECT}`. This gives the job access to your databases, model weights, and input file.
 
 8. Click **Create** to submit
 
@@ -200,7 +233,7 @@ The alignment job searches the sequence databases and produces pre-computed feat
 
 Wait for the job status to show **Completed** before continuing to Step 5. This typically takes around 7 minutes.
 
-To verify the alignment completed successfully, open the JupyterLab file browser and confirm the folder `/scratch/<PROJECT_ID>/alphafold3/output/oxytocin/` exists and contains files.
+To verify the alignment completed successfully, open the JupyterLab file browser and confirm the folder `/alphafold3/output/oxytocin/` exists and contains files.
 
 ## Step 5: Run the structure prediction job [GPU]
 
@@ -211,12 +244,12 @@ Once the alignment job has completed, submit the GPU step. This reads the pre-co
     - **Project**: same project as Step 4
     - **Name**: a unique name, e.g. `oxytocin-inference`
     - **Environment** image: `sydneyinformaticshub/alphafold3:v3.0.2-20260604`
-3. Under **Command**, enter (replacing `<PROJECT_ID>` throughout):
+3. Under **Command**, enter (replacing `<RUNAI_PROJECT>` throughout):
     ```
-    python run_alphafold.py --json_path=/scratch/<PROJECT_ID>/alphafold3/oxytocin.json --model_dir=/scratch/<PROJECT_ID>/alphafold3/params --output_dir=/scratch/<PROJECT_ID>/alphafold3/output --run_data_pipeline=false --num_diffusion_samples=5
+    python run_alphafold.py --json_path=/scratch/<RUNAI_PROJECT>/alphafold3/oxytocin.json --model_dir=/scratch/<RUNAI_PROJECT>/alphafold3/params --output_dir=/scratch/<RUNAI_PROJECT>/alphafold3/output --run_data_pipeline=false --num_diffusion_samples=5
     ```
 4. Under **Compute resources**, set the GPU fraction to 0.5 (half an H200, ~70 GB VRAM), CPU cores to 8, and memory to 64 GB
-5. Under **Data & sources**, attach your PVC with mount path `/scratch/<PROJECT_ID>`
+5. Under **Data & sources**, attach your PVC with mount path `/scratch/<RUNAI_PROJECT>`
 6. Click **Create** to submit
 
 <!-- TODO: screenshot fig/af3_inference_complete.png — Run:AI Workloads page showing inference job Completed -->
@@ -226,7 +259,7 @@ Once the alignment job has completed, submit the GPU step. This reads the pre-co
 Once the inference job shows **Completed**, your output files are in:
 
 ```
-/scratch/<PROJECT_ID>/alphafold3/output/oxytocin/
+/scratch/<RUNAI_PROJECT>/alphafold3/output/oxytocin/
 ```
 
 This folder contains predicted structure files (`.cif` format) and JSON confidence score files for each predicted model. Structure files can be viewed in [Mol\*](https://molstar.org/viewer/) or [PyMOL](https://pymol.org/).
