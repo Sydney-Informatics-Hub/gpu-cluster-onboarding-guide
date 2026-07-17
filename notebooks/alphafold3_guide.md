@@ -36,12 +36,42 @@ You will use a JupyterLab session throughout this guide to run setup commands, m
 - **Data & sources**: attach your PVC to access your databases, weights, and input files
 
 :::{.callout-tip}
-This JupyterLab session is for file management and setup only. Tasks include preparing inputs, running download commands, and viewing results. The AlphaFold3 jobs themselves run as separate Training workloads in later steps.
+This JupyterLab session is for file management and setup only. Tasks include preparing inputs, running download commands, and viewing results. The AlphaFold3 jobs themselves are submitted from the terminal in Steps 4 and 5.
 :::
+
+### 3. Install the runai CLI
+
+The `runai` command-line interface (CLI) is used to submit and monitor jobs on the cluster. This guide runs the CLI from a JupyterLab terminal.
+
+**Install the CLI**
+
+Follow the [CLI setup guide](CLI.html) to download the installer. When prompted to select a platform, choose **Linux**.
+
+**Log in from JupyterLab**
+
+Open a terminal in JupyterLab (**File > New > Terminal**) and run:
+
+```bash
+runai login remote-browser
+```
+
+:::{.callout-important}
+Use `runai login remote-browser`, not `runai login`. Because the terminal is running on a remote server, it cannot open a browser directly. The `remote-browser` option gives you a URL to open yourself instead.
+:::
+
+A URL will be printed in the terminal. Copy it, open it in your browser, and follow the prompts to authenticate. When you receive a token, paste it back into the terminal and press Enter.
+
+Confirm the login was successful:
+
+```bash
+runai whoami
+```
+
+Your username and project should be displayed.
 
 ## Step 1: Download model weights
 
-Once you receive the approval email from Google DeepMind, open a terminal in JupyterLab (**File → New → Terminal**) and run the following commands. 
+Once you receive the approval email from Google DeepMind, open a terminal in JupyterLab (**File > New > Terminal**) and run the following commands.
 
 Ensure to replace `<DOWNLOAD_URL>` with the link provided in the approval email:
 
@@ -68,13 +98,6 @@ rm af3.bin.zst
 ```
 
 The decompressed `af3.bin` file is approximately 1.1 GB.
-
-TODO: Alternatively, transfer from the RDS:
-
-```bash
-sftp <unikey>@research-data-ext.sydney.edu.au:/rds/PRJ-<Project Short ID>/<Path to af3.bin>
-get af3.bin
-```
 
 ## Step 2: Download sequence databases
 
@@ -136,13 +159,13 @@ rm -rfv af3_repo/
 
 AlphaFold3 reads a JSON file - a structured text file that describes the molecules you want to model. Create this file in JupyterLab before submitting your jobs.
 
-This guide uses [oxytocin](https://www.uniprot.org/uniprotkb/P01178) as an example. It is a 9-residue protein with a disulfide bond between cysteines at positions 1 and 6. 
+This guide uses [oxytocin](https://www.uniprot.org/uniprotkb/P01178) as an example. It is a 9-residue protein with a disulfide bond between cysteines at positions 1 and 6.
 
 For your own proteins, replace the `sequence` value with your amino-acid sequence in single-letter code and remove `bondedAtomPairs` unless you are specifying bonds explicitly. The full input format is described in the [official documentation](https://github.com/google-deepmind/alphafold3/blob/main/docs/input.md).
 
 1. In the JupyterLab file browser (left panel), navigate to `/alphafold3/`
-2. Select **File → New → Text File** to create a new empty file
-3. Right-click the new file and rename it to to something informative. In this guide, we will fold oxytocin as an example and call the file `oxytocin.json`
+2. Select **File > New > Text File** to create a new empty file
+3. Right-click the new file and rename it to something informative. In this guide, we will fold oxytocin as an example and call the file `oxytocin.json`
 4. Paste the following content into the file and save with **Ctrl+S**:
 
 ```json
@@ -165,20 +188,16 @@ For your own proteins, replace the `sequence` value with your amino-acid sequenc
 }
 ```
 
-Your files should look similar to:
-
-* TODO add image
-
 :::{.callout-note collapse="true"}
 ## JSON field reference
 
 | Field | Description |
 |---|---|
 | `name` | Label for the prediction that is used in output file names |
-| `sequences[].protein.id` | Chain identifier in the output structure (`"A"`, `"B"`, …) |
+| `sequences[].protein.id` | Chain identifier in the output structure (`"A"`, `"B"`, ...) |
 | `sequences[].protein.sequence` | Amino-acid sequence in single-letter code. One continuous string, no spaces or line breaks |
 | `bondedAtomPairs` | Explicit bonds to enforce. Each entry is `[chain_id, residue_number, atom_name]`. Use `"SG"` on cysteine (`C`) for disulfide bonds; residue numbers are 1-based. Omit this field if you have no explicit bonds. |
-| `modelSeeds` | Each number produces one predicted structure — add more seeds for greater structural diversity |
+| `modelSeeds` | Each number produces one predicted structure - add more seeds for greater structural diversity |
 | `dialect` / `version` | Always `"alphafold3"` and `2` |
 :::
 
@@ -186,80 +205,125 @@ Your files should look similar to:
 
 The alignment job searches the sequence databases and produces pre-computed features used in Step 5. It runs on CPU only and does not need a GPU.
 
-1. In the Run:AI web interface, navigate to **Workload Manager** → **Workloads** and click **NEW WORKLOAD**
-2. Select **Training** from the workload type dropdown
+Create a new file (**File > New > Text File**). Rename it to something like `align.sh`.
 
-<!-- TODO: screenshot fig/af3_new_training_workload.png — Run:AI new workload dialog with Training selected -->
+Next, copy the following code, paste it into `align.sh`. Save and close the file.
 
-3. Configure the workload:
-    - **Cluster**: set automatically, no change needed
-    - **Project**: select your project
-    - **Workload architecture**: select *Standard*
-    - **Templates**: select *Start from scratch*
-    - **Name**: give the job a unique name, e.g. `oxytocin-align`
-
-TODO screnshots
-
-4. Under **Environment**, copy and paste the **Image URL**:
+Note that the `JOB_NAME` is set to the same name as the json file.
 
 ```bash
-sydneyinformaticshub/alphafold3:v3.0.2-20260604
+#!/bin/bash
+# AlphaFold3 alignment job - searches sequence databases (CPU only, no GPU nee
+ded)
+# Run this first, wait for it to complete, then run inference.sh
+
+# ── Edit this line before running ─────────────────────────────────────
+JOB_NAME=oxytocin   # label for this prediction; also the name of your input JSON file
+# ──────────────────────────────────────────────────────────────────────
+
+runai training submit "${JOB_NAME}-align" \
+  -p "${RUNAI_PROJECT}" \
+  --image sydneyinformaticshub/alphafold3:v3.0.2-20260604 \
+  --image-pull-policy IfNotPresent \
+  -c \
+  --cpu-core-limit 8 \
+  --cpu-memory-limit 64G \
+  --large-shm 
+  --existing-pvc "claimname=pvc-${RUNAI_PROJECT},path=/scratch/${RUNAI_PROJECT}" \
+  -- python run_alphafold.py \
+      --json_path="/scratch/${RUNAI_PROJECT}/alphafold3/${JOB_NAME}.json" \
+      --model_dir="/scratch/${RUNAI_PROJECT}/alphafold3/params" \
+      --db_dir="/scratch/${RUNAI_PROJECT}/alphafold3/db" \
+      --output_dir="/scratch/${RUNAI_PROJECT}/alphafold3/output" \
+      --run_inference=false
 ```
 
-5. Under **Runtime settings**, select **COMMAND & ARGUMENTS**.
-
-6. Under **Command**, copy and paste the following:
+Submit the job in the Terminal by running:
 
 ```bash
-python run_alphafold.py \
-    --json_path=/scratch/${RUNAI_PROJECT}/alphafold3/oxytocin.json \
-    --model_dir=/scratch/${RUNAI_PROJECT}/alphafold3/params \
-    --db_dir=/scratch/${RUNAI_PROJECT}/alphafold3/db \
-    --output_dir=/scratch/${RUNAI_PROJECT}/alphafold3/output \
-    --run_inference=false
+bash align.sh
 ```
 
-TODO: Add folded params field reference again.
+Once submitted, you should see the following message:
 
-7. Under **Compute resources -> Extended resources**, toggle **Increased shared memory size**.
+```md
+Creating training oxytocin-align...
+To track the workload's status, run 'runai training standard describe oxytocin-align'
+```
 
-This configuration will automatically assign CPU and CPU memory resources, and no GPUs.
+To check whether the job is running and when it finishes, either check the **Workloads** page in the Run:AI web interface, or run:
 
-7. Under **Data & sources**, attach your PVC with mount path `/scratch/${RUNAI_PROJECT}`. This gives the job access to your databases, model weights, and input file.
+```bash
+# Show a summary of all your jobs and their current status
+runai training list -p $RUNAI_PROJECT
 
-8. Click **Create** to submit
+# Stream live logs (press Ctrl+C to stop)
+runai training logs "oxytocin-align" -f
+```
 
-<!-- TODO: screenshot fig/af3_alignment_running.png — Run:AI Workloads page showing alignment job in Running state -->
-
-Wait for the job status to show **Completed** before continuing to Step 5. This typically takes around 7 minutes.
+Wait until the job status shows **Completed** before continuing to Step 5. This typically takes around 10 minutes for oxytocin.
 
 To verify the alignment completed successfully, open the JupyterLab file browser and confirm the folder `/alphafold3/output/oxytocin/` exists and contains files.
+
+In case you need to resubmit a job, first delete the existing run with `runai training delete oxytocin-align`, then rerun `bash 
 
 ## Step 5: Run the structure prediction job [GPU]
 
 Once the alignment job has completed, submit the GPU step. This reads the pre-computed features written by Step 4.
 
-1. Navigate to **Workloads** → **NEW WORKLOAD** → **Training**
-2. Configure the workload:
-    - **Project**: same project as Step 4
-    - **Name**: a unique name, e.g. `oxytocin-inference`
-    - **Environment** image: `sydneyinformaticshub/alphafold3:v3.0.2-20260604`
-3. Under **Command**, enter (replacing `<RUNAI_PROJECT>` throughout):
-    ```
-    python run_alphafold.py --json_path=/scratch/<RUNAI_PROJECT>/alphafold3/oxytocin.json --model_dir=/scratch/<RUNAI_PROJECT>/alphafold3/params --output_dir=/scratch/<RUNAI_PROJECT>/alphafold3/output --run_data_pipeline=false --num_diffusion_samples=5
-    ```
-4. Under **Compute resources**, set the GPU fraction to 0.5 (half an H200, ~70 GB VRAM), CPU cores to 8, and memory to 64 GB
-5. Under **Data & sources**, attach your PVC with mount path `/scratch/<RUNAI_PROJECT>`
-6. Click **Create** to submit
+Similarly, create a new file called `inference.sh`. Copy and paste the following:
 
-<!-- TODO: screenshot fig/af3_inference_complete.png — Run:AI Workloads page showing inference job Completed -->
+```bash
+#!/bin/bash
+# AlphaFold3 inference job - generates 3D structure predictions (requires GPU)
+# Run this only after alphafold3_align.sh has completed
+
+# ── Edit this line before running ──────────────────────────────────────
+JOB_NAME=oxytocin    # must match the JOB_NAME used in alphafold3_align.sh
+# ───────────────────────────────────────────────────────────────────────
+
+runai training submit "${JOB_NAME}-inference" \
+  -p "${RUNAI_PROJECT}" \
+  --image sydneyinformaticshub/alphafold3:v3.0.2-20260604 \
+  --image-pull-policy IfNotPresent \
+  -c \
+  --gpu-portion-request 0.1 \
+  --cpu-cores-request 8 \
+  --memory 64Gi \
+  --existing-pvc "claimname=pvc-${RUNAI_PROJECT},path=/scratch/${RUNAI_PROJECT}" \
+  -- python run_alphafold.py \
+      --json_path="/scratch/${RUNAI_PROJECT}/alphafold3/output/${JOB_NAME}/${JOB_NAME}.json" \
+      --model_dir="/scratch/${RUNAI_PROJECT}/alphafold3/params" \
+      --output_dir="/scratch/${RUNAI_PROJECT}/alphafold3/output" \
+      --run_data_pipeline=false \
+      --num_diffusion_samples=5
+```
+
+Submit the job:
+
+```bash
+bash inference.sh
+```
+
+Commands to check on the job:
+
+```bash
+runai training list -p "${RUNAI_PROJECT}"
+runai training logs oxytocin-inference -p "${RUNAI_PROJECT}" -f
+```
+
+Once completed, the output of `runai training logs oxytocin-inference` should display something similar:
+
+```bash
+
+```
 
 ## Retrieve your results
 
 Once the inference job shows **Completed**, your output files are in:
 
 ```
-/scratch/<RUNAI_PROJECT>/alphafold3/output/oxytocin/
+/scratch/${RUNAI_PROJECT}/alphafold3/output/oxytocin/
 ```
 
 This folder contains predicted structure files (`.cif` format) and JSON confidence score files for each predicted model. Structure files can be viewed in [Mol\*](https://molstar.org/viewer/) or [PyMOL](https://pymol.org/).
@@ -268,17 +332,48 @@ This folder contains predicted structure files (`.cif` format) and JSON confiden
 A 9-residue peptide (oxytocin) takes approximately 8 minutes total: ~7 minutes for alignment and ~1 minute for structure prediction. Longer proteins take proportionally more time for the alignment step.
 :::
 
+## Command reference
+
+:::{.callout-note collapse="true"}
+## runai training submit flags
+
+| Flag | Value in this guide | Purpose |
+|------|---------------------|---------|
+| *(job name)* | `${JOB_NAME}-align` or `${JOB_NAME}-inference` | Unique name for this job within your project |
+| `-p` | `${RUNAI_PROJECT}` | Your Run:AI project |
+| `--image` | `sydneyinformaticshub/alphafold3:v3.0.2-20260604` | The AlphaFold3 container image |
+| `--image-pull-policy` | `IfNotPresent` | Reuses a locally cached image instead of re-downloading on every run |
+| `-c` | *(flag)* | Allows you to specify the command to run inside the container |
+| `--cpu-cores-request` | `8` | Number of CPU cores to reserve for the job |
+| `--memory` | `64Gi` | RAM to reserve; the database search loads large files into memory |
+| `--large-shm` | *(flag, alignment only)* | Increases shared memory size, required by the database search tools |
+| `--gpu-portion-request` | `0.5` (inference only) | Fraction of one GPU to use; 0.5 = half an H200 (~70 GB VRAM) |
+| `--existing-pvc` | `claimname=pvc-${RUNAI_PROJECT},...` | Mounts your persistent storage so the job can read your databases, weights, and input file |
+
+## AlphaFold3 flags
+
+| Flag | Purpose |
+|------|---------|
+| `--json_path` | Path to the JSON file describing the molecules you want to predict |
+| `--model_dir` | Folder containing the model weights file (`af3.bin`) |
+| `--db_dir` | Folder containing the sequence databases (alignment job only) |
+| `--output_dir` | Folder where results are written; created automatically if it does not exist |
+| `--run_inference=false` | Alignment job only: skip the GPU prediction step and stop after the database search |
+| `--run_data_pipeline=false` | Inference job only: skip the database search and use the pre-computed results from the alignment job |
+| `--num_diffusion_samples` | Number of predicted structures to generate per model seed; 5 is the default |
+:::
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---------|-------------|-----|
-| Job stays in `Pending` | No suitable node is available (e.g. no free GPU for the inference job) | Wait for a free slot; check the workload queue in the Run:AI web interface |
-| Job stuck in `ContainerCreating` for 5–10 min | The container image is being downloaded to that node for the first time (~15 GB) | No action needed; check the workload **Events** tab for a `Pulled` message |
+| Job stays in `Pending` | No suitable node is available (e.g. no free GPU for the inference job) | Wait for a free slot; run `runai training describe ${JOB_NAME}-inference -p ${RUNAI_PROJECT}` or check the Run:AI web interface to see the queue |
+| Job stuck in `ContainerCreating` for 5-10 min | The container image is being downloaded to that node for the first time (~15 GB) | No action needed; run `runai training describe ${JOB_NAME}-align -p ${RUNAI_PROJECT}` and look for a `Pulled` message in the Events section |
 | `FileNotFoundError: af3.bin` | The weights file is missing or in the wrong location | Confirm `af3.bin` is directly inside `alphafold3/params/`, not inside a subfolder |
 | `FileNotFoundError` for a database file | A database file is missing or has an unexpected name | Verify all files from `fetch_databases.sh` are in `alphafold3/db/` with their original names |
 | XLA compilation takes 20+ minutes on first run | The GPU kernel is compiled on first use for your protein's length | Expected on the first run only; subsequent runs reuse the compiled result stored in `output_dir` |
 
 ## Coming soon
 
-- **Shared databases** — sequence databases will be available on a shared cluster path for all users, removing the need for [Step 2](#step-2-download-sequence-databases)
-- **PyMOL on the cluster** — visualise predicted structures directly on the cluster without downloading them locally
+- **Shared databases** - sequence databases will be available on a shared cluster path for all users, removing the need for [Step 2](#step-2-download-sequence-databases)
+- **PyMOL on the cluster** - visualise predicted structures directly on the cluster without downloading them locally
