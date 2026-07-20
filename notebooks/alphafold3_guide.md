@@ -30,14 +30,10 @@ Follow the request instructions on the [AlphaFold3 GitHub page](https://github.c
 
 ### 2. Set up a JupyterLab workload
 
-You will use a JupyterLab session throughout this guide to run setup commands, manage files, and view outputs. Follow the [Creating a JupyterLab workload](jupyter_tutorial.html) guide with these settings:
+You will use a JupyterLab session throughout this guide to run setup commands, manage files, view outputs, and submit the folding jobs. Follow the [Creating a JupyterLab workload](jupyter_tutorial.html) guide with these settings:
 
 - **Compute resources**: select CPU only as no GPU is needed for this session
 - **Data & sources**: attach your PVC to access your databases, weights, and input files
-
-:::{.callout-tip}
-This JupyterLab session is for file management and setup only. Tasks include preparing inputs, running download commands, and viewing results. The AlphaFold3 jobs themselves are submitted from the terminal in Steps 4 and 5.
-:::
 
 ### 3. Install the runai CLI
 
@@ -71,9 +67,13 @@ Your username and project should be displayed.
 
 ## Step 1: Download model weights
 
-Once you receive the approval email from Google DeepMind, open a terminal in JupyterLab (**File > New > Terminal**) and run the following commands.
+The AlphaFold3 model weights (`af3.bin`) only need to be obtained once. If you have already downloaded a copy for a previous project, you can transfer that copy from the Research Data Store (RDS) instead of requesting it again. Choose the tab below that matches your situation.
 
-Ensure to replace `<DOWNLOAD_URL>` with the link provided in the approval email:
+::::{.panel-tabset}
+
+## Download from DeepMind
+
+Once you receive the approval email from Google DeepMind, open a terminal in JupyterLab (**File > New > Terminal**) and run the following commands.
 
 :::{.callout-tip}
 The `${RUNAI_PROJECT}` will automatically be populated with your Run:AI project name, so you can copy and paste the code directly from this guide.
@@ -84,8 +84,11 @@ The `${RUNAI_PROJECT}` will automatically be populated with your Run:AI project 
 mkdir -p /scratch/${RUNAI_PROJECT}/alphafold3/params
 cd /scratch/${RUNAI_PROJECT}/alphafold3/params
 
+# Paste the download link from your approval email here
+export DOWNLOAD_URL=https://paste-your-link-here
+
 # Download the weights (this may take a few minutes)
-wget -O af3.bin.zst <DOWNLOAD_URL>
+wget -O af3.bin.zst "${DOWNLOAD_URL}"
 
 # Decompress the file (requires ~2 GB of free space temporarily)
 zstd -d af3.bin.zst
@@ -98,6 +101,36 @@ rm af3.bin.zst
 ```
 
 The decompressed `af3.bin` file is approximately 1.1 GB.
+
+## Transfer from RDS
+
+If a decompressed copy of `af3.bin` already exists on the Research Data Store (RDS) you can copy it directly to your PVC.
+
+This uses the same `sftp` transfer method described in the [Data Transfer guide](data_transfer.html); see that guide for more detail on unikeys and RDS project IDs.
+
+Open a terminal in JupyterLab (**File > New > Terminal**) and run:
+
+```bash
+# Create a folder for the weights on your PVC
+mkdir -p /scratch/${RUNAI_PROJECT}/alphafold3/params
+cd /scratch/${RUNAI_PROJECT}/alphafold3/params
+
+# Set these to your details
+export UNIKEY=abcd0123          # your University of Sydney unikey
+export RDS_PROJECT=PRJ-1234     # your RDS project ID, found on DashR (https://dashr.sydney.edu.au/)
+export RDS_PATH=path/to/af3.bin # the location of af3.bin within your RDS project
+
+# Copy the weights file from RDS to your PVC
+sftp "${UNIKEY}@research-data-ext.sydney.edu.au:/rds/${RDS_PROJECT}/${RDS_PATH}" .
+
+# Protect the file so only you can read it (required by the licence)
+chmod 400 af3.bin
+```
+
+You will be prompted for the password associated with your unikey to connect to RDS.
+
+::::
+
 
 ## Step 2: Download sequence databases
 
@@ -312,10 +345,30 @@ runai training list -p "${RUNAI_PROJECT}"
 runai training logs oxytocin-inference -p "${RUNAI_PROJECT}" -f
 ```
 
-Once completed, the output of `runai training logs oxytocin-inference` should display something similar:
+Once completed, the output of `runai training logs oxytocin-inference` should display something similar as the following:
 
-```bash
+```md
+Found local devices: [CudaDevice(id=0)], using device 0: cuda:0
+Building model from scratch...
+Checking that model parameters can be loaded...
 
+Running fold job oxytocin...
+Output will be written in /scratch/rds-core-sih4hpc-rw/alphafold3/output/oxytocin_20260717_074703 since /scratch/rds-core-sih4hpc-rw/alphafold3/output/oxytocin is non-empty.
+Skipping data pipeline...
+Writing model input JSON to /scratch/rds-core-sih4hpc-rw/alphafold3/output/oxytocin_20260717_074703/oxytocin_data.json
+Predicting 3D structure for oxytocin with 1 seed(s)...
+Featurising data with 1 seed(s)...
+Featurising data with seed 1.
+Featurising data with seed 1 took 0.20 seconds.
+Featurising data with 1 seed(s) took 8.88 seconds.
+Running model inference and extracting output structure samples with 1 seed(s)...
+Running model inference with seed 1...
+Running model inference with seed 1 took 103.10 seconds.
+Extracting inference results with seed 1...
+Extracting 5 inference samples with seed 1 took 0.05 seconds.
+Running model inference and extracting output structures with 1 seed(s) took 103.14 seconds.
+Writing outputs with 1 seed(s)...
+Fold job oxytocin done, output written to /scratch/rds-core-sih4hpc-rw/alphafold3/output/oxytocin_20260717_074703
 ```
 
 ## Retrieve your results
