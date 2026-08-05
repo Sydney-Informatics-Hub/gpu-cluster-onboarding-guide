@@ -65,6 +65,14 @@ runai whoami
 
 Your username and project should be displayed.
 
+**Set your default project**
+
+By default, `runai` commands need a project specified with `-p ${RUNAI_PROJECT}` on every command, or they will fail with `Error: project is missing`. Set a default now so you don't need to repeat this flag throughout the rest of this guide:
+
+```bash
+runai project set ${RUNAI_PROJECT}
+```
+
 ## Step 1: Download model weights
 
 The AlphaFold3 model weights (`af3.bin`) only need to be obtained once. If you have already downloaded a copy for a previous project, you can transfer that copy from the Research Data Store (RDS) instead of requesting it again. Choose the tab below that matches your situation.
@@ -246,8 +254,7 @@ Note that the `JOB_NAME` is set to the same name as the json file.
 
 ```bash
 #!/bin/bash
-# AlphaFold3 alignment job - searches sequence databases (CPU only, no GPU nee
-ded)
+# AlphaFold3 alignment job - searches sequence databases (CPU only, no GPU needed)
 # Run this first, wait for it to complete, then run inference.sh
 
 # ── Edit this line before running ─────────────────────────────────────
@@ -261,7 +268,7 @@ runai training submit "${JOB_NAME}-align" \
   -c \
   --cpu-core-limit 8 \
   --cpu-memory-limit 64G \
-  --large-shm 
+  --large-shm \
   --existing-pvc "claimname=pvc-${RUNAI_PROJECT},path=/scratch/${RUNAI_PROJECT}" \
   -- python run_alphafold.py \
       --json_path="/scratch/${RUNAI_PROJECT}/alphafold3/${JOB_NAME}.json" \
@@ -288,7 +295,7 @@ To check whether the job is running and when it finishes, either check the **Wor
 
 ```bash
 # Show a summary of all your jobs and their current status
-runai training list -p $RUNAI_PROJECT
+runai training list
 
 # Stream live logs (press Ctrl+C to stop)
 runai training logs "oxytocin-align" -f
@@ -298,7 +305,7 @@ Wait until the job status shows **Completed** before continuing to Step 5. This 
 
 To verify the alignment completed successfully, open the JupyterLab file browser and confirm the folder `/alphafold3/output/oxytocin/` exists and contains files.
 
-In case you need to resubmit a job, first delete the existing run with `runai training delete oxytocin-align`, then rerun `bash 
+In case you need to resubmit a job, first delete the existing run with `runai training delete oxytocin-align`, then rerun `bash align.sh`.
 
 ## Step 5: Run the structure prediction job [GPU]
 
@@ -341,8 +348,8 @@ bash inference.sh
 Commands to check on the job:
 
 ```bash
-runai training list -p "${RUNAI_PROJECT}"
-runai training logs oxytocin-inference -p "${RUNAI_PROJECT}" -f
+runai training list
+runai training logs oxytocin-inference -f
 ```
 
 Once completed, the output of `runai training logs oxytocin-inference` should display something similar as the following:
@@ -425,6 +432,7 @@ A 9-residue peptide (oxytocin) takes approximately 8 minutes total: ~7 minutes f
 | `FileNotFoundError: af3.bin` | The weights file is missing or in the wrong location | Confirm `af3.bin` is directly inside `alphafold3/params/`, not inside a subfolder |
 | `FileNotFoundError` for a database file | A database file is missing or has an unexpected name | Verify all files from `fetch_databases.sh` are in `alphafold3/db/` with their original names |
 | XLA compilation takes 20+ minutes on first run | The GPU kernel is compiled on first use for your protein's length | Expected on the first run only; subsequent runs reuse the compiled result stored in `output_dir` |
+| `Error: project is missing. value is empty.` | No default project is set for `runai` commands | Run `runai project set ${RUNAI_PROJECT}`, or add `-p ${RUNAI_PROJECT}` to the command |
 
 ## Coming soon
 
