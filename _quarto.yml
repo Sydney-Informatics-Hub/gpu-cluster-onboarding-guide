@@ -28,6 +28,8 @@ website:
         contents:
         - text: "Creating a Jupyter Lab workload"
           href: notebooks/jupyter_tutorial.html
+        - text: "Creating a VS Code workload"
+          href: notebooks/vscode_tutorial.html
         - text: "Creating a Marimo Python workload"
           href: notebooks/marimo_tutorial.html
         - text: "How to transfer data to/from the SIH GPU Cluster"
