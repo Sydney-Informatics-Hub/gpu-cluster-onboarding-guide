@@ -1,6 +1,6 @@
 # How to run AlphaFold3 on the SIH GPU Cluster
 
-TODO: embed ~/Videos/screencasts/insulin-demo.webm
+{{< video ../fig/af3_insulin_demo.webm >}}
 
 [AlphaFold3](https://github.com/google-deepmind/alphafold3) predicts the 3D structure of proteins, nucleic acids, and small molecules. You describe your molecules in a text file and AlphaFold3 returns predicted 3D structures with confidence scores.
 
@@ -202,7 +202,7 @@ rm -rfv af3_repo/
 
 AlphaFold3 reads a JSON file - a structured text file that describes the molecules you want to model. Create this file in JupyterLab before submitting your jobs.
 
-This guide uses [insulin](https://www.rcsb.org/structure/3I40) as an example. TODO: Update with insulin: It is a 9-residue protein with a disulfide bond between cysteines at positions 1 and 6.
+This guide uses [insulin](https://www.rcsb.org/structure/3I40) as an example: a 51-residue protein made of two chains (a 21-residue A chain and a 30-residue B chain) linked by three disulfide bonds.
 
 For your own proteins, replace the `sequence` value with your amino-acid sequence in single-letter code and remove `bondedAtomPairs` unless you are specifying bonds explicitly. The full input format is described in the [official documentation](https://github.com/google-deepmind/alphafold3/blob/main/docs/input.md).
 
@@ -327,8 +327,7 @@ runai training list
 runai training logs "insulin-align" -f
 ```
 
-USER TODO: Update benchmark
-Wait until the job status shows **Completed** before continuing to Step 5. This typically takes around 10 minutes for insulin.
+Wait until the job status shows **Completed** before continuing to Step 5. This typically takes around 45 minutes for insulin.
 
 To verify the alignment completed successfully, open the JupyterLab file browser and confirm the folder `/alphafold3/output/insulin/` (`/scratch/${RUNAI_PROJECT}/alphafold3/output/insulin/` in a terminal) exists and contains one file: `insulin_data.json`. This is the pre-computed features file that Step 5 reads. You can also check from the terminal:
 
@@ -421,10 +420,8 @@ Writing outputs with 1 seed(s)...
 Fold job insulin done, output written to /scratch/rds-core-sih4hpc-rw/alphafold3/output/insulin_20260717_074703
 ```
 
-USER TODO: Update with insulin: ~45 mins for alignment, and under a minute for the GPU structure prediction
-
 :::{.callout-note}
-A X-residue peptide (oxytocin) takes approximately 8 minutes total: ~7 minutes for alignment and ~1 minute for structure prediction. Longer proteins take proportionally more time for the alignment step. Benchmarks will come soon.
+For reference, insulin (51 residues, two chains) took around 45 minutes for alignment and under a minute for structure prediction. A shorter peptide, oxytocin (9 residues), took around 7 minutes for alignment and around 1 minute for structure prediction. Alignment time scales with sequence length; structure prediction stays fast regardless of protein size.
 :::
 
 ## Visualise your results
@@ -432,18 +429,73 @@ A X-residue peptide (oxytocin) takes approximately 8 minutes total: ~7 minutes f
 Once the inference job shows **Completed**, your output files are in:
 
 ```
-/scratch/${RUNAI_PROJECT}/alphafold3/output/oxytocin/
+/scratch/${RUNAI_PROJECT}/alphafold3/output/insulin/
 ```
 
-This folder contains predicted structure files (`.cif` format) and JSON confidence score files for each predicted model. Structure files can be viewed in tools such as [Mol\*](https://molstar.org/viewer/) or [PyMOL](https://pymol.org/).
+![Output files for a completed prediction](../fig/af3_output_directory.png)
+
+This folder contains:
+
+| File / folder | Description |
+|---|---|
+| `insulin_model.cif` | The top-ranked predicted structure |
+| `seed-<N>_sample-<N>/` | One folder per predicted sample, each containing that sample's structure and confidence files |
+| `insulin_summary_confidences.json` | Overall confidence scores (e.g. pTM, ipTM) for the top-ranked structure |
+| `insulin_confidences.json` | Detailed, per-residue confidence scores for the top-ranked structure |
+| `insulin_ranking_scores.csv` | Confidence scores for every sample, used to rank them |
+| `insulin_data.json` | The input file AlphaFold3 used to run the prediction |
+| `TERMS_OF_USE.md` | AlphaFold3's output terms of use |
+
+Structure files (`.cif`) can be viewed in tools such as [Mol\*](https://molstar.org/viewer/) or [PyMOL](https://pymol.org/).
 
 Here we will use an interactive Jupyter notebook and the `py3Dmol` package to visualise our results.
 
 1. File -> New -> Notebook
 2. If prompted, select the Python3 (ipykernel)
-3. Install `py3Dmol` with pip install py3Dmol
+3. Install `py3Dmol` with `pip install py3Dmol`
+4. Run the following in a cell, updating `file_path` to point at your `insulin_model.cif`:
 
-IMAgE
+```python
+import py3Dmol
+
+file_path = "/scratch/${RUNAI_PROJECT}/alphafold3/output/insulin/insulin_model.cif"
+with open(file_path) as ifile:
+    system = "".join([x for x in ifile])
+
+view = py3Dmol.view(width=400, height=300)
+view.addModelsAsFrames(system)
+view.setStyle({'model': -1}, {"cartoon": {'color': 'spectrum'}})
+view.zoomTo()
+view.show()
+```
+
+![Predicted insulin structure rendered with py3Dmol](../fig/af3_py3dmol_view.png)
+
+5. Optionally, run the following in a new cell to highlight insulin's three disulfide bonds (the same bonds specified in `bondedAtomPairs` in Step 3) as yellow sticks on the structure:
+
+```python
+# Insulin's three disulfide bonds: A6-A11, A7-B7, A20-B19
+disulfides = [
+    ("A", 6, "A", 11),
+    ("A", 7, "B", 7),
+    ("A", 20, "B", 19),
+]
+
+for c1, r1, c2, r2 in disulfides:
+    view.addStyle({"chain": [c1, c2], "resi": [r1, r2]},
+                   {"stick": {"colorscheme": "yellowCarbon"}})
+    view.addCylinder({
+        "start": {"chain": c1, "resi": r1, "atom": "SG"},
+        "end":   {"chain": c2, "resi": r2, "atom": "SG"},
+        "radius": 0.15,
+        "color": "yellow"
+    })
+
+view.zoomTo()
+view.show()
+```
+
+![Insulin structure with disulfide bonds highlighted](../fig/af3_py3dmol_disulfides.png)
 
 ## Command reference
 
