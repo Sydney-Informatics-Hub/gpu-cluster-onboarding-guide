@@ -22,6 +22,10 @@ Splitting the work this way means the GPU is only reserved for the shorter predi
 - Sequence databases downloaded to your PVC (~394 GB) - [Step 2](#step-2-download-sequence-databases)
 :::
 
+:::{.callout-tip}
+This guide is a work in progress. If you have feedback or run into issues, please [let us know](https://forms.cloud.microsoft/r/ezkDbt1YGp).
+:::
+
 ## Prerequisites
 
 ### 1. Request model weights
@@ -496,6 +500,10 @@ view.show()
 ```
 
 ![Insulin structure with disulfide bonds highlighted](../fig/af3_py3dmol_disulfides.png)
+
+:::{.callout-tip}
+Found this guide helpful, or noticed something missing? [Share your feedback](https://forms.cloud.microsoft/r/ezkDbt1YGp).
+:::
 
 ## Command reference
 
