@@ -32,10 +32,10 @@ Follow the request instructions on the [AlphaFold3 GitHub page](https://github.c
 
 ### 2. Set up a JupyterLab workload
 
-You will use a JupyterLab session throughout this guide to run setup commands, manage files, view outputs, and submit the folding jobs. Follow the [Creating a JupyterLab workload](jupyter_tutorial.html) guide with these settings:
+You will use a JupyterLab session throughout this guide to run setup commands, manage files, view outputs, and submit the folding jobs. Follow the [Creating a JupyterLab workload](jupyter_tutorial.html) guide's "create from scratch" workflow, applying these settings at [Step 2: Configure the workload](jupyter_tutorial.html#step-2-configure-the-workload-from-scratch):
 
 - **Compute resources**: select CPU only as no GPU is needed for this session
-- **Data & sources**: attach your PVC to access your databases, weights, and input files
+- **Data & sources**: attach your project's PVC, the persistent storage described in [Data sources](runai_features.html#runai-data-sources), so JupyterLab can access your databases, weights, and input files. You will set these up on the PVC in [Step 1](#step-1-download-model-weights) and [Step 2](#step-2-download-sequence-databases) below
 
 ### 3. Install the runai CLI
 
@@ -118,7 +118,7 @@ If a decompressed copy of `af3.bin` already exists on the Research Data Store (R
 
 This uses the same `sftp` transfer method described in the [Data Transfer guide](data_transfer.html); see that guide for more detail on unikeys and RDS project IDs.
 
-Open a terminal in JupyterLab (**File > New > Terminal**) and run:
+This uses the JupyterLab session and PVC you already set up in the [Prerequisites](#set-up-a-jupyterlab-workload) section, so no additional PVC setup is needed here. Open a terminal in JupyterLab (**File > New > Terminal**) and run:
 
 ```bash
 # Create a folder for the weights on your PVC
