@@ -3,7 +3,7 @@
 ## Projects {#runai-projects}
 In Run:ai, users are organised into [projects](https://run-ai-docs.nvidia.com/self-hosted/2.23/platform-management/aiinitiatives/organization/projects). This allows cluster users to work collaboratively and access shared resources including GPU devices and scratch disk space.
 
-Once a DashR project has been provisioned access to the SIH GPU cluster, all members of the project will automatically be added to a Run:ai project resembling the DashR project shortcode (e.g. "rds-core-sih4hpc-rw"). Users may be added to multiple Run:ai projects if the corresponding DashR projects have been granted access.
+Once a DashR project has been provisioned access to the Apollo GPU cluster, all members of the project will automatically be added to a Run:ai project resembling the DashR project shortcode (e.g. "rds-core-sih4hpc-rw"). Users may be added to multiple Run:ai projects if the corresponding DashR projects have been granted access.
 
 ![List of Run:ai projects](../fig/project_example.png)
 
@@ -53,6 +53,6 @@ Please [contact the SIH team](https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyh
 
 ## User roles
 
-Run:ai uses a [role-based access control system](https://run-ai-docs.nvidia.com/self-hosted/2.23/infrastructure-setup/authentication/roles) to manage what users can see and do within the platform. On the SIH GPU platform, newly onboarded researchers are assigned the [**L2 Researcher**](https://run-ai-docs.nvidia.com/self-hosted/2.23/infrastructure-setup/authentication/roles#roles-in-nvidia-run-ai) role, which allows them to submit and manage their own workloads within their projects.
+Run:ai uses a [role-based access control system](https://run-ai-docs.nvidia.com/self-hosted/2.23/infrastructure-setup/authentication/roles) to manage what users can see and do within the platform. On the Apollo GPU platform, newly onboarded researchers are assigned the [**L2 Researcher**](https://run-ai-docs.nvidia.com/self-hosted/2.23/infrastructure-setup/authentication/roles#roles-in-nvidia-run-ai) role, which allows them to submit and manage their own workloads within their projects.
 
 Administrative tasks, such as managing projects, configuring environments, and setting resource quotas, are handled by the SIH team with elevated roles. If you require additional permissions, please [submit a support request](https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyhFZsPIwZDBs?SupportType=Platforms&Q_PopulateResponse={%22QID10%22:%224%22}).

@@ -1,6 +1,6 @@
 # Login
 :::{.callout-note}
-Before logging in, please make sure you are part of a DashR project that has been granted access to the SIH GPU Cluster. If you have not done so, please refer to the [Accessing the SIH GPU Cluster](access.md) page for instructions on how to request access
+Before logging in, please make sure you are part of a DashR project that has been granted access to the Apollo GPU Cluster. If you have not done so, please refer to the [Accessing the Apollo GPU Cluster](access.md) page for instructions on how to request access
 :::
 
 

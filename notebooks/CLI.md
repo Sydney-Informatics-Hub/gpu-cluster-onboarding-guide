@@ -21,7 +21,7 @@ Once the Run:AI CLI is set up - you can start a workflow by running a saved dock
 
 ## How to Run a Terminal Environment at the Command Line
 
-You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the SIH GPU cluster.
+You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the Apollo GPU cluster.
 
 ### Example running a GPU workflow using the CLI
 

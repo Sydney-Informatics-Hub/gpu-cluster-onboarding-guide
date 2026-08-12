@@ -1,4 +1,4 @@
-# SIH GPU Cluster Onboarding Guide
+# Apollo GPU Cluster Onboarding Guide
 ## Contributing to this repository
 
 1. **Do not** under any circumstances commit to the main branch without review by someone else;

@@ -1,7 +1,7 @@
 # Projects
 In Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.
 
-Once you have been granted access to the SIH GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.
+Once you have been granted access to the Apollo GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.
 
 ![Listed Run:ai project](../fig/project_example.png)
 

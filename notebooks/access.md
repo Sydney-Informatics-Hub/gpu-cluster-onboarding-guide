@@ -1,4 +1,4 @@
-# Accessing the SIH GPU Cluster
+# Accessing the Apollo GPU Cluster
 
 Early access to the GPU Cluster is now available. Please follow instructions on [this page](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3579674625/GPU+Cluster#Sydney-GPU-Cluster---Early-access-available) to submit your request.
 
@@ -25,7 +25,7 @@ Information that you will be asked to provide in the access request form include
 
 - **Billing Code**: This should be the internal billing code associated with your project or department. If you are unsure, please consult your supervisor or finance administrator.
 
-You will receive an email confirmation once your access has been granted, along with the project code and further instructions on how to connect to the SIH GPU Cluster.
+You will receive an email confirmation once your access has been granted, along with the project code and further instructions on how to connect to the Apollo GPU Cluster.
 
 :::{.callout-note}
 **Work in Progress**: Long-term project provisioning and cluster access will be streamlined and centrally managed on DashR.
