@@ -1,67 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://sydney-informatics-hub.github.io/index.html</loc>
-    <lastmod>2026-06-17T07:06:54.382Z</lastmod>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/data_transfer.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <loc>https://sydney-informatics-hub.github.io/setup.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/notebooks/CLI.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <lastmod>2026-08-12T06:13:06.862Z</lastmod>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/data_sources_deprecated.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/marimo_tutorial.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/user_interface_deprecated.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/data_transfer.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/notebooks/jupyter_tutorial.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/environments_deprecated.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
-  </url>
-  <url>
-    <loc>https://sydney-informatics-hub.github.io/setup.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/notebooks/access.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/dashboards.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/environments_deprecated.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/runai_features.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/data_sources_deprecated.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/login.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/alphafold3_guide.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/notebooks/R_tutorial.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
-    <loc>https://sydney-informatics-hub.github.io/notebooks/projects_deprecated.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/runai_features.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/login.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
   </url>
   <url>
     <loc>https://sydney-informatics-hub.github.io/notebooks/cluster_intro.html</loc>
-    <lastmod>2026-06-17T07:06:54.383Z</lastmod>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/marimo_tutorial.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/user_interface_deprecated.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/projects_deprecated.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/notebooks/dashboards.html</loc>
+    <lastmod>2026-08-12T06:13:06.864Z</lastmod>
+  </url>
+  <url>
+    <loc>https://sydney-informatics-hub.github.io/index.html</loc>
+    <lastmod>2026-08-12T06:13:06.862Z</lastmod>
   </url>
 </urlset>

@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>alphafold3_guide – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-293804b51f7d076bc504611c7cf22dc9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script data-goatcounter="https://sih.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+
+
+<link rel="stylesheet" href="../lesson.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../fig/usyd-logo.png" alt="" class="navbar-logo light-content">
+    <img src="../fig/usyd-logo.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Sydney Informatics Hub GPU Cluster Onboarding Guide</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/alphafold3_guide.html">How to run AlphaFold3</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Home</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started with the SIH GPU Cluster</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/cluster_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction to the SIH GPU Cluster</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/access.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Accessing the SIH GPU Cluster</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/login.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Login</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/runai_features.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Run:ai features</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Tutorials</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/jupyter_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Creating a Jupyter Lab workload</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/marimo_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Creating a Marimo Python workload</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/data_transfer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to transfer data to/from the SIH GPU Cluster</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/CLI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to run a terminal using the Command Line Interface (CLI)</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/R_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to self-install R packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/alphafold3_guide.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">How to run AlphaFold3</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#how-to-run-alphafold3-on-the-sih-gpu-cluster" id="toc-how-to-run-alphafold3-on-the-sih-gpu-cluster" class="nav-link active" data-scroll-target="#how-to-run-alphafold3-on-the-sih-gpu-cluster">How to run AlphaFold3 on the SIH GPU Cluster</a>
+  <ul class="collapse">
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a>
+  <ul class="collapse">
+  <li><a href="#request-model-weights" id="toc-request-model-weights" class="nav-link" data-scroll-target="#request-model-weights">1. Request model weights</a></li>
+  <li><a href="#set-up-a-jupyterlab-workload" id="toc-set-up-a-jupyterlab-workload" class="nav-link" data-scroll-target="#set-up-a-jupyterlab-workload">2. Set up a JupyterLab workload</a></li>
+  <li><a href="#install-the-runai-cli" id="toc-install-the-runai-cli" class="nav-link" data-scroll-target="#install-the-runai-cli">3. Install the runai CLI</a></li>
+  </ul></li>
+  <li><a href="#step-1-download-model-weights" id="toc-step-1-download-model-weights" class="nav-link" data-scroll-target="#step-1-download-model-weights">Step 1: Download model weights</a></li>
+  <li><a href="#step-2-download-sequence-databases" id="toc-step-2-download-sequence-databases" class="nav-link" data-scroll-target="#step-2-download-sequence-databases">Step 2: Download sequence databases</a></li>
+  <li><a href="#step-3-create-your-input-file" id="toc-step-3-create-your-input-file" class="nav-link" data-scroll-target="#step-3-create-your-input-file">Step 3: Create your input file</a></li>
+  <li><a href="#step-4-run-the-alignment-job-cpu-only" id="toc-step-4-run-the-alignment-job-cpu-only" class="nav-link" data-scroll-target="#step-4-run-the-alignment-job-cpu-only">Step 4: Run the alignment job [CPU-only]</a></li>
+  <li><a href="#step-5-run-the-structure-prediction-job-gpu" id="toc-step-5-run-the-structure-prediction-job-gpu" class="nav-link" data-scroll-target="#step-5-run-the-structure-prediction-job-gpu">Step 5: Run the structure prediction job [GPU]</a></li>
+  <li><a href="#visualise-your-results" id="toc-visualise-your-results" class="nav-link" data-scroll-target="#visualise-your-results">Visualise your results</a></li>
+  <li><a href="#command-reference" id="toc-command-reference" class="nav-link" data-scroll-target="#command-reference">Command reference</a></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a></li>
+  <li><a href="#coming-soon" id="toc-coming-soon" class="nav-link" data-scroll-target="#coming-soon">Coming soon</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/alphafold3_guide.html">How to run AlphaFold3</a></li></ol></nav></header>
+
+
+
+
+<section id="how-to-run-alphafold3-on-the-sih-gpu-cluster" class="level1">
+<h1>How to run AlphaFold3 on the SIH GPU Cluster</h1>
+<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../fig/af3_insulin_demo.webm"></video></div>
+<p><a href="https://github.com/google-deepmind/alphafold3">AlphaFold3</a> predicts the 3D structure of proteins, nucleic acids, and small molecules. You describe your molecules in a text file and AlphaFold3 returns predicted 3D structures with confidence scores.</p>
+<p>In this guide, AlphaFold3 will be run as two separate jobs:</p>
+<ol type="1">
+<li><strong>Alignment job (CPU only):</strong> searches large sequence databases to find proteins related to yours. No GPU required.</li>
+<li><strong>Structure prediction job (GPU):</strong> uses those alignment results to generate 3D structure predictions.</li>
+</ol>
+<p>Splitting the work this way means the GPU is only reserved for the shorter prediction step, keeping your compute costs low.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>What SIH provides (no action needed):</strong></p>
+<ul>
+<li>A ready-to-use AlphaFold3 container image</li>
+</ul>
+<p><strong>What you need to set up once before your first prediction:</strong></p>
+<ul>
+<li>AlphaFold3 model weights (<code>af3.bin</code>) from Google DeepMind - <a href="#step-1-download-model-weights">Step 1</a></li>
+<li>Sequence databases downloaded to your PVC (~394 GB) - <a href="#step-2-download-sequence-databases">Step 2</a></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This guide is a work in progress. If you have feedback or run into issues, please <a href="https://forms.cloud.microsoft/r/ezkDbt1YGp">let us know</a>.</p>
+</div>
+</div>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<section id="request-model-weights" class="level3">
+<h3 class="anchored" data-anchor-id="request-model-weights">1. Request model weights</h3>
+<p>AlphaFold3’s model weights are provided by Google DeepMind under a non-commercial licence. Start your request now. Approval typically takes around 3 business days at the earliest. You will download the weights in Step 1 once approved.</p>
+<p>Follow the request instructions on the <a href="https://github.com/google-deepmind/alphafold3">AlphaFold3 GitHub page</a>. You will fill in a short form and receive an email with a download link when access is approved.</p>
+</section>
+<section id="set-up-a-jupyterlab-workload" class="level3">
+<h3 class="anchored" data-anchor-id="set-up-a-jupyterlab-workload">2. Set up a JupyterLab workload</h3>
+<p>You will use a JupyterLab session throughout this guide to run setup commands, manage files, view outputs, and submit the folding jobs. Follow the <a href="jupyter_tutorial.html">Creating a JupyterLab workload</a> guide’s “create from scratch” workflow, applying these settings at <a href="jupyter_tutorial.html#step-2-configure-the-workload-from-scratch">Step 2: Configure the workload</a>:</p>
+<ul>
+<li><strong>Compute resources</strong>: select CPU only as no GPU is needed for this session</li>
+<li><strong>Data &amp; sources</strong>: attach your project’s PVC, the persistent storage described in <a href="runai_features.html#runai-data-sources">Data sources</a>, so JupyterLab can access your databases, weights, and input files. You will set these up on the PVC in <a href="#step-1-download-model-weights">Step 1</a> and <a href="#step-2-download-sequence-databases">Step 2</a> below</li>
+</ul>
+</section>
+<section id="install-the-runai-cli" class="level3">
+<h3 class="anchored" data-anchor-id="install-the-runai-cli">3. Install the runai CLI</h3>
+<p>The <code>runai</code> command-line interface (CLI) is used to submit and monitor jobs on the cluster. This guide runs the CLI from a JupyterLab terminal.</p>
+<p><strong>Install the CLI</strong></p>
+<p>Follow the <a href="CLI.html">CLI setup guide</a> to download the installer. When prompted to select a platform, choose <strong>Linux</strong>.</p>
+<p><strong>Log in from JupyterLab</strong></p>
+<p>Open a terminal in JupyterLab (<strong>File &gt; New &gt; Terminal</strong>) and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> login remote-browser</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use <code>runai login remote-browser</code>, not <code>runai login</code>. Because the terminal is running on a remote server, it cannot open a browser directly. The <code>remote-browser</code> option gives you a URL to open yourself instead.</p>
+</div>
+</div>
+<p>A URL will be printed in the terminal. Copy it, open it in your browser, and follow the prompts to authenticate. When you receive a token, paste it back into the terminal and press Enter.</p>
+<p>Confirm the login was successful:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> whoami</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Your username and project should be displayed.</p>
+<p><strong>Set your default project</strong></p>
+<p>By default, <code>runai</code> commands need a project specified with <code>-p ${RUNAI_PROJECT}</code> on every command, or they will fail with <code>Error: project is missing</code>. Set a default now so you don’t need to repeat this flag throughout the rest of this guide:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> project set <span class="va">${RUNAI_PROJECT}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="step-1-download-model-weights" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-download-model-weights">Step 1: Download model weights</h2>
+<p>The AlphaFold3 model weights (<code>af3.bin</code>) only need to be obtained once. If you have already downloaded a copy for a previous project, you can transfer that copy from the Research Data Store (RDS) instead of requesting it again. Choose the tab below that matches your situation.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Download from DeepMind</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Transfer from RDS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Once you receive the approval email from Google DeepMind, open a terminal in JupyterLab (<strong>File &gt; New &gt; Terminal</strong>) and run the following commands.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>${RUNAI_PROJECT}</code> will automatically be populated with your Run:AI project name, so you can copy and paste the code directly from this guide.</p>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a folder for the weights on your PVC</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/params</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/params</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Paste the download link from your approval email here</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">DOWNLOAD_URL</span><span class="op">=</span>https://paste-your-link-here</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the weights (this may take a few minutes)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> <span class="at">-O</span> af3.bin.zst <span class="st">"</span><span class="va">${DOWNLOAD_URL}</span><span class="st">"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Decompress the file (requires ~2 GB of free space temporarily)</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="ex">zstd</span> <span class="at">-d</span> af3.bin.zst</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Protect the file so only you can read it (required by the licence)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 400 af3.bin</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove the compressed archive to recover space</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> af3.bin.zst</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The decompressed <code>af3.bin</code> file is approximately 1.1 GB.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>If a decompressed copy of <code>af3.bin</code> already exists on the Research Data Store (RDS) you can copy it directly to your PVC.</p>
+<p>This uses the same <code>sftp</code> transfer method described in the <a href="data_transfer.html">Data Transfer guide</a>; see that guide for more detail on unikeys and RDS project IDs.</p>
+<p>This uses the JupyterLab session and PVC you already set up in the <a href="#set-up-a-jupyterlab-workload">Prerequisites</a> section, so no additional PVC setup is needed here. Open a terminal in JupyterLab (<strong>File &gt; New &gt; Terminal</strong>) and run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a folder for the weights on your PVC</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/params</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/params</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Set these to your details</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">UNIKEY</span><span class="op">=</span>abcd0123          <span class="co"># your University of Sydney unikey</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">RDS_PROJECT</span><span class="op">=</span>PRJ-1234     <span class="co"># your RDS project ID, found on DashR (https://dashr.sydney.edu.au/)</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">RDS_PATH</span><span class="op">=</span>path/to/af3.bin <span class="co"># the location of af3.bin within your RDS project</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy the weights file from RDS to your PVC</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ex">sftp</span> <span class="st">"</span><span class="va">${UNIKEY}</span><span class="st">@research-data-ext.sydney.edu.au:/rds/</span><span class="va">${RDS_PROJECT}</span><span class="st">/</span><span class="va">${RDS_PATH}</span><span class="st">"</span> .</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Protect the file so only you can read it (required by the licence)</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 400 af3.bin</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You will be prompted for the password associated with your unikey to connect to RDS.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-download-sequence-databases" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-download-sequence-databases">Step 2: Download sequence databases</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Shared databases available to all cluster users are coming soon. Once live, this step will no longer be needed.</p>
+</div>
+</div>
+<p>The alignment job (Step 4) searches several large sequence databases. These must be downloaded once to your PVC. The full set is approximately 394 GB; <strong>allow several hours for the download to complete</strong>. The script is resumable if interrupted.</p>
+<p>In your JupyterLab terminal, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a folder for the databases on your PVC</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/db</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/db</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Download the AlphaFold3 setup scripts</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/google-deepmind/alphafold3.git af3_repo</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Download all sequence databases to your PVC (takes several hours)</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> af3_repo/fetch_databases.sh /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/db</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Do not close your JupyterLab session while the download is running. Closing the session will interrupt the download. You can however close the browser tab and reopen it later, but the JupyterLab workload itself must remain active.</p>
+<p>You can work through Step 3 in a separate terminal tab while the download runs.</p>
+</div>
+</div>
+<p>Once the download finishes, verify the databases are in place:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/db</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Expected contents (~394 GB total):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">total</span> 394G</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">drwxr-x---</span>  mmcif_files                                              <span class="er">(</span><span class="ex">9.7M</span> files <span class="at">-</span> PDB structures<span class="kw">)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  mgy_clusters_2022_05.fa                                  120G  MGnify protein clusters</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  uniprot_all_2021_04.fa                                   102G  UniProt <span class="er">(</span><span class="ex">TrEMBL</span> + Swiss-Prot<span class="kw">)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  nt_rna_2023_02_23_clust_seq_id_90_cov_80_rep_seq.fasta    76G  NT-RNA clusters</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  uniref90_2022_05.fa                                       67G  UniRef90</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  bfd-first_non_consensus_sequences.fasta                   17G  BFD</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  rnacentral_active_seq_id_90_cov_80_linclust.fasta         13G  RNAcentral</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  pdb_seqres_2022_09_28.fasta                              223M  PDB sequence clusters</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">-rw-r--r--</span>  rfam_14_9_clust_seq_id_90_cov_80_rep_seq.fasta           218M  Rfam RNA families</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Update the permissions of the database files and delete the git repository folder.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> <span class="at">-R</span> 550 <span class="pp">*</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rfv</span> af3_repo/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-3-create-your-input-file" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-create-your-input-file">Step 3: Create your input file</h2>
+<p>AlphaFold3 reads a JSON file - a structured text file that describes the molecules you want to model. Create this file in JupyterLab before submitting your jobs.</p>
+<p>This guide uses <a href="https://www.rcsb.org/structure/3I40">insulin</a> as an example: a 51-residue protein made of two chains (a 21-residue A chain and a 30-residue B chain) linked by three disulfide bonds.</p>
+<p>For your own proteins, replace the <code>sequence</code> value with your amino-acid sequence in single-letter code and remove <code>bondedAtomPairs</code> unless you are specifying bonds explicitly. The full input format is described in the <a href="https://github.com/google-deepmind/alphafold3/blob/main/docs/input.md">official documentation</a>.</p>
+<ol type="1">
+<li>In the JupyterLab file browser (left panel), navigate to <code>/alphafold3/</code></li>
+<li>Select <strong>File &gt; New &gt; Text File</strong> to create a new empty file</li>
+<li>Right-click the new file and rename it to something informative. In this guide, we will fold insulin as an example and call the file <code>insulin.json</code></li>
+<li>Paste the following content into the file and save with <strong>Ctrl+S</strong>:</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The JupyterLab file browser shows your PVC’s contents starting from <code>/</code>, so the <code>/alphafold3/</code> folder above is the same as <code>/scratch/${RUNAI_PROJECT}/alphafold3/</code> when working in a terminal. The alignment job in Step 4 reads the input file from this full terminal path, so this is where <code>insulin.json</code> needs to end up.</p>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"name"</span><span class="fu">:</span> <span class="st">"insulin"</span><span class="fu">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"sequences"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"protein"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"A"</span><span class="fu">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"sequence"</span><span class="fu">:</span> <span class="st">"GIVEQCCTSICSLYQLENYCN"</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"protein"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"id"</span><span class="fu">:</span> <span class="st">"B"</span><span class="fu">,</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"sequence"</span><span class="fu">:</span> <span class="st">"FVNQHLCGSHLVEALYLVCGERGFFYTPKT"</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"bondedAtomPairs"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">[[</span><span class="st">"A"</span><span class="ot">,</span> <span class="dv">6</span><span class="ot">,</span> <span class="st">"SG"</span><span class="ot">],</span> <span class="ot">[</span><span class="st">"A"</span><span class="ot">,</span> <span class="dv">11</span><span class="ot">,</span> <span class="st">"SG"</span><span class="ot">]],</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="ot">[[</span><span class="st">"A"</span><span class="ot">,</span> <span class="dv">7</span><span class="ot">,</span> <span class="st">"SG"</span><span class="ot">],</span> <span class="ot">[</span><span class="st">"B"</span><span class="ot">,</span> <span class="dv">7</span><span class="ot">,</span> <span class="st">"SG"</span><span class="ot">]],</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="ot">[[</span><span class="st">"A"</span><span class="ot">,</span> <span class="dv">20</span><span class="ot">,</span> <span class="st">"SG"</span><span class="ot">],</span> <span class="ot">[</span><span class="st">"B"</span><span class="ot">,</span> <span class="dv">19</span><span class="ot">,</span> <span class="st">"SG"</span><span class="ot">]]</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"modelSeeds"</span><span class="fu">:</span> <span class="ot">[</span><span class="dv">1</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"dialect"</span><span class="fu">:</span> <span class="st">"alphafold3"</span><span class="fu">,</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"version"</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>JSON field reference
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>name</code></td>
+<td>Label for the prediction that is used in output file names</td>
+</tr>
+<tr class="even">
+<td><code>sequences[].protein.id</code></td>
+<td>Chain identifier in the output structure (<code>"A"</code>, <code>"B"</code>, …)</td>
+</tr>
+<tr class="odd">
+<td><code>sequences[].protein.sequence</code></td>
+<td>Amino-acid sequence in single-letter code. One continuous string, no spaces or line breaks</td>
+</tr>
+<tr class="even">
+<td><code>bondedAtomPairs</code></td>
+<td>Explicit bonds to enforce. Each entry is <code>[chain_id, residue_number, atom_name]</code>. Use <code>"SG"</code> on cysteine (<code>C</code>) for disulfide bonds; residue numbers are 1-based. Omit this field if you have no explicit bonds.</td>
+</tr>
+<tr class="odd">
+<td><code>modelSeeds</code></td>
+<td>Each number produces one predicted structure - add more seeds for greater structural diversity</td>
+</tr>
+<tr class="even">
+<td><code>dialect</code> / <code>version</code></td>
+<td>Always <code>"alphafold3"</code> and <code>2</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-run-the-alignment-job-cpu-only" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-run-the-alignment-job-cpu-only">Step 4: Run the alignment job [CPU-only]</h2>
+<p>The alignment job searches the sequence databases and produces pre-computed features used in Step 5. It runs on CPU only and does not need a GPU.</p>
+<p>Create a new file (<strong>File &gt; New &gt; Text File</strong>). Rename it to something like <code>align.sh</code>.</p>
+<p>Next, copy the following code, paste it into <code>align.sh</code>. Save and close the file.</p>
+<p>Note that the <code>JOB_NAME</code> is set to the same name as the json file.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># AlphaFold3 alignment job - searches sequence databases (CPU only, no GPU needed)</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run this first, wait for it to complete, then run inference.sh</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Edit this line before running ─────────────────────────────────────</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="va">JOB_NAME</span><span class="op">=</span>insulin   <span class="co"># label for this prediction; also the name of your input JSON file</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ──────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> training submit <span class="st">"</span><span class="va">${JOB_NAME}</span><span class="st">-align"</span> <span class="dt">\</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> <span class="st">"</span><span class="va">${RUNAI_PROJECT}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">--image</span> sydneyinformaticshub/alphafold3:v3.0.2-20260604 <span class="dt">\</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">--image-pull-policy</span> IfNotPresent <span class="dt">\</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">-c</span> <span class="dt">\</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cpu-core-limit</span> 8 <span class="dt">\</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cpu-memory-limit</span> 64G <span class="dt">\</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">--large-shm</span> <span class="dt">\</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">--existing-pvc</span> <span class="st">"claimname=pvc-</span><span class="va">${RUNAI_PROJECT}</span><span class="st">,path=/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">--</span> python run_alphafold.py <span class="dt">\</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">--json_path</span><span class="op">=</span><span class="st">"/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">/alphafold3/</span><span class="va">${JOB_NAME}</span><span class="st">.json"</span> <span class="dt">\</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">--model_dir</span><span class="op">=</span><span class="st">"/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">/alphafold3/params"</span> <span class="dt">\</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">--db_dir</span><span class="op">=</span><span class="st">"/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">/alphafold3/db"</span> <span class="dt">\</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">--output_dir</span><span class="op">=</span><span class="st">"/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">/alphafold3/output"</span> <span class="dt">\</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">--run_inference</span><span class="op">=</span>false</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If the job fails to submit with an error mentioning your PVC claim (for example <code>PersistentVolumeClaim "pvc-${RUNAI_PROJECT}" not found</code>), your project’s PVC uses a different naming convention. Run <code>runai pvc list -p ${RUNAI_PROJECT}</code> to find the actual claim name, then replace <code>pvc-${RUNAI_PROJECT}</code> in the <code>--existing-pvc</code> flag above with that name.</p>
+</div>
+</div>
+<p>Before submitting, confirm your input file is where the job expects it to be:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/insulin.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If this reports “No such file or directory”, the file is not saved in the right place - check that you saved <code>insulin.json</code> in <code>/alphafold3/</code> in the JupyterLab file browser (Step 3), and that <code>JOB_NAME</code> above matches the file name exactly.</p>
+<p>Submit the job in the Terminal by running:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> align.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Once submitted, you should see the following message:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Creating training insulin-align...</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>To track the workload's status, run 'runai training standard describe insulin-align'</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>To check whether the job is running and when it finishes, either check the <strong>Workloads</strong> page in the Run:AI web interface, or run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show a summary of all your jobs and their current status</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> training list</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Stream live logs (press Ctrl+C to stop)</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> training logs <span class="st">"insulin-align"</span> <span class="at">-f</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Wait until the job status shows <strong>Completed</strong> before continuing to Step 5. This typically takes around 45 minutes for insulin.</p>
+<p>To verify the alignment completed successfully, open the JupyterLab file browser and confirm the folder <code>/alphafold3/output/insulin/</code> (<code>/scratch/${RUNAI_PROJECT}/alphafold3/output/insulin/</code> in a terminal) exists and contains one file: <code>insulin_data.json</code>. This is the pre-computed features file that Step 5 reads. You can also check from the terminal:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/output/<span class="va">${JOB_NAME}</span>/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In case you need to resubmit a job, first delete the existing run with <code>runai training delete insulin-align</code>, then rerun <code>bash align.sh</code>.</p>
+</section>
+<section id="step-5-run-the-structure-prediction-job-gpu" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-run-the-structure-prediction-job-gpu">Step 5: Run the structure prediction job [GPU]</h2>
+<p>Once the alignment job has completed, submit the GPU step. This reads the pre-computed features written by Step 4.</p>
+<p>Similarly, create a new file called <code>inference.sh</code>. Copy and paste the following:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Notice that <code>--json_path</code> below points into the alignment job’s <code>output</code> folder, not to <code>insulin.json</code> from Step 3. The alignment job (Step 4) writes a new file, <code>${JOB_NAME}_data.json</code>, containing the pre-computed features - that is the file the inference job needs to read.</p>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># AlphaFold3 inference job - generates 3D structure predictions (requires GPU)</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run this only after align.sh has completed</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Edit this line before running ──────────────────────────────────────</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="va">JOB_NAME</span><span class="op">=</span>insulin    <span class="co"># must match the JOB_NAME used in align.sh</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ───────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> training submit <span class="st">"</span><span class="va">${JOB_NAME}</span><span class="st">-inference"</span> <span class="dt">\</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">-p</span> <span class="st">"</span><span class="va">${RUNAI_PROJECT}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">--image</span> sydneyinformaticshub/alphafold3:v3.0.2-20260604 <span class="dt">\</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">--image-pull-policy</span> IfNotPresent <span class="dt">\</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">-c</span> <span class="dt">\</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gpu-portion-request</span> 0.1 <span class="dt">\</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cpu-core-request</span> 8 <span class="dt">\</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">--cpu-memory-request</span> 64Gi <span class="dt">\</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">--existing-pvc</span> <span class="st">"claimname=pvc-</span><span class="va">${RUNAI_PROJECT}</span><span class="st">,path=/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">--</span> python run_alphafold.py <span class="dt">\</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">--json_path</span><span class="op">=</span><span class="st">"/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">/alphafold3/output/</span><span class="va">${JOB_NAME}</span><span class="st">/</span><span class="va">${JOB_NAME}</span><span class="st">_data.json"</span> <span class="dt">\</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">--model_dir</span><span class="op">=</span><span class="st">"/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">/alphafold3/params"</span> <span class="dt">\</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">--output_dir</span><span class="op">=</span><span class="st">"/scratch/</span><span class="va">${RUNAI_PROJECT}</span><span class="st">/alphafold3/output"</span> <span class="dt">\</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">--run_data_pipeline</span><span class="op">=</span>false <span class="dt">\</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">--num_diffusion_samples</span><span class="op">=</span>5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Before submitting, confirm the alignment job’s output file is in place:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> /scratch/<span class="va">${RUNAI_PROJECT}</span>/alphafold3/output/<span class="va">${JOB_NAME}</span>/insulin_data.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If this reports “No such file or directory”, wait for the alignment job (Step 4) to reach <strong>Completed</strong> and check again - the inference job cannot run without this file.</p>
+<p>Submit the job:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> inference.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Commands to check on the job:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> training list</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ex">runai</span> training logs insulin-inference <span class="at">-f</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Once completed, the output of <code>runai training logs insulin-inference</code> should display something similar as the following:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="an">Found local devices:</span><span class="co"> [CudaDevice(id=0)], using device 0: cuda:0</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Building model from scratch...</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>Checking that model parameters can be loaded...</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>Running fold job insulin...</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>Output will be written in /scratch/rds-core-sih4hpc-rw/alphafold3/output/insulin_20260717_074703 since /scratch/rds-core-sih4hpc-rw/alphafold3/output/insulin is non-empty.</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>Skipping data pipeline...</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>Writing model input JSON to /scratch/rds-core-sih4hpc-rw/alphafold3/output/insulin_20260717_074703/insulin_data.json</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>Predicting 3D structure for insulin with 1 seed(s)...</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>Featurising data with 1 seed(s)...</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>Featurising data with seed 1.</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>Featurising data with seed 1 took 0.20 seconds.</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>Featurising data with 1 seed(s) took 8.88 seconds.</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>Running model inference and extracting output structure samples with 1 seed(s)...</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>Running model inference with seed 1...</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>Running model inference with seed 1 took 103.10 seconds.</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>Extracting inference results with seed 1...</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>Extracting 5 inference samples with seed 1 took 0.05 seconds.</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>Running model inference and extracting output structures with 1 seed(s) took 103.14 seconds.</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>Writing outputs with 1 seed(s)...</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>Fold job insulin done, output written to /scratch/rds-core-sih4hpc-rw/alphafold3/output/insulin_20260717_074703</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For reference, insulin (51 residues, two chains) took around 45 minutes for alignment and under a minute for structure prediction. A shorter peptide, oxytocin (9 residues), took around 7 minutes for alignment and around 1 minute for structure prediction. Alignment time scales with sequence length; structure prediction stays fast regardless of protein size.</p>
+</div>
+</div>
+</section>
+<section id="visualise-your-results" class="level2">
+<h2 class="anchored" data-anchor-id="visualise-your-results">Visualise your results</h2>
+<p>Once the inference job shows <strong>Completed</strong>, your output files are in:</p>
+<pre><code>/scratch/${RUNAI_PROJECT}/alphafold3/output/insulin/</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/af3_output_directory.png" class="img-fluid figure-img"></p>
+<figcaption>Output files for a completed prediction</figcaption>
+</figure>
+</div>
+<p>This folder contains:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File / folder</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>insulin_model.cif</code></td>
+<td>The top-ranked predicted structure</td>
+</tr>
+<tr class="even">
+<td><code>seed-&lt;N&gt;_sample-&lt;N&gt;/</code></td>
+<td>One folder per predicted sample, each containing that sample’s structure and confidence files</td>
+</tr>
+<tr class="odd">
+<td><code>insulin_summary_confidences.json</code></td>
+<td>Overall confidence scores (e.g.&nbsp;pTM, ipTM) for the top-ranked structure</td>
+</tr>
+<tr class="even">
+<td><code>insulin_confidences.json</code></td>
+<td>Detailed, per-residue confidence scores for the top-ranked structure</td>
+</tr>
+<tr class="odd">
+<td><code>insulin_ranking_scores.csv</code></td>
+<td>Confidence scores for every sample, used to rank them</td>
+</tr>
+<tr class="even">
+<td><code>insulin_data.json</code></td>
+<td>The input file AlphaFold3 used to run the prediction</td>
+</tr>
+<tr class="odd">
+<td><code>TERMS_OF_USE.md</code></td>
+<td>AlphaFold3’s output terms of use</td>
+</tr>
+</tbody>
+</table>
+<p>Structure files (<code>.cif</code>) can be viewed in tools such as <a href="https://molstar.org/viewer/">Mol*</a> or <a href="https://pymol.org/">PyMOL</a>.</p>
+<p>Here we will use an interactive Jupyter notebook and the <code>py3Dmol</code> package to visualise our results.</p>
+<ol type="1">
+<li>File -&gt; New -&gt; Notebook</li>
+<li>If prompted, select the Python3 (ipykernel)</li>
+<li>Install <code>py3Dmol</code> with <code>pip install py3Dmol</code></li>
+<li>Run the following in a cell, updating <code>file_path</code> to point at your <code>insulin_model.cif</code>:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> py3Dmol</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="st">"/scratch/$</span><span class="sc">{RUNAI_PROJECT}</span><span class="st">/alphafold3/output/insulin/insulin_model.cif"</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(file_path) <span class="im">as</span> ifile:</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    system <span class="op">=</span> <span class="st">""</span>.join([x <span class="cf">for</span> x <span class="kw">in</span> ifile])</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> py3Dmol.view(width<span class="op">=</span><span class="dv">400</span>, height<span class="op">=</span><span class="dv">300</span>)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>view.addModelsAsFrames(system)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>view.setStyle({<span class="st">'model'</span>: <span class="op">-</span><span class="dv">1</span>}, {<span class="st">"cartoon"</span>: {<span class="st">'color'</span>: <span class="st">'spectrum'</span>}})</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>view.zoomTo()</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>view.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/af3_py3dmol_view.png" class="img-fluid figure-img"></p>
+<figcaption>Predicted insulin structure rendered with py3Dmol</figcaption>
+</figure>
+</div>
+<ol start="5" type="1">
+<li>Optionally, run the following in a new cell to highlight insulin’s three disulfide bonds (the same bonds specified in <code>bondedAtomPairs</code> in Step 3) as yellow sticks on the structure:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Insulin's three disulfide bonds: A6-A11, A7-B7, A20-B19</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>disulfides <span class="op">=</span> [</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"A"</span>, <span class="dv">6</span>, <span class="st">"A"</span>, <span class="dv">11</span>),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"A"</span>, <span class="dv">7</span>, <span class="st">"B"</span>, <span class="dv">7</span>),</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"A"</span>, <span class="dv">20</span>, <span class="st">"B"</span>, <span class="dv">19</span>),</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c1, r1, c2, r2 <span class="kw">in</span> disulfides:</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    view.addStyle({<span class="st">"chain"</span>: [c1, c2], <span class="st">"resi"</span>: [r1, r2]},</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>                   {<span class="st">"stick"</span>: {<span class="st">"colorscheme"</span>: <span class="st">"yellowCarbon"</span>}})</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>    view.addCylinder({</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"start"</span>: {<span class="st">"chain"</span>: c1, <span class="st">"resi"</span>: r1, <span class="st">"atom"</span>: <span class="st">"SG"</span>},</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"end"</span>:   {<span class="st">"chain"</span>: c2, <span class="st">"resi"</span>: r2, <span class="st">"atom"</span>: <span class="st">"SG"</span>},</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"radius"</span>: <span class="fl">0.15</span>,</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"color"</span>: <span class="st">"yellow"</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>view.zoomTo()</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>view.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/af3_py3dmol_disulfides.png" class="img-fluid figure-img"></p>
+<figcaption>Insulin structure with disulfide bonds highlighted</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Found this guide helpful, or noticed something missing? <a href="https://forms.cloud.microsoft/r/ezkDbt1YGp">Share your feedback</a>.</p>
+</div>
+</div>
+</section>
+<section id="command-reference" class="level2">
+<h2 class="anchored" data-anchor-id="command-reference">Command reference</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>runai training submit flags
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 58%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Flag</th>
+<th>Value in this guide</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><em>(job name)</em></td>
+<td><code>${JOB_NAME}-align</code> or <code>${JOB_NAME}-inference</code></td>
+<td>Unique name for this job within your project</td>
+</tr>
+<tr class="even">
+<td><code>-p</code></td>
+<td><code>${RUNAI_PROJECT}</code></td>
+<td>Your Run:AI project</td>
+</tr>
+<tr class="odd">
+<td><code>--image</code></td>
+<td><code>sydneyinformaticshub/alphafold3:v3.0.2-20260604</code></td>
+<td>The AlphaFold3 container image</td>
+</tr>
+<tr class="even">
+<td><code>--image-pull-policy</code></td>
+<td><code>IfNotPresent</code></td>
+<td>Reuses a locally cached image instead of re-downloading on every run</td>
+</tr>
+<tr class="odd">
+<td><code>-c</code></td>
+<td><em>(flag)</em></td>
+<td>Allows you to specify the command to run inside the container</td>
+</tr>
+<tr class="even">
+<td><code>--cpu-core-limit</code> / <code>--cpu-memory-limit</code></td>
+<td><code>8</code> / <code>64G</code> (alignment only)</td>
+<td>Maximum CPU cores and RAM the job may use</td>
+</tr>
+<tr class="odd">
+<td><code>--cpu-core-request</code> / <code>--cpu-memory-request</code></td>
+<td><code>8</code> / <code>64Gi</code> (inference only)</td>
+<td>CPU cores and RAM reserved for the job</td>
+</tr>
+<tr class="even">
+<td><code>--large-shm</code></td>
+<td><em>(flag, alignment only)</em></td>
+<td>Increases shared memory size, required by the database search tools</td>
+</tr>
+<tr class="odd">
+<td><code>--gpu-portion-request</code></td>
+<td><code>0.5</code> (inference only)</td>
+<td>Fraction of one GPU to use; 0.5 = half an H200 (~70 GB VRAM)</td>
+</tr>
+<tr class="even">
+<td><code>--existing-pvc</code></td>
+<td><code>claimname=pvc-${RUNAI_PROJECT},...</code></td>
+<td>Mounts your persistent storage so the job can read your databases, weights, and input file</td>
+</tr>
+</tbody>
+</table>
+<section id="alphafold3-flags" class="level2">
+<h2 class="anchored" data-anchor-id="alphafold3-flags">AlphaFold3 flags</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Flag</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>--json_path</code></td>
+<td>Path to the JSON file describing the molecules you want to predict</td>
+</tr>
+<tr class="even">
+<td><code>--model_dir</code></td>
+<td>Folder containing the model weights file (<code>af3.bin</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>--db_dir</code></td>
+<td>Folder containing the sequence databases (alignment job only)</td>
+</tr>
+<tr class="even">
+<td><code>--output_dir</code></td>
+<td>Folder where results are written; created automatically if it does not exist</td>
+</tr>
+<tr class="odd">
+<td><code>--run_inference=false</code></td>
+<td>Alignment job only: skip the GPU prediction step and stop after the database search</td>
+</tr>
+<tr class="even">
+<td><code>--run_data_pipeline=false</code></td>
+<td>Inference job only: skip the database search and use the pre-computed results from the alignment job</td>
+</tr>
+<tr class="odd">
+<td><code>--num_diffusion_samples</code></td>
+<td>Number of predicted structures to generate per model seed; 5 is the default</td>
+</tr>
+</tbody>
+</table>
+</section>
+</div>
+</div>
+</div>
+</section>
+<section id="troubleshooting" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 48%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Job stays in <code>Pending</code></td>
+<td>No suitable node is available (e.g.&nbsp;no free GPU for the inference job)</td>
+<td>Wait for a free slot; run <code>runai training describe ${JOB_NAME}-inference -p ${RUNAI_PROJECT}</code> or check the Run:AI web interface to see the queue</td>
+</tr>
+<tr class="even">
+<td>Job stuck in <code>ContainerCreating</code> for 5-10 min</td>
+<td>The container image is being downloaded to that node for the first time (~15 GB)</td>
+<td>No action needed; run <code>runai training describe ${JOB_NAME}-align -p ${RUNAI_PROJECT}</code> and look for a <code>Pulled</code> message in the Events section</td>
+</tr>
+<tr class="odd">
+<td><code>FileNotFoundError: af3.bin</code></td>
+<td>The weights file is missing or in the wrong location</td>
+<td>Confirm <code>af3.bin</code> is directly inside <code>alphafold3/params/</code>, not inside a subfolder</td>
+</tr>
+<tr class="even">
+<td><code>FileNotFoundError</code> for a database file</td>
+<td>A database file is missing or has an unexpected name</td>
+<td>Verify all files from <code>fetch_databases.sh</code> are in <code>alphafold3/db/</code> with their original names</td>
+</tr>
+<tr class="odd">
+<td>XLA compilation takes 20+ minutes on first run</td>
+<td>The GPU kernel is compiled on first use for your protein’s length</td>
+<td>Expected on the first run only; subsequent runs reuse the compiled result stored in <code>output_dir</code></td>
+</tr>
+<tr class="even">
+<td><code>Error: project is missing. value is empty.</code></td>
+<td>No default project is set for <code>runai</code> commands</td>
+<td>Run <code>runai project set ${RUNAI_PROJECT}</code>, or add <code>-p ${RUNAI_PROJECT}</code> to the command</td>
+</tr>
+<tr class="odd">
+<td><code>Error: unknown flag: --some-flag</code></td>
+<td>The flag name doesn’t match the <code>runai</code> CLI version installed</td>
+<td>Run <code>runai training submit --help</code> to check current flag names</td>
+</tr>
+<tr class="even">
+<td><code>FileNotFoundError</code> for the inference job’s <code>--json_path</code></td>
+<td>The alignment job (Step 4) hasn’t finished, or <code>JOB_NAME</code> doesn’t match between <code>align.sh</code> and <code>inference.sh</code></td>
+<td>Confirm <code>${JOB_NAME}_data.json</code> exists in <code>alphafold3/output/${JOB_NAME}/</code> before running <code>inference.sh</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="coming-soon" class="level2">
+<h2 class="anchored" data-anchor-id="coming-soon">Coming soon</h2>
+<ul>
+<li><strong>Shared databases</strong> - sequence databases will be available on a shared cluster path for all users, removing the need for <a href="#step-2-download-sequence-databases">Step 2</a></li>
+<li><strong>Benchmarking</strong> - estimates for how many GPU hours it takes based on protein and analysis</li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/sydney-informatics-hub\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>All materials copyright Sydney Informatics Hub, University of Sydney</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+<script>videojs(video_shortcode_videojs_video1);</script>
+
+
+
+
+</body></html>
