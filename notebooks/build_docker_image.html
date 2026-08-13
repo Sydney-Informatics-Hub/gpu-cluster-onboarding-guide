@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>user_interface_deprecated – Apollo GPU Cluster Onboarding Guide</title>
+<title>build_docker_image – Apollo GPU Cluster Onboarding Guide</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -25,6 +25,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -104,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/build_docker_image.html">Building and using a custom Docker image</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -200,7 +235,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/build_docker_image.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/build_docker_image.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Building and using a custom Docker image</span></a>
   </div>
 </li>
@@ -222,39 +257,127 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#navigating-the-user-interface" id="toc-navigating-the-user-interface" class="nav-link active" data-scroll-target="#navigating-the-user-interface">Navigating the User Interface</a></li>
+  <li><a href="#tutorial-building-and-using-a-custom-docker-image" id="toc-tutorial-building-and-using-a-custom-docker-image" class="nav-link active" data-scroll-target="#tutorial-building-and-using-a-custom-docker-image">Tutorial: Building and Using a Custom Docker Image</a>
+  <ul class="collapse">
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  <li><a href="#step-1-write-a-dockerfile" id="toc-step-1-write-a-dockerfile" class="nav-link" data-scroll-target="#step-1-write-a-dockerfile">Step 1: Write a Dockerfile</a></li>
+  <li><a href="#step-2-build-the-image" id="toc-step-2-build-the-image" class="nav-link" data-scroll-target="#step-2-build-the-image">Step 2: Build the image</a></li>
+  <li><a href="#step-3-push-the-image-to-docker-hub" id="toc-step-3-push-the-image-to-docker-hub" class="nav-link" data-scroll-target="#step-3-push-the-image-to-docker-hub">Step 3: Push the image to Docker Hub</a></li>
+  <li><a href="#step-4-launch-a-jupyter-lab-workload-with-your-custom-image" id="toc-step-4-launch-a-jupyter-lab-workload-with-your-custom-image" class="nav-link" data-scroll-target="#step-4-launch-a-jupyter-lab-workload-with-your-custom-image">Step 4: Launch a Jupyter Lab workload with your custom image</a></li>
+  <li><a href="#future-maintenance-updating-your-image" id="toc-future-maintenance-updating-your-image" class="nav-link" data-scroll-target="#future-maintenance-updating-your-image">Future maintenance: updating your image</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/build_docker_image.html">Building and using a custom Docker image</a></li></ol></nav></header>
 
 
 
 
-<section id="navigating-the-user-interface" class="level1">
-<h1>Navigating the User Interface</h1>
-<p>The Run:ai user interface is designed to be intuitive and user-friendly, allowing users to easily access and manage their resources and workloads.</p>
+<section id="tutorial-building-and-using-a-custom-docker-image" class="level1">
+<h1>Tutorial: Building and Using a Custom Docker Image</h1>
+<p>This tutorial walks you through building a custom Docker image based on the SIH DGX base image, pushing it to Docker Hub, and using it to launch a Jupyter Lab workload on the SIH GPU cluster. This is useful when you need a personalised compute environment — for example, to pre-install packages, set up specific library versions, or include your own tools — while still being able to use Jupyter Lab as your interactive front end.</p>
+<p>If you are new to workloads and Jupyter Lab on the cluster, read <a href="../notebooks/jupyter_tutorial.html">Tutorial: Running a Jupyter Lab Workload</a> first.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The exact steps in this tutorial may not cover every use case. Depending on the application you are building, you may need to adjust the Dockerfile, the environment configuration, or other workload settings.</p>
+<p><strong>The GPU cluster base image (<code>sydneyinformaticshub/dgx-interactive-jupyterlab</code>) will be updated from time to time.</strong> If you are unsure how to proceed or run into issues, please reach out to the SIH team for assistance.</p>
+</div>
+</div>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<p>Before starting, make sure you have:</p>
+<ul>
+<li><a href="https://docs.docker.com/get-docker/">Docker</a> installed on your local machine</li>
+<li>A free <a href="https://hub.docker.com">Docker Hub</a> account</li>
+<li>Basic familiarity with the terminal</li>
+</ul>
+</section>
+<section id="step-1-write-a-dockerfile" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-write-a-dockerfile">Step 1: Write a Dockerfile</h2>
+<p>Create a new directory for your project and create a file named <code>Dockerfile</code> inside it. Start <code>FROM</code> the SIH DGX base image <a href="https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab"><code>sydneyinformaticshub/dgx-interactive-jupyterlab</code></a>, which already has Jupyter Lab and common data science packages (TensorFlow, PyTorch, pandas, ollama) installed.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode dockerfile code-with-copy"><code class="sourceCode dockerfile"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> sydneyinformaticshub/dgx-interactive-jupyterlab:latest</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">ENV</span> PACKAGES=<span class="st">"package1 </span><span class="op">\</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">              package2"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">apt-get</span> update <span class="kw">&amp;&amp;</span> <span class="ex">apt-get</span> install <span class="at">-y</span> <span class="va">$PACKAGES</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a separate requirements.txt file in the same folder with a list of python packages to install</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">COPY</span> requirements.txt .</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">RUN</span> <span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Replace the <code>RUN</code> line with whatever packages or configuration your environment requires. You can add multiple <code>RUN</code> instructions, copy in files, or set environment variables — refer to the <a href="https://docs.docker.com/reference/dockerfile/">Docker documentation</a> for the full Dockerfile syntax.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>During the image build process you have full <code>sudo</code> (root) access inside the container, so you can install system-level packages with <code>apt-get</code> or make other privileged changes. This flexibility is not available when running the container on the SIH GPU cluster, where <code>sudo</code> is disabled for security reasons. Any system-level setup should therefore be done here in the Dockerfile, not at runtime.</p>
+</div>
+</div>
+</section>
+<section id="step-2-build-the-image" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-build-the-image">Step 2: Build the image</h2>
+<p>From the directory containing your <code>Dockerfile</code>, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> <span class="op">&lt;</span>your-dockerhub-username<span class="op">&gt;</span>/<span class="op">&lt;</span>image-name<span class="op">&gt;</span>:<span class="op">&lt;</span>tag<span class="op">&gt;</span> .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> jdoe/my-gpu-env:latest .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The build may take several minutes depending on the packages you are installing. Once complete, verify the image was created:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-3-push-the-image-to-docker-hub" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-push-the-image-to-docker-hub">Step 3: Push the image to Docker Hub</h2>
+<p>Log in to Docker Hub from the terminal:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> login</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Enter your Docker Hub username and password when prompted. Then push the image:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> push <span class="op">&lt;</span>your-dockerhub-username<span class="op">&gt;</span>/<span class="op">&lt;</span>image-name<span class="op">&gt;</span>:<span class="op">&lt;</span>tag<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> push jdoe/my-gpu-env:latest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Once the push completes, the image will be publicly accessible at <code>&lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Docker Hub free accounts allow unlimited public repositories. Make sure your repository visibility is set to <strong>Public</strong> so the cluster can pull it without authentication.</p>
+</div>
+</div>
+</section>
+<section id="step-4-launch-a-jupyter-lab-workload-with-your-custom-image" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-launch-a-jupyter-lab-workload-with-your-custom-image">Step 4: Launch a Jupyter Lab workload with your custom image</h2>
+<p>You can now use your custom image on the SIH GPU cluster by following the <a href="../notebooks/jupyter_tutorial.html">Tutorial: Running a Jupyter Lab Workload</a>, with one change in Step 2: when selecting the <strong>Environment</strong>, choose the <code>jupyter-notebook</code> environment as usual, then replace the pre-filled image URL with the full path to your custom image (e.g.&nbsp;<code>jdoe/my-gpu-env:latest</code>).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../fig/navigation_panel.png" class="img-fluid figure-img"></p>
-<figcaption>Run:ai navigation panel</figcaption>
+<p><img src="../fig/custom_docker_image.png" class="img-fluid figure-img"></p>
+<figcaption>Modify the image URL</figcaption>
 </figure>
 </div>
-<p>On the left panel, there are several options to select:</p>
-<ul>
-<li><p><strong>Dashboards</strong>: Two system dashboards, namely “Overview” and “Analytics”, are accessible to users. They provide both system- and project-level information including system summaries, real-time resource allocation, cluster load, etc.</p></li>
-<li><p><strong>Projects</strong>: This lists out the projects the user has been assigned to.</p></li>
-<li><p><strong>Workloads</strong>: This page provides a summary of the current workloads and allows users to create and configure new workloads.</p></li>
-<li><p><strong>Environments</strong>: Both platform-wide and customised environments can be found in this page.</p></li>
-<li><p><strong>Data Sources</strong>: This page allows users to configure new data sources and view existing ones.</p></li>
-<li><p><strong>Compute Resources</strong>: This page summaries all compute resources (similar to choosing the “flavours” in a cloud computing environment) and allows users to create new compute resources for their specific needs.</p></li>
-<li><p><strong>Templates</strong>: This feature allows users to manage bespoke templates configured for their specific workloads.</p></li>
-<li><p><strong>Credentials</strong>: This space allows users to define secrets including access keys, passwords, or other sensitive information essential to the execution of workloads during runtime.</p></li>
-</ul>
-<p>The instructions on how to use these features will be covered in the following “Run:ai Features” section.</p>
+<p>All other steps remain the same. Because your image is built on top of <code>sydneyinformaticshub/dgx-interactive-jupyterlab</code>, the Jupyter Lab server will start automatically, and you will be able to connect via <strong>Jupyter</strong> under “CONNECT” once the workload is running — with your custom packages and configuration available inside the session.</p>
+</section>
+<section id="future-maintenance-updating-your-image" class="level2">
+<h2 class="anchored" data-anchor-id="future-maintenance-updating-your-image">Future maintenance: updating your image</h2>
+<p>If you need to add or change packages in the future, update your <code>Dockerfile</code> and repeat Steps 2 and 3 to rebuild and push the updated image. We recommend incrementing the tag each time (e.g.&nbsp;<code>v1</code>, <code>v2</code>) so you can track versions and roll back if needed. The next workload you launch using that image name will automatically pull the latest version.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
