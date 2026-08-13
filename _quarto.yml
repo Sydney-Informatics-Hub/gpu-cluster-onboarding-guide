@@ -34,6 +34,8 @@ website:
           href: notebooks/CLI.html
         - text: "How to self-install R packages"
           href: notebooks/R_tutorial.html
+        - text: "Building and using a custom Docker image"
+          href: notebooks/build_docker_image.html
         - text: "How to run AlphaFold3"
           href: notebooks/alphafold3_guide.html
   page-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
