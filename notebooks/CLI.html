@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>cli – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
+<title>cli – Apollo GPU Cluster Onboarding Guide</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-293804b51f7d076bc504611c7cf22dc9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-174f99fd538d40d38173fbbe961256dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -126,7 +126,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <img src="../fig/usyd-logo.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Sydney Informatics Hub GPU Cluster Onboarding Guide</span>
+    <span class="navbar-title">Apollo GPU Cluster Onboarding Guide</span>
     </a>
   </div>
         <div class="quarto-navbar-tools tools-end">
@@ -168,7 +168,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Getting Started with the SIH GPU Cluster</span></a>
+ <span class="menu-text">Getting Started with the Apollo GPU Cluster</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -177,13 +177,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/cluster_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction to the SIH GPU Cluster</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/access.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Accessing the SIH GPU Cluster</span></a>
+ <span class="menu-text">Introduction to the Apollo GPU Cluster</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -224,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/data_transfer.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">How to transfer data to/from the SIH GPU Cluster</span></a>
+ <span class="menu-text">How to transfer data to/from the Apollo GPU Cluster</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -277,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="the-runai-command-line-interface-cli" class="level1">
 <h1>The Run:AI Command Line Interface (CLI)</h1>
-<p>The Run:AI <a href="https://run-ai-docs.nvidia.com/self-hosted/2.23/reference/cli">Command Line Interface</a> (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.</p>
+<p>The Run:AI <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/reference/cli">Command Line Interface</a> (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.</p>
 <section id="setting-up-the-runai-cli" class="level2">
 <h2 class="anchored" data-anchor-id="setting-up-the-runai-cli">Setting up the Run:AI CLI</h2>
 <p>To set up the CLI in your terminal:</p>
@@ -296,7 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="how-to-run-a-terminal-environment-at-the-command-line" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-run-a-terminal-environment-at-the-command-line">How to Run a Terminal Environment at the Command Line</h2>
-<p>You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the SIH GPU cluster.</p>
+<p>You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the Apollo GPU cluster.</p>
 <section id="example-running-a-gpu-workflow-using-the-cli" class="level3">
 <h3 class="anchored" data-anchor-id="example-running-a-gpu-workflow-using-the-cli">Example running a GPU workflow using the CLI</h3>
 <ol type="1">
@@ -316,7 +310,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p><code>runai workspace submit &lt;workspace-name&gt;</code> will run a new workspace and give it the name specified in <code>&lt;workspace-name&gt;</code></p></li>
 <li><p><code>--image sydneyinformaticshub/dgx-interactive-terminal</code> will run the base Docker image located at <code>sydneyinformaticshub/dgx-interactive-terminal</code>, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base</p></li>
-<li><p><code>--gpu-devices-request 1 --cpu-core-request 1.0</code> requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see <a href="https://run-ai-docs.nvidia.com/self-hosted/2.22/reference/cli/runai/runai_workspace_submit">here</a> or use <code>runai workspace submit --help</code> for a full list of options</p></li>
+<li><p><code>--gpu-devices-request 1 --cpu-core-request 1.0</code> requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/reference/cli/runai/runai_workspace_submit">here</a> or use <code>runai workspace submit --help</code> for a full list of options</p></li>
 <li><p><code>--run-as-user</code> will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace</p></li>
 <li><p><code>--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch</code> will mount an existing PVC associated with your project into the running workload. Replace <pvc-name> with the name of your PVC. This will mount the PVC into <code>/scratch</code> inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.</pvc-name></p></li>
 <li><p><code>--pod-running-timeout 10m</code> will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.</p></li>

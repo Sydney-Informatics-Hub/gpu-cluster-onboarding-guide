@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>alphafold3_guide – Sydney Informatics Hub GPU Cluster Onboarding Guide</title>
+<title>alphafold3_guide – Apollo GPU Cluster Onboarding Guide</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-293804b51f7d076bc504611c7cf22dc9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-174f99fd538d40d38173fbbe961256dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/videojs/video.min.js"></script>
 <link href="../site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -128,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <img src="../fig/usyd-logo.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Sydney Informatics Hub GPU Cluster Onboarding Guide</span>
+    <span class="navbar-title">Apollo GPU Cluster Onboarding Guide</span>
     </a>
   </div>
         <div class="quarto-navbar-tools tools-end">
@@ -170,7 +170,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Getting Started with the SIH GPU Cluster</span></a>
+ <span class="menu-text">Getting Started with the Apollo GPU Cluster</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -179,13 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/cluster_intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Introduction to the SIH GPU Cluster</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../notebooks/access.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Accessing the SIH GPU Cluster</span></a>
+ <span class="menu-text">Introduction to the Apollo GPU Cluster</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -226,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../notebooks/data_transfer.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">How to transfer data to/from the SIH GPU Cluster</span></a>
+ <span class="menu-text">How to transfer data to/from the Apollo GPU Cluster</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -259,7 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#how-to-run-alphafold3-on-the-sih-gpu-cluster" id="toc-how-to-run-alphafold3-on-the-sih-gpu-cluster" class="nav-link active" data-scroll-target="#how-to-run-alphafold3-on-the-sih-gpu-cluster">How to run AlphaFold3 on the SIH GPU Cluster</a>
+  <li><a href="#how-to-run-alphafold3-on-the-apollo-gpu-cluster" id="toc-how-to-run-alphafold3-on-the-apollo-gpu-cluster" class="nav-link active" data-scroll-target="#how-to-run-alphafold3-on-the-apollo-gpu-cluster">How to run AlphaFold3 on the Apollo GPU Cluster</a>
   <ul class="collapse">
   <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a>
   <ul class="collapse">
@@ -286,8 +280,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="how-to-run-alphafold3-on-the-sih-gpu-cluster" class="level1">
-<h1>How to run AlphaFold3 on the SIH GPU Cluster</h1>
+<section id="how-to-run-alphafold3-on-the-apollo-gpu-cluster" class="level1">
+<h1>How to run AlphaFold3 on the Apollo GPU Cluster</h1>
 <div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="../fig/af3_insulin_demo.webm"></video></div>
 <p><a href="https://github.com/google-deepmind/alphafold3">AlphaFold3</a> predicts the 3D structure of proteins, nucleic acids, and small molecules. You describe your molecules in a text file and AlphaFold3 returns predicted 3D structures with confidence scores.</p>
 <p>In this guide, AlphaFold3 will be run as two separate jobs:</p>
