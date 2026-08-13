@@ -6,7 +6,7 @@ In Run:AI, an environment consists of a set of configurations that define the so
 - Custom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)
 
 ## Pre-defined Environments
-The SIH GPU platform has provided several basic environments for users to get started with:
+The Apollo GPU platform has provided several basic environments for users to get started with:
 
 ![Pre-defined environments](../fig/environment_predefined.png)
 

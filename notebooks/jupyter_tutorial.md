@@ -8,7 +8,7 @@ Generally, the minimum requirements you need before creating the workload includ
 * Have a [data source](runai_features.md#runai-data-sources), e.g. a PVC, to store your input and output data
 * Understand the [compute resources](runai_features.md#runai-compute-resources) requirements you need to run the job
 
-In this tutorial, we will create a basic Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the SIH GPU cluster.
+In this tutorial, we will create a basic Jupyter Lab workload that allows you to run Jupyter notebooks interactively on the Apollo GPU cluster.
 
 ## Step 1: Create a workload
 Navigate to the "Workload manager" section, select "Workloads", and click on the "NEW WORKLOAD" button. Select "Workspace" from the dropdown menu.

@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Sydney Informatics Hub GPU Cluster Onboarding Guide"
+  title: "Apollo GPU Cluster Onboarding Guide"
   site-url: https://sydney-informatics-hub.github.io/
   navbar:
     logo: fig/usyd-logo.png
@@ -14,12 +14,10 @@ website:
     contents:
       - href: index.qmd
         text: Home
-      - section: "Getting Started with the SIH GPU Cluster"
+      - section: "Getting Started with the Apollo GPU Cluster"
         contents:
-        - text: "Introduction to the SIH GPU Cluster"
+        - text: "Introduction to the Apollo GPU Cluster"
           href: notebooks/cluster_intro.html
-        - text: "Accessing the SIH GPU Cluster"
-          href: notebooks/access.html
         - text: "Login"
           href: notebooks/login.html
         - text: "Key Run:ai features"
@@ -30,7 +28,7 @@ website:
           href: notebooks/jupyter_tutorial.html
         - text: "Creating a Marimo Python workload"
           href: notebooks/marimo_tutorial.html
-        - text: "How to transfer data to/from the SIH GPU Cluster"
+        - text: "How to transfer data to/from the Apollo GPU Cluster"
           href: notebooks/data_transfer.html
         - text: "How to run a terminal using the Command Line Interface (CLI)"
           href: notebooks/CLI.html
@@ -38,22 +36,20 @@ website:
           href: notebooks/R_tutorial.html
         - text: "Building and using a custom Docker image"
           href: notebooks/build_docker_image.html
-  cookie-consent: 
-    type: express
-    style: simple
-    palette: light
-    policy-url: https://www.sydney.edu.au/privacy-statement.html
-  google-analytics: "G-TNWWV3HK57"
-
+        - text: "How to run AlphaFold3"
+          href: notebooks/alphafold3_guide.html
   page-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
 
 format:
   html:
-   link-external-newwindow: true
-   link-external-icon: true # displays an icon next to external links
-   toc: true
-   css: [lesson.css]
-   theme: cosmo
-   code-link: true
-   code-fold: false
+    include-in-header: 
+      - text: |
+          <script data-goatcounter="https://sih.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    link-external-newwindow: true
+    link-external-icon: true
+    toc: true
+    css: [lesson.css]
+    theme: cosmo
+    code-link: true
+    code-fold: false
    

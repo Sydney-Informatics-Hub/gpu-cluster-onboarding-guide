@@ -9,7 +9,7 @@ Generally, the minimum requirements you need before creating the workload includ
 * Have a [data source](runai_features.md#runai-data-sources), e.g. a PVC, to store your input and output data
 * Understand the [compute resources](runai_features.md#runai-compute-resources) requirements you need to run the job
 
-In this tutorial, we will create a simple Marimo workload that allows you to run python Marimo notebooks interactively on the SIH GPU cluster.
+In this tutorial, we will create a simple Marimo workload that allows you to run python Marimo notebooks interactively on the Apollo GPU cluster.
 
 [Marimo notebook example gallery](https://marimo.io/gallery)
 

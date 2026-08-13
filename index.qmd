@@ -1,5 +1,5 @@
 ---
-title: "Sydney Informatics Hub (SIH) GPU Cluster Onboarding Guide"
+title: "Apollo GPU Cluster Onboarding Guide"
 output:
   html_document:
     toc: false
@@ -10,6 +10,6 @@ This Onboarding Guide is structured as follows:
 |  |  |
 | --- | :--- |
 | **Section** | **Content** |
-| Getting Started with the SIH GPU Cluster | Overview and basic information about the GPU Cluster |
-| Getting Started with Run:ai | Introduction to Run:ai concepts and fundamentals. More details can be found on the [official Run:ai user guide (version 2.23)](https://run-ai-docs.nvidia.com/self-hosted/2.23) |
+| Getting Started with the Apollo GPU Cluster | Overview and basic information about the GPU Cluster |
+| Getting Started with Run:ai | Introduction to Run:ai concepts and fundamentals. More details can be found on the [official Run:ai user guide (version 2.24)](https://run-ai-docs.nvidia.com/self-hosted/2.24) |
 | Tutorials | Practical examples and demonstrations of different use cases |
