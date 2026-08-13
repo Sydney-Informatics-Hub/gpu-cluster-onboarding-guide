@@ -1,4 +1,4 @@
-# How to run AlphaFold3 on the SIH GPU Cluster
+# How to run AlphaFold3 on the Apollo GPU Cluster
 
 {{< video ../fig/af3_insulin_demo.webm >}}
 
