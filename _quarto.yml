@@ -18,8 +18,6 @@ website:
         contents:
         - text: "Introduction to the Apollo GPU Cluster"
           href: notebooks/cluster_intro.html
-        - text: "Accessing the Apollo GPU Cluster"
-          href: notebooks/access.html
         - text: "Login"
           href: notebooks/login.html
         - text: "Key Run:ai features"
