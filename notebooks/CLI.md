@@ -1,6 +1,6 @@
 # The Run:AI Command Line Interface (CLI)
 
-The Run:AI [Command Line Interface](https://run-ai-docs.nvidia.com/self-hosted/2.23/reference/cli) (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.
+The Run:AI [Command Line Interface](https://run-ai-docs.nvidia.com/self-hosted/2.24/reference/cli) (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.
 
 ## Setting up the Run:AI CLI
 
@@ -51,7 +51,7 @@ Here is a brief rundown of the arguments of the command above:
 
 - `--image sydneyinformaticshub/dgx-interactive-terminal` will run the base Docker image located at `sydneyinformaticshub/dgx-interactive-terminal`, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base
 
-- `--gpu-devices-request 1 --cpu-core-request 1.0` requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see [here](https://run-ai-docs.nvidia.com/self-hosted/2.22/reference/cli/runai/runai_workspace_submit) or use `runai workspace submit --help` for a full list of options
+- `--gpu-devices-request 1 --cpu-core-request 1.0` requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see [here](https://run-ai-docs.nvidia.com/self-hosted/2.24/reference/cli/runai/runai_workspace_submit) or use `runai workspace submit --help` for a full list of options
 
 - `--run-as-user` will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace
 
