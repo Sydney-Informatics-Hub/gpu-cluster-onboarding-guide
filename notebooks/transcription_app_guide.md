@@ -81,8 +81,9 @@ Once your files are uploaded and your settings are configured, click the **Start
 
 ![process](../fig/transcription_process.png)
 
-!!! note
-    Do not change settings or navigate away while processing is running.
+::: {.callout-note}
+Do not change settings or navigate away while processing is running.
+:::
 
 ---
 
