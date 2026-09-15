@@ -26,11 +26,35 @@ Step 2: Configure the workload
 
     ![name](../fig/transcription_name.png)
 
-5. Finally select "CREATE WORKSPACE".
+5. Click the triangle next to "CREATE WORKSPACE", then select "Advanced setup" from the pop-up menu.
+
+    ![advance set up](../fig/transcription_advance_setup.png)
+
+6. Under "Environment", click "Tools".
+
+    ![tools](../fig/transcription_tools.png)
+
+7. Under "Access", the default setting is "All authenticated users". To change this, click the pencil icon.
+    
+    ![access](../fig/transcription_access.png)
+
+8. In the pop-up menu, select "Specific users and service accounts", then enter your email address in the grey box.
+
+    ![users](../fig/transcription_users.png)
+
+9. To add additional users, click "+ USER OR SERVICE ACCOUNT".
+
+    ![multiple users](../fig/transcription_multiple_users.png)
+
+10. Once you have added all users, click "SAVE".
+
+    ![save](../fig/transcription_save.png)
+
+11. Finally, scroll to the bottom of the page and click "CREATE WORKSPACE".
 
     ![Create](../fig/transcription_create.png)
 
-6. You will now be taken back to the Run:ai Workloads page.
+12. You will now be taken back to the Run:ai Workloads page.
 
 Step 3: Connect to the Transcription and Translation app
 
