@@ -34,7 +34,8 @@ Select the language spoken in your audio files.
 
 ![speaker recognition](../fig/transcription_speaker_recognition.png)
 
-- Check this box if your audio contains **multiple speakers** and you want the transcript to identify who said what (e.g. "SPEAKER_01: Hello").
+- Check this box **only if your audio has more than one speaker** and you want the transcript to identify who said what (e.g. "SPEAKER_01: Hello").
+    - If there is only **one speaker**, leave this unchecked. Enabling it for single-speaker audio can reduce accuracy and may incorrectly split one person's speech across multiple "speakers."
 - When enabled, a **Number of Speakers** field appears:
     - Enter `0` to let the app auto-detect how many speakers there are.
     - Enter the exact number of speakers (e.g. `2`) for **more accurate** results. Use this whenever you know how many people are in the recording.
