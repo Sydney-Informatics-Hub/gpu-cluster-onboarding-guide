@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>runai_features – Apollo GPU Cluster Onboarding Guide</title>
+<title>transcription_app_guide – Apollo GPU Cluster Onboarding Guide</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -104,7 +104,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/cluster_intro.html">Getting Started with the Apollo GPU Cluster</a></li><li class="breadcrumb-item"><a href="../notebooks/runai_features.html">Key Run:ai features</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/transcription_app_guide.html">Transcription and translation tool: User guide</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/runai_features.html" class="sidebar-item-text sidebar-link active">
+  <a href="../notebooks/runai_features.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Key Run:ai features</span></a>
   </div>
 </li>
@@ -218,7 +218,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/transcription_app_guide.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/transcription_app_guide.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Transcription and translation tool: User guide</span></a>
   </div>
 </li>
@@ -234,34 +234,153 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-runai-features" id="toc-key-runai-features" class="nav-link active" data-scroll-target="#key-runai-features">Key Run:ai Features</a>
+  <li><a href="#audio-transcription-translation-user-guide" id="toc-audio-transcription-translation-user-guide" class="nav-link active" data-scroll-target="#audio-transcription-translation-user-guide">Audio Transcription &amp; Translation — User Guide</a>
   <ul class="collapse">
-  <li><a href="#runai-projects" id="toc-runai-projects" class="nav-link" data-scroll-target="#runai-projects">Projects</a></li>
-  <li><a href="#workloads" id="toc-workloads" class="nav-link" data-scroll-target="#workloads">Workloads</a></li>
-  <li><a href="#runai-environments" id="toc-runai-environments" class="nav-link" data-scroll-target="#runai-environments">Environments</a></li>
-  <li><a href="#runai-compute-resources" id="toc-runai-compute-resources" class="nav-link" data-scroll-target="#runai-compute-resources">Compute resources</a></li>
-  <li><a href="#runai-data-sources" id="toc-runai-data-sources" class="nav-link" data-scroll-target="#runai-data-sources">Data sources</a></li>
-  <li><a href="#user-roles" id="toc-user-roles" class="nav-link" data-scroll-target="#user-roles">User roles</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#step-1-configure-settings-left-sidebar" id="toc-step-1-configure-settings-left-sidebar" class="nav-link" data-scroll-target="#step-1-configure-settings-left-sidebar">Step 1: Configure Settings (Left Sidebar)</a>
+  <ul class="collapse">
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model">Model</a></li>
+  <li><a href="#language" id="toc-language" class="nav-link" data-scroll-target="#language">Language</a></li>
+  <li><a href="#options" id="toc-options" class="nav-link" data-scroll-target="#options">Options</a></li>
+  </ul></li>
+  <li><a href="#step-2-upload-your-audio-files" id="toc-step-2-upload-your-audio-files" class="nav-link" data-scroll-target="#step-2-upload-your-audio-files">Step 2: Upload Your Audio Files</a></li>
+  <li><a href="#step-3-run-transcription" id="toc-step-3-run-transcription" class="nav-link" data-scroll-target="#step-3-run-transcription">Step 3: Run Transcription</a></li>
+  <li><a href="#step-4-download-results" id="toc-step-4-download-results" class="nav-link" data-scroll-target="#step-4-download-results">Step 4: Download Results</a></li>
+  <li><a href="#processing-logs" id="toc-processing-logs" class="nav-link" data-scroll-target="#processing-logs">Processing Logs</a></li>
+  <li><a href="#quick-reference" id="toc-quick-reference" class="nav-link" data-scroll-target="#quick-reference">Quick Reference</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/cluster_intro.html">Getting Started with the Apollo GPU Cluster</a></li><li class="breadcrumb-item"><a href="../notebooks/runai_features.html">Key Run:ai features</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/transcription_app_guide.html">Transcription and translation tool: User guide</a></li></ol></nav></header>
 
 
 
 
-<section id="key-runai-features" class="level1">
-<h1>Key Run:ai Features</h1>
-<section id="runai-projects" class="level2">
-<h2 class="anchored" data-anchor-id="runai-projects">Projects</h2>
-<p>In Run:ai, users are organised into <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/platform-management/aiinitiatives/organization/projects">projects</a>. This allows cluster users to work collaboratively and access shared resources including GPU devices and scratch disk space.</p>
-<p>Once a DashR project has been provisioned access to the Apollo GPU cluster, all members of the project will automatically be added to a Run:ai project resembling the DashR project shortcode (e.g.&nbsp;“rds-core-sih4hpc-rw”). Users may be added to multiple Run:ai projects if the corresponding DashR projects have been granted access.</p>
+<section id="audio-transcription-translation-user-guide" class="level1">
+<h1>Audio Transcription &amp; Translation — User Guide</h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>This app transcribes and optionally translates audio files. You configure your settings in the sidebar on the left, upload your files, run processing, then download the results.</p>
+<hr>
+</section>
+<section id="step-1-configure-settings-left-sidebar" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-configure-settings-left-sidebar">Step 1: Configure Settings (Left Sidebar)</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../fig/project_example.png" class="img-fluid figure-img"></p>
-<figcaption>List of Run:ai projects</figcaption>
+<p><img src="../fig/transcription_config.png" class="img-fluid figure-img"></p>
+<figcaption>configuration</figcaption>
+</figure>
+</div>
+<section id="model" class="level3">
+<h3 class="anchored" data-anchor-id="model">Model</h3>
+<p>Choose the Whisper model to use for transcription:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_model.png" class="img-fluid figure-img"></p>
+<figcaption>model</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong><code>turbo</code></strong> <em>(default)</em> — use this for <strong>English-only audio</strong> when you want faster processing.</li>
+<li><strong><code>large-v3</code></strong> — use this for <strong>non-English audio</strong>, or when you need the highest accuracy. Slower but more powerful.</li>
+</ul>
+</section>
+<section id="language" class="level3">
+<h3 class="anchored" data-anchor-id="language">Language</h3>
+<p>Select the language spoken in your audio files.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_language.png" class="img-fluid figure-img"></p>
+<figcaption>language</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Auto-detect</strong> <em>(default)</em> — the model will guess the language automatically. Works well in most cases.</li>
+<li>If you <strong>know</strong> the language, select it from the dropdown. This is more accurate than auto-detect and recommended when processing non-English audio.</li>
+</ul>
+</section>
+<section id="options" class="level3">
+<h3 class="anchored" data-anchor-id="options">Options</h3>
+<p><strong>Speaker Recognition</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_speaker_recognition.png" class="img-fluid figure-img"></p>
+<figcaption>speaker recognition</figcaption>
+</figure>
+</div>
+<ul>
+<li>Check this box <strong>only if your audio has more than one speaker</strong> and you want the transcript to identify who said what (e.g.&nbsp;“SPEAKER_01: Hello”).
+<ul>
+<li>If there is only <strong>one speaker</strong>, leave this unchecked. Enabling it for single-speaker audio can reduce accuracy and may incorrectly split one person’s speech across multiple “speakers.”</li>
+</ul></li>
+<li>When enabled, a <strong>Number of Speakers</strong> field appears:
+<ul>
+<li>Enter <code>0</code> to let the app auto-detect how many speakers there are.</li>
+<li>Enter the exact number of speakers (e.g.&nbsp;<code>2</code>) for <strong>more accurate</strong> results. Use this whenever you know how many people are in the recording.</li>
+<li>Maximum supported: 20 speakers.</li>
+</ul></li>
+</ul>
+<p><strong>Translate to English</strong></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_translation.png" class="img-fluid figure-img"></p>
+<figcaption>translation</figcaption>
+</figure>
+</div>
+<ul>
+<li>Check this box if you want the output translated into English, regardless of the source language.</li>
+<li>Can be combined with Speaker Recognition — the transcript will show speaker labels and English text together.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="step-2-upload-your-audio-files" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-upload-your-audio-files">Step 2: Upload Your Audio Files</h2>
+<p>Supported formats: <strong>MP3, MP4, M4A, WAV, FLAC, OGG, WEBM</strong></p>
+<ol type="1">
+<li><p>In the <strong>File Upload</strong> section, click <strong>Upload</strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_browse.png" class="img-fluid figure-img"></p>
+<figcaption>browse</figcaption>
+</figure>
+</div></li>
+<li><p>You can select <strong>multiple files</strong> at once.</p></li>
+</ol>
+<p>The <strong>Files in ./data</strong> panel on the right shows everything currently queued for processing. From here you can:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_view_files.png" class="img-fluid figure-img"></p>
+<figcaption>view_files</figcaption>
+</figure>
+</div>
+<ul>
+<li>Click <strong>Refresh</strong> to update the list.</li>
+<li>Click <strong>X</strong> next to a file to remove it individually.</li>
+<li>Click <strong>Delete All</strong> to clear every file in the queue.</li>
+</ul>
+<hr>
+</section>
+<section id="step-3-run-transcription" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-run-transcription">Step 3: Run Transcription</h2>
+<p>Once your files are uploaded and your settings are configured, click the <strong>Start Transcription</strong> button.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_start.png" class="img-fluid figure-img"></p>
+<figcaption>start</figcaption>
+</figure>
+</div>
+<ul>
+<li>A progress bar and status message will appear showing which file is being processed and how many remain.</li>
+<li>Logs appear at the bottom of the page in real time.</li>
+<li>Processing time depends on file length, the model chosen, and whether speaker recognition is enabled.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_process.png" class="img-fluid figure-img"></p>
+<figcaption>process</figcaption>
 </figure>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -274,78 +393,93 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Creating new projects and adjusting project settings in Run:ai are restricted to <strong>system administrators only</strong>. Chief Investigators of the DashR project can administrate user access to the GPU cluster by adding or removing them from the <a href="https://dashr.sydney.edu.au/projects">DashR project</a>.</p>
+<p>Do not change settings or navigate away while processing is running.</p>
 </div>
 </div>
+<hr>
 </section>
-<section id="workloads" class="level2">
-<h2 class="anchored" data-anchor-id="workloads">Workloads</h2>
-<p>A <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/workloads"><strong>workload</strong></a> in Run:ai represents a unit of compute work submitted to the cluster, such as a training job, interactive session, or inference service. Workloads are scheduled and managed by the Run:ai scheduler, which optimises GPU allocation across projects and users based on defined quotas and priorities. From the Workloads page, users can submit new workloads, monitor their status, and manage existing ones.</p>
-<p>Examples of creating different workloads are included in the <a href="../notebooks/jupyter_tutorial.html">Tutorials section</a>.</p>
-</section>
-<section id="runai-environments" class="level2">
-<h2 class="anchored" data-anchor-id="runai-environments">Environments</h2>
-<p>In Run:AI, an <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/assets/environments"><strong>environment</strong></a> consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:</p>
+<section id="step-4-download-results" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-download-results">Step 4: Download Results</h2>
+<p>When processing finishes, the <strong>Download Results</strong> section shows your output files.</p>
 <ul>
-<li>Base Docker image (e.g., <code>pytorch/pytorch</code>, <code>tensorflow/tensorflow:2.20.0-jupyter</code>)</li>
-<li>Tools (such as Jupyter, RStudio, etc.)</li>
-<li>Custom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)</li>
+<li><strong>Download All (ZIP)</strong> — downloads a <code>transcriptions.zip</code> archive containing your results:
+<ul>
+<li><code>.srt</code> and <code>.txt</code> files for your output</li>
+<li>if translation was used, the transcription in the original language as well as the translated English file</li>
+<li>a <code>reference.txt</code> file with a research blurb and methodology</li>
+</ul></li>
 </ul>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_download_all.png" class="img-fluid figure-img"></p>
+<figcaption>download_all</figcaption>
+</figure>
 </div>
-<div class="callout-title-container flex-fill">
-Important
+<ul>
+<li>Click <strong>Delete All Outputs</strong> to remove all output files.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_delete_all.png" class="img-fluid figure-img"></p>
+<figcaption>delete_all</figcaption>
+</figure>
 </div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The SIH team is actively configuring and testing new environments on the cluster. Please follow related tutorials for the applications you intend to run and make sure correct environments are selected when creating workloads. <strong>Your workload will very likely fail to start if a wrong environment is loaded.</strong></p>
-</div>
-</div>
+<hr>
 </section>
-<section id="runai-compute-resources" class="level2">
-<h2 class="anchored" data-anchor-id="runai-compute-resources">Compute resources</h2>
-<p><a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/assets/compute-resources"><strong>Compute resources</strong></a> in Run:ai define the hardware specifications allocated to a workload, including the number of GPUs, CPUs, and memory. Rather than configuring these settings each time a workload is submitted, compute resources can be saved as named presets and reused across workloads and templates. This simplifies job submission and ensures consistent resource allocation. When creating a workload, users select a compute resource preset that best fits their task — for example, a single GPU with moderate memory for interactive development, or multiple GPUs for large-scale distributed training.</p>
-<p>We provide a list of predefined Compute Resources such as “one-gpu”, “two-gpu-16-cpu-memory-boost”, “data-transfer”, <em>etc</em>: <img src="../fig/compute_resources.png" class="img-fluid" alt="Pre-defined compute resources"></p>
-<p>You may also further adjust the requested resources during workload configuration to better suit your purposes.</p>
+<section id="processing-logs" class="level2">
+<h2 class="anchored" data-anchor-id="processing-logs">Processing Logs</h2>
+<p>The <strong>Processing Logs</strong> section at the bottom records what happened during each run — which files were processed, any errors, and when processing completed.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_logs.png" class="img-fluid figure-img"></p>
+<figcaption>logs</figcaption>
+</figure>
+</div>
+<p>Click <strong>Clear Logs</strong> to reset the log view.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_clear_logs.png" class="img-fluid figure-img"></p>
+<figcaption>logs</figcaption>
+</figure>
+</div>
+<hr>
 </section>
-<section id="runai-data-sources" class="level2">
-<h2 class="anchored" data-anchor-id="runai-data-sources">Data sources</h2>
-<p><a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/assets/datasources"><strong>Data sources</strong></a> in Run:ai provide a way to connect storage to your workloads, making datasets, model weights, and output directories accessible inside the container at runtime.</p>
-<p>Persistent Volume Claims (PVCs) are currently the only supported data source type. By default, 1 TB of PVC is provisioned when the Run:ai project is created and can be reused across multiple workloads, avoiding the need to reconfigure storage paths each time. When submitting a workload, users attach the PVC at a specified path within the container. <img src="../fig/data_sources.png" class="img-fluid" alt="Project PVC under “Data sources”"></p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>PVCs are NOT backed up and should only be used as temporary scratch space.</strong> As best practice, please keep copies of your raw data on RDS and regularly transfer new results back when working on the cluster.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Please <a href="https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyhFZsPIwZDBs?SupportType=Platforms&amp;Q_PopulateResponse=%7B%22QID10%22:%224%22%7D">contact the SIH team</a> if you do not see a PVC data source on your account.</p>
-</div>
-</div>
-</section>
-<section id="user-roles" class="level2">
-<h2 class="anchored" data-anchor-id="user-roles">User roles</h2>
-<p>Run:ai uses a <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/infrastructure-setup/authentication/roles">role-based access control system</a> to manage what users can see and do within the platform. On the Apollo GPU platform, newly onboarded researchers are assigned the <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/infrastructure-setup/authentication/roles#roles-in-nvidia-run-ai"><strong>L2 Researcher</strong></a> role, which allows them to submit and manage their own workloads within their projects.</p>
-<p>Administrative tasks, such as managing projects, configuring environments, and setting resource quotas, are handled by the SIH team with elevated roles. If you require additional permissions, please <a href="https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyhFZsPIwZDBs?SupportType=Platforms&amp;Q_PopulateResponse=%7B%22QID10%22:%224%22%7D">submit a support request</a>.</p>
+<section id="quick-reference" class="level2">
+<h2 class="anchored" data-anchor-id="quick-reference">Quick Reference</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Goal</th>
+<th>Settings</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Transcribe English audio, fast</td>
+<td>Model: <code>turbo</code>, Language: <code>English</code></td>
+</tr>
+<tr class="even">
+<td>Transcribe non-English audio</td>
+<td>Model: <code>large-v3</code>, Language: select yours</td>
+</tr>
+<tr class="odd">
+<td>Identify speakers in a recording</td>
+<td>Enable <strong>Speaker Recognition</strong>; set number of speakers if known</td>
+</tr>
+<tr class="even">
+<td>Get an English translation of foreign audio</td>
+<td>Enable <strong>Translate to English</strong></td>
+</tr>
+<tr class="odd">
+<td>Transcribed translation with speaker labels</td>
+<td>Enable both <strong>Speaker Recognition</strong> and <strong>Translate to English</strong></td>
+</tr>
+</tbody>
+</table>
 
 
 </section>

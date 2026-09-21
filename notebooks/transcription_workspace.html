@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>runai_features – Apollo GPU Cluster Onboarding Guide</title>
+<title>transcription_workspace – Apollo GPU Cluster Onboarding Guide</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -104,7 +104,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/cluster_intro.html">Getting Started with the Apollo GPU Cluster</a></li><li class="breadcrumb-item"><a href="../notebooks/runai_features.html">Key Run:ai features</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/transcription_workspace.html">Transcription and translation tool: Getting started</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -153,7 +153,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/runai_features.html" class="sidebar-item-text sidebar-link active">
+  <a href="../notebooks/runai_features.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Key Run:ai features</span></a>
   </div>
 </li>
@@ -212,7 +212,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../notebooks/transcription_workspace.html" class="sidebar-item-text sidebar-link">
+  <a href="../notebooks/transcription_workspace.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Transcription and translation tool: Getting started</span></a>
   </div>
 </li>
@@ -234,118 +234,130 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#key-runai-features" id="toc-key-runai-features" class="nav-link active" data-scroll-target="#key-runai-features">Key Run:ai Features</a>
+  <li><a href="#audio-transcription-translation-apollo-guide" id="toc-audio-transcription-translation-apollo-guide" class="nav-link active" data-scroll-target="#audio-transcription-translation-apollo-guide">Audio Transcription &amp; Translation — Apollo Guide</a>
   <ul class="collapse">
-  <li><a href="#runai-projects" id="toc-runai-projects" class="nav-link" data-scroll-target="#runai-projects">Projects</a></li>
-  <li><a href="#workloads" id="toc-workloads" class="nav-link" data-scroll-target="#workloads">Workloads</a></li>
-  <li><a href="#runai-environments" id="toc-runai-environments" class="nav-link" data-scroll-target="#runai-environments">Environments</a></li>
-  <li><a href="#runai-compute-resources" id="toc-runai-compute-resources" class="nav-link" data-scroll-target="#runai-compute-resources">Compute resources</a></li>
-  <li><a href="#runai-data-sources" id="toc-runai-data-sources" class="nav-link" data-scroll-target="#runai-data-sources">Data sources</a></li>
-  <li><a href="#user-roles" id="toc-user-roles" class="nav-link" data-scroll-target="#user-roles">User roles</a></li>
+  <li><a href="#creating-a-workload" id="toc-creating-a-workload" class="nav-link" data-scroll-target="#creating-a-workload">Creating a Workload</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/cluster_intro.html">Getting Started with the Apollo GPU Cluster</a></li><li class="breadcrumb-item"><a href="../notebooks/runai_features.html">Key Run:ai features</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../notebooks/jupyter_tutorial.html">Tutorials</a></li><li class="breadcrumb-item"><a href="../notebooks/transcription_workspace.html">Transcription and translation tool: Getting started</a></li></ol></nav></header>
 
 
 
 
-<section id="key-runai-features" class="level1">
-<h1>Key Run:ai Features</h1>
-<section id="runai-projects" class="level2">
-<h2 class="anchored" data-anchor-id="runai-projects">Projects</h2>
-<p>In Run:ai, users are organised into <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/platform-management/aiinitiatives/organization/projects">projects</a>. This allows cluster users to work collaboratively and access shared resources including GPU devices and scratch disk space.</p>
-<p>Once a DashR project has been provisioned access to the Apollo GPU cluster, all members of the project will automatically be added to a Run:ai project resembling the DashR project shortcode (e.g.&nbsp;“rds-core-sih4hpc-rw”). Users may be added to multiple Run:ai projects if the corresponding DashR projects have been granted access.</p>
+<section id="audio-transcription-translation-apollo-guide" class="level1">
+<h1>Audio Transcription &amp; Translation — Apollo Guide</h1>
+<section id="creating-a-workload" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-workload">Creating a Workload</h2>
+<p>Step 1: Create a workload</p>
+<ol type="1">
+<li><p>Navigate to the “Workload manager” section.</p></li>
+<li><p>Select “Workloads”.</p></li>
+<li><p>Click the “NEW WORKLOAD” button.</p></li>
+<li><p>Select “Workspace” from the dropdown menu.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../fig/project_example.png" class="img-fluid figure-img"></p>
-<figcaption>List of Run:ai projects</figcaption>
+<p><img src="../fig/transcription_workspace.png" class="img-fluid figure-img"></p>
+<figcaption>create workload</figcaption>
 </figure>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Creating new projects and adjusting project settings in Run:ai are restricted to <strong>system administrators only</strong>. Chief Investigators of the DashR project can administrate user access to the GPU cluster by adding or removing them from the <a href="https://dashr.sydney.edu.au/projects">DashR project</a>.</p>
-</div>
-</div>
-</section>
-<section id="workloads" class="level2">
-<h2 class="anchored" data-anchor-id="workloads">Workloads</h2>
-<p>A <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/workloads"><strong>workload</strong></a> in Run:ai represents a unit of compute work submitted to the cluster, such as a training job, interactive session, or inference service. Workloads are scheduled and managed by the Run:ai scheduler, which optimises GPU allocation across projects and users based on defined quotas and priorities. From the Workloads page, users can submit new workloads, monitor their status, and manage existing ones.</p>
-<p>Examples of creating different workloads are included in the <a href="../notebooks/jupyter_tutorial.html">Tutorials section</a>.</p>
-</section>
-<section id="runai-environments" class="level2">
-<h2 class="anchored" data-anchor-id="runai-environments">Environments</h2>
-<p>In Run:AI, an <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/assets/environments"><strong>environment</strong></a> consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:</p>
-<ul>
-<li>Base Docker image (e.g., <code>pytorch/pytorch</code>, <code>tensorflow/tensorflow:2.20.0-jupyter</code>)</li>
-<li>Tools (such as Jupyter, RStudio, etc.)</li>
-<li>Custom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)</li>
-</ul>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The SIH team is actively configuring and testing new environments on the cluster. Please follow related tutorials for the applications you intend to run and make sure correct environments are selected when creating workloads. <strong>Your workload will very likely fail to start if a wrong environment is loaded.</strong></p>
-</div>
-</div>
-</section>
-<section id="runai-compute-resources" class="level2">
-<h2 class="anchored" data-anchor-id="runai-compute-resources">Compute resources</h2>
-<p><a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/assets/compute-resources"><strong>Compute resources</strong></a> in Run:ai define the hardware specifications allocated to a workload, including the number of GPUs, CPUs, and memory. Rather than configuring these settings each time a workload is submitted, compute resources can be saved as named presets and reused across workloads and templates. This simplifies job submission and ensures consistent resource allocation. When creating a workload, users select a compute resource preset that best fits their task — for example, a single GPU with moderate memory for interactive development, or multiple GPUs for large-scale distributed training.</p>
-<p>We provide a list of predefined Compute Resources such as “one-gpu”, “two-gpu-16-cpu-memory-boost”, “data-transfer”, <em>etc</em>: <img src="../fig/compute_resources.png" class="img-fluid" alt="Pre-defined compute resources"></p>
-<p>You may also further adjust the requested resources during workload configuration to better suit your purposes.</p>
-</section>
-<section id="runai-data-sources" class="level2">
-<h2 class="anchored" data-anchor-id="runai-data-sources">Data sources</h2>
-<p><a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/assets/datasources"><strong>Data sources</strong></a> in Run:ai provide a way to connect storage to your workloads, making datasets, model weights, and output directories accessible inside the container at runtime.</p>
-<p>Persistent Volume Claims (PVCs) are currently the only supported data source type. By default, 1 TB of PVC is provisioned when the Run:ai project is created and can be reused across multiple workloads, avoiding the need to reconfigure storage paths each time. When submitting a workload, users attach the PVC at a specified path within the container. <img src="../fig/data_sources.png" class="img-fluid" alt="Project PVC under “Data sources”"></p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>PVCs are NOT backed up and should only be used as temporary scratch space.</strong> As best practice, please keep copies of your raw data on RDS and regularly transfer new results back when working on the cluster.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Please <a href="https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyhFZsPIwZDBs?SupportType=Platforms&amp;Q_PopulateResponse=%7B%22QID10%22:%224%22%7D">contact the SIH team</a> if you do not see a PVC data source on your account.</p>
-</div>
-</div>
-</section>
-<section id="user-roles" class="level2">
-<h2 class="anchored" data-anchor-id="user-roles">User roles</h2>
-<p>Run:ai uses a <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/infrastructure-setup/authentication/roles">role-based access control system</a> to manage what users can see and do within the platform. On the Apollo GPU platform, newly onboarded researchers are assigned the <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/infrastructure-setup/authentication/roles#roles-in-nvidia-run-ai"><strong>L2 Researcher</strong></a> role, which allows them to submit and manage their own workloads within their projects.</p>
-<p>Administrative tasks, such as managing projects, configuring environments, and setting resource quotas, are handled by the SIH team with elevated roles. If you require additional permissions, please <a href="https://sydney.au1.qualtrics.com/jfe/form/SV_5mXyhFZsPIwZDBs?SupportType=Platforms&amp;Q_PopulateResponse=%7B%22QID10%22:%224%22%7D">submit a support request</a>.</p>
+</div></li>
+</ol>
+<p>Step 2: Configure the workload</p>
+<ol type="1">
+<li><p>The “Cluster” section will be set automatically; you do not need to change this.</p></li>
+<li><p>Under “Projects”, select the project it will be linked to (yours will differ from the examples in the image below depending on your project).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_clusterproject.png" class="img-fluid figure-img"></p>
+<figcaption>cluster and projects</figcaption>
+</figure>
+</div></li>
+<li><p>Under “Templates”, select “transcription-translation-tool”. It may not appear on the first page, so use the page numbers at the bottom to navigate through the list.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_template.png" class="img-fluid figure-img"></p>
+<figcaption>template</figcaption>
+</figure>
+</div></li>
+<li><p>Provide a descriptive name for the workload (e.g.&nbsp;transcription-translation-example).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_name.png" class="img-fluid figure-img"></p>
+<figcaption>name</figcaption>
+</figure>
+</div></li>
+<li><p>Click the triangle next to “CREATE WORKSPACE”, then select “Advanced setup” from the pop-up menu.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_advance_setup.png" class="img-fluid figure-img"></p>
+<figcaption>advance set up</figcaption>
+</figure>
+</div></li>
+<li><p>Under “Environment”, click “Tools”.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_tools.png" class="img-fluid figure-img"></p>
+<figcaption>tools</figcaption>
+</figure>
+</div></li>
+<li><p>Under “Access”, the default setting is “All authenticated users”. To change this, click the pencil icon.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_access.png" class="img-fluid figure-img"></p>
+<figcaption>access</figcaption>
+</figure>
+</div></li>
+<li><p>In the pop-up menu, select “Specific users and service accounts”, then enter your email address in the grey box.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_users.png" class="img-fluid figure-img"></p>
+<figcaption>users</figcaption>
+</figure>
+</div></li>
+<li><p>To add additional users, click “+ USER OR SERVICE ACCOUNT”.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_multiple_users.png" class="img-fluid figure-img"></p>
+<figcaption>multiple users</figcaption>
+</figure>
+</div></li>
+<li><p>Once you have added all users, click “SAVE”.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_save.png" class="img-fluid figure-img"></p>
+<figcaption>save</figcaption>
+</figure>
+</div></li>
+<li><p>Finally, scroll to the bottom of the page and click “CREATE WORKSPACE”.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_create.png" class="img-fluid figure-img"></p>
+<figcaption>Create</figcaption>
+</figure>
+</div></li>
+<li><p>You will now be taken back to the Run:ai Workloads page.</p></li>
+</ol>
+<p>Step 3: Connect to the Transcription and Translation app</p>
+<ol type="1">
+<li><p>Your workload status will start on “Initializing”. This may take a couple of minutes.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_initalize.png" class="img-fluid figure-img"></p>
+<figcaption>initializing</figcaption>
+</figure>
+</div></li>
+<li><p>When the status changes to “Running,” select your workload. You can then access the transcription and translation app interface by selecting “Connect.”</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../fig/transcription_connect.png" class="img-fluid figure-img"></p>
+<figcaption>connect</figcaption>
+</figure>
+</div></li>
+<li><p>The transcription and translation app will now open in a separate tab in your browser.</p></li>
+</ol>
+<p>For instructions on how to use the app, see the <a href="../notebooks/transcription_app_guide.html">App user guide</a>.</p>
 
 
 </section>

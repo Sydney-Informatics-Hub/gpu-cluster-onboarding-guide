@@ -7,72 +7,6 @@
     "text": "1. Get a client\nThese are the setup instructions…"
   },
   {
-    "objectID": "notebooks/CLI.html",
-    "href": "notebooks/CLI.html",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "The Run:AI Command Line Interface (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.\n\n\nTo set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).\n\n\n\nYou can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the Apollo GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.\n\n\n\n\n\nUsing the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/CLI.html#setting-up-the-runai-cli",
-    "href": "notebooks/CLI.html#setting-up-the-runai-cli",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "To set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
-    "href": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the Apollo GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
-    "href": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
-    "title": "The Run:AI Command Line Interface (CLI)",
-    "section": "",
-    "text": "Using the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
-    "crumbs": [
-      "Tutorials",
-      "How to run a terminal using the Command Line Interface (CLI)"
-    ]
-  },
-  {
-    "objectID": "notebooks/data_transfer.html",
-    "href": "notebooks/data_transfer.html",
-    "title": "How to transfer data to and from the Persistent volume claim",
-    "section": "",
-    "text": "In this section we will describe methods of transferring data between the Research Data Store (RDS) and Gadi. For now, while we await the implementation of Globus for fast and efficient transfer to and from your Persistent Volume Claim (PVC), we will describe an interactive method for transferring data using a JupyterLab environment in the Run:ai web interface. In the future we will include instructions for copying data using the Run:AI CLI at the command line.\nHere we assume you already have set up a project and have some Persistent Volume Claim (PVC) storage available.\n\n\nYou can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an environment called data-transfer for you to do this.\nTo run the data-transfer environment from a template:\n\nLog into the Run:ai dashboard at gpu.sydney.edu.au and use Okta to login with your credentials via the “CONTINUE WITH SSO” sign in option.\nClick the ‘Workload manager’ icon in the left panel and then select ‘Workloads’ in the menu. Next select the green ‘+ NEW WORKLOAD’ icon in the top left of the workloads screen and select ‘Workspace’.\n\n\n\n\nNew Workload\n\n\n\nSelect your project from the projects available and select the data-transfer-workspace template and give your workspace a name before selecting ‘Advanced Setup’ on the bottom right.\nIf you have selected the data-transfer-workspace template, you should now have pre-populated the required Environment and Compute resources fields on the following page. You can double check this now.\nExpand the Data & storage box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.\n\n\n\n\nSelect a PVC in Data & storage\n\n\n\nWhen you are happy with everything, click CREATE WORKSPACE and your data transfer environment will be created. When this is provisioned click the CONNECT icon above the list of workloads.\n\n\n\n\nConnect\n\n\n\nYou will again be prompted for your Run:ai login and your newly created JupyterLab session will appear in a new tab in your browser. Select the ‘Terminal’ app there.\n\n\n\n\nTerminal\n\n\n\nIn the open terminal app you can now use the sftp command to copy data to/from your project space in RDS.\n\nTo copy data from RDS to the GPU cluster, you can type the following into the open terminal:\n\n\n\n\n\n\nNote\n\n\n\nBe sure to replace everything in brackets &lt; &gt; with values specific to the data you are trying to copy as follows:\n&lt;your_unikey&gt;: Your University of Sydney unikey, usually in the form abcd0123.\n&lt;rds_project&gt;: The name of the project you have on DashR with data stored in RDS.\n&lt;path_to_project_data&gt;: The location of your storage directory under your project on RDS. (e.g. my_project_data/my_project_data_for_dgx/)\n&lt;pvc_mount_point&gt;: The location your PVC has been mounted (this is established when your PVC is provisioned). (e.g. /scratch)\n&lt;path_to_pvc_data&gt;: The path of the data you have stored on the PVC. (e.g. my_dgx_data/workflow_output/)\n\n\nsftp -r &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\nAfter you execute this command, you will be prompted for the password associated with your unikey to establish a connection to RDS.\nTo copy data from the GPU cluster to RDS, reverse the order of source and destination in the above command:\nsftp &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;&lt;&lt; $\"put -r &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\"\nDuring file transfer, for larger files, you can close the browser and leave things running in the background. You can then reconnect to check its status by logging back into the web UI at gpu.sydney.edu.au.",
-    "crumbs": [
-      "Tutorials",
-      "How to transfer data to/from the Apollo GPU Cluster"
-    ]
-  },
-  {
-    "objectID": "notebooks/data_transfer.html#interactive-data-transfer-tofrom-rds-from-a-web-browser",
-    "href": "notebooks/data_transfer.html#interactive-data-transfer-tofrom-rds-from-a-web-browser",
-    "title": "How to transfer data to and from the Persistent volume claim",
-    "section": "",
-    "text": "You can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an environment called data-transfer for you to do this.\nTo run the data-transfer environment from a template:\n\nLog into the Run:ai dashboard at gpu.sydney.edu.au and use Okta to login with your credentials via the “CONTINUE WITH SSO” sign in option.\nClick the ‘Workload manager’ icon in the left panel and then select ‘Workloads’ in the menu. Next select the green ‘+ NEW WORKLOAD’ icon in the top left of the workloads screen and select ‘Workspace’.\n\n\n\n\nNew Workload\n\n\n\nSelect your project from the projects available and select the data-transfer-workspace template and give your workspace a name before selecting ‘Advanced Setup’ on the bottom right.\nIf you have selected the data-transfer-workspace template, you should now have pre-populated the required Environment and Compute resources fields on the following page. You can double check this now.\nExpand the Data & storage box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.\n\n\n\n\nSelect a PVC in Data & storage\n\n\n\nWhen you are happy with everything, click CREATE WORKSPACE and your data transfer environment will be created. When this is provisioned click the CONNECT icon above the list of workloads.\n\n\n\n\nConnect\n\n\n\nYou will again be prompted for your Run:ai login and your newly created JupyterLab session will appear in a new tab in your browser. Select the ‘Terminal’ app there.\n\n\n\n\nTerminal\n\n\n\nIn the open terminal app you can now use the sftp command to copy data to/from your project space in RDS.\n\nTo copy data from RDS to the GPU cluster, you can type the following into the open terminal:\n\n\n\n\n\n\nNote\n\n\n\nBe sure to replace everything in brackets &lt; &gt; with values specific to the data you are trying to copy as follows:\n&lt;your_unikey&gt;: Your University of Sydney unikey, usually in the form abcd0123.\n&lt;rds_project&gt;: The name of the project you have on DashR with data stored in RDS.\n&lt;path_to_project_data&gt;: The location of your storage directory under your project on RDS. (e.g. my_project_data/my_project_data_for_dgx/)\n&lt;pvc_mount_point&gt;: The location your PVC has been mounted (this is established when your PVC is provisioned). (e.g. /scratch)\n&lt;path_to_pvc_data&gt;: The path of the data you have stored on the PVC. (e.g. my_dgx_data/workflow_output/)\n\n\nsftp -r &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\nAfter you execute this command, you will be prompted for the password associated with your unikey to establish a connection to RDS.\nTo copy data from the GPU cluster to RDS, reverse the order of source and destination in the above command:\nsftp &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;&lt;&lt; $\"put -r &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\"\nDuring file transfer, for larger files, you can close the browser and leave things running in the background. You can then reconnect to check its status by logging back into the web UI at gpu.sydney.edu.au.",
-    "crumbs": [
-      "Tutorials",
-      "How to transfer data to/from the Apollo GPU Cluster"
-    ]
-  },
-  {
     "objectID": "notebooks/jupyter_tutorial.html",
     "href": "notebooks/jupyter_tutorial.html",
     "title": "Tutorial: Running a Jupyter Lab Workload",
@@ -126,111 +60,6 @@
       "Tutorials",
       "Creating a Jupyter Lab workload"
     ]
-  },
-  {
-    "objectID": "notebooks/build_docker_image.html",
-    "href": "notebooks/build_docker_image.html",
-    "title": "Tutorial: Building and Using a Custom Docker Image",
-    "section": "",
-    "text": "This tutorial walks you through building a custom Docker image based on the SIH DGX base image, pushing it to Docker Hub, and using it to launch a Jupyter Lab workload on the SIH GPU cluster. This is useful when you need a personalised compute environment — for example, to pre-install packages, set up specific library versions, or include your own tools — while still being able to use Jupyter Lab as your interactive front end.\nIf you are new to workloads and Jupyter Lab on the cluster, read Tutorial: Running a Jupyter Lab Workload first.\n\n\n\n\n\n\nImportant\n\n\n\nThe exact steps in this tutorial may not cover every use case. Depending on the application you are building, you may need to adjust the Dockerfile, the environment configuration, or other workload settings.\nThe GPU cluster base image (sydneyinformaticshub/dgx-interactive-jupyterlab) will be updated from time to time. If you are unsure how to proceed or run into issues, please reach out to the SIH team for assistance.\n\n\n\n\nBefore starting, make sure you have:\n\nDocker installed on your local machine\nA free Docker Hub account\nBasic familiarity with the terminal\n\n\n\n\nCreate a new directory for your project and create a file named Dockerfile inside it. Start FROM the SIH DGX base image sydneyinformaticshub/dgx-interactive-jupyterlab, which already has Jupyter Lab and common data science packages (TensorFlow, PyTorch, pandas, ollama) installed.\nFROM sydneyinformaticshub/dgx-interactive-jupyterlab:latest\n\nENV PACKAGES=\"package1 \\\n              package2\"\n\nRUN apt-get update && apt-get install -y $PACKAGES\n# Create a separate requirements.txt file in the same folder with a list of python packages to install\nCOPY requirements.txt .\nRUN pip install -r requirements.txt\nReplace the RUN line with whatever packages or configuration your environment requires. You can add multiple RUN instructions, copy in files, or set environment variables — refer to the Docker documentation for the full Dockerfile syntax.\n\n\n\n\n\n\nTip\n\n\n\nDuring the image build process you have full sudo (root) access inside the container, so you can install system-level packages with apt-get or make other privileged changes. This flexibility is not available when running the container on the SIH GPU cluster, where sudo is disabled for security reasons. Any system-level setup should therefore be done here in the Dockerfile, not at runtime.\n\n\n\n\n\nFrom the directory containing your Dockerfile, run:\ndocker build -t &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt; .\nFor example:\ndocker build -t jdoe/my-gpu-env:latest .\nThe build may take several minutes depending on the packages you are installing. Once complete, verify the image was created:\ndocker images\n\n\n\nLog in to Docker Hub from the terminal:\ndocker login\nEnter your Docker Hub username and password when prompted. Then push the image:\ndocker push &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;\nFor example:\ndocker push jdoe/my-gpu-env:latest\nOnce the push completes, the image will be publicly accessible at &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;.\n\n\n\n\n\n\nNote\n\n\n\nDocker Hub free accounts allow unlimited public repositories. Make sure your repository visibility is set to Public so the cluster can pull it without authentication.\n\n\n\n\n\nYou can now use your custom image on the SIH GPU cluster by following the Tutorial: Running a Jupyter Lab Workload, with one change in Step 2: when selecting the Environment, choose the jupyter-notebook environment as usual, then replace the pre-filled image URL with the full path to your custom image (e.g. jdoe/my-gpu-env:latest).\n\n\n\nModify the image URL\n\n\nAll other steps remain the same. Because your image is built on top of sydneyinformaticshub/dgx-interactive-jupyterlab, the Jupyter Lab server will start automatically, and you will be able to connect via Jupyter under “CONNECT” once the workload is running — with your custom packages and configuration available inside the session.\n\n\n\nIf you need to add or change packages in the future, update your Dockerfile and repeat Steps 2 and 3 to rebuild and push the updated image. We recommend incrementing the tag each time (e.g. v1, v2) so you can track versions and roll back if needed. The next workload you launch using that image name will automatically pull the latest version.",
-    "crumbs": [
-      "Tutorials",
-      "Building and using a custom Docker image"
-    ]
-  },
-  {
-    "objectID": "notebooks/build_docker_image.html#prerequisites",
-    "href": "notebooks/build_docker_image.html#prerequisites",
-    "title": "Tutorial: Building and Using a Custom Docker Image",
-    "section": "",
-    "text": "Before starting, make sure you have:\n\nDocker installed on your local machine\nA free Docker Hub account\nBasic familiarity with the terminal",
-    "crumbs": [
-      "Tutorials",
-      "Building and using a custom Docker image"
-    ]
-  },
-  {
-    "objectID": "notebooks/build_docker_image.html#step-1-write-a-dockerfile",
-    "href": "notebooks/build_docker_image.html#step-1-write-a-dockerfile",
-    "title": "Tutorial: Building and Using a Custom Docker Image",
-    "section": "",
-    "text": "Create a new directory for your project and create a file named Dockerfile inside it. Start FROM the SIH DGX base image sydneyinformaticshub/dgx-interactive-jupyterlab, which already has Jupyter Lab and common data science packages (TensorFlow, PyTorch, pandas, ollama) installed.\nFROM sydneyinformaticshub/dgx-interactive-jupyterlab:latest\n\nENV PACKAGES=\"package1 \\\n              package2\"\n\nRUN apt-get update && apt-get install -y $PACKAGES\n# Create a separate requirements.txt file in the same folder with a list of python packages to install\nCOPY requirements.txt .\nRUN pip install -r requirements.txt\nReplace the RUN line with whatever packages or configuration your environment requires. You can add multiple RUN instructions, copy in files, or set environment variables — refer to the Docker documentation for the full Dockerfile syntax.\n\n\n\n\n\n\nTip\n\n\n\nDuring the image build process you have full sudo (root) access inside the container, so you can install system-level packages with apt-get or make other privileged changes. This flexibility is not available when running the container on the SIH GPU cluster, where sudo is disabled for security reasons. Any system-level setup should therefore be done here in the Dockerfile, not at runtime.",
-    "crumbs": [
-      "Tutorials",
-      "Building and using a custom Docker image"
-    ]
-  },
-  {
-    "objectID": "notebooks/build_docker_image.html#step-2-build-the-image",
-    "href": "notebooks/build_docker_image.html#step-2-build-the-image",
-    "title": "Tutorial: Building and Using a Custom Docker Image",
-    "section": "",
-    "text": "From the directory containing your Dockerfile, run:\ndocker build -t &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt; .\nFor example:\ndocker build -t jdoe/my-gpu-env:latest .\nThe build may take several minutes depending on the packages you are installing. Once complete, verify the image was created:\ndocker images",
-    "crumbs": [
-      "Tutorials",
-      "Building and using a custom Docker image"
-    ]
-  },
-  {
-    "objectID": "notebooks/build_docker_image.html#step-3-push-the-image-to-docker-hub",
-    "href": "notebooks/build_docker_image.html#step-3-push-the-image-to-docker-hub",
-    "title": "Tutorial: Building and Using a Custom Docker Image",
-    "section": "",
-    "text": "Log in to Docker Hub from the terminal:\ndocker login\nEnter your Docker Hub username and password when prompted. Then push the image:\ndocker push &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;\nFor example:\ndocker push jdoe/my-gpu-env:latest\nOnce the push completes, the image will be publicly accessible at &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;.\n\n\n\n\n\n\nNote\n\n\n\nDocker Hub free accounts allow unlimited public repositories. Make sure your repository visibility is set to Public so the cluster can pull it without authentication.",
-    "crumbs": [
-      "Tutorials",
-      "Building and using a custom Docker image"
-    ]
-  },
-  {
-    "objectID": "notebooks/build_docker_image.html#step-4-launch-a-jupyter-lab-workload-with-your-custom-image",
-    "href": "notebooks/build_docker_image.html#step-4-launch-a-jupyter-lab-workload-with-your-custom-image",
-    "title": "Tutorial: Building and Using a Custom Docker Image",
-    "section": "",
-    "text": "You can now use your custom image on the SIH GPU cluster by following the Tutorial: Running a Jupyter Lab Workload, with one change in Step 2: when selecting the Environment, choose the jupyter-notebook environment as usual, then replace the pre-filled image URL with the full path to your custom image (e.g. jdoe/my-gpu-env:latest).\n\n\n\nModify the image URL\n\n\nAll other steps remain the same. Because your image is built on top of sydneyinformaticshub/dgx-interactive-jupyterlab, the Jupyter Lab server will start automatically, and you will be able to connect via Jupyter under “CONNECT” once the workload is running — with your custom packages and configuration available inside the session.",
-    "crumbs": [
-      "Tutorials",
-      "Building and using a custom Docker image"
-    ]
-  },
-  {
-    "objectID": "notebooks/build_docker_image.html#future-maintenance-updating-your-image",
-    "href": "notebooks/build_docker_image.html#future-maintenance-updating-your-image",
-    "title": "Tutorial: Building and Using a Custom Docker Image",
-    "section": "",
-    "text": "If you need to add or change packages in the future, update your Dockerfile and repeat Steps 2 and 3 to rebuild and push the updated image. We recommend incrementing the tag each time (e.g. v1, v2) so you can track versions and roll back if needed. The next workload you launch using that image name will automatically pull the latest version.",
-    "crumbs": [
-      "Tutorials",
-      "Building and using a custom Docker image"
-    ]
-  },
-  {
-    "objectID": "notebooks/environments_deprecated.html",
-    "href": "notebooks/environments_deprecated.html",
-    "title": "Configure Environments",
-    "section": "",
-    "text": "In Run:AI, an environment consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:\n\nBase Docker image (e.g., pytorch/pytorch, tensorflow/tensorflow:2.20.0-jupyter)\nTools (such as Jupyter, RStudio, etc.)\nCustom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)\n\n\n\nThe Apollo GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments\n\n\n\n\n\nYou can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
-  },
-  {
-    "objectID": "notebooks/environments_deprecated.html#pre-defined-environments",
-    "href": "notebooks/environments_deprecated.html#pre-defined-environments",
-    "title": "Configure Environments",
-    "section": "",
-    "text": "The Apollo GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments"
-  },
-  {
-    "objectID": "notebooks/environments_deprecated.html#create-a-new-environment",
-    "href": "notebooks/environments_deprecated.html#create-a-new-environment",
-    "title": "Configure Environments",
-    "section": "",
-    "text": "You can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
-  },
-  {
-    "objectID": "notebooks/data_sources_deprecated.html",
-    "href": "notebooks/data_sources_deprecated.html",
-    "title": "Data Sources",
-    "section": "",
-    "text": "Data Sources\nData sources in Run:ai allow you to connect additional storage systems to your Run:ai projects, enabling seamless access to datasets required for your workloads. Run:ai supports various types of data sources, including PVC (Persistent Volume Claim), NFS, S3-compatible storage, and more.\nWhen a Run:ai project is created, a default data source (PVC) is automatically set up for this project. You can find the data source under the “Data Sources”, listed as pvc-&lt;dashr_project_shortcode&gt;:\n\n\n\nDefault Data Source\n\n\nThis dedicated persistent storage can be accessable from any workload running within the same project. The default mount path inside the container is /scratch/&lt;dashr_project_shortcode&gt;. It is especially useful for storing intermediate results, model checkpoints, and uploading data to the cluster from external sources (e.g. RDS)."
   },
   {
     "objectID": "notebooks/alphafold3_guide.html",
@@ -365,47 +194,164 @@
     ]
   },
   {
-    "objectID": "notebooks/R_tutorial.html",
-    "href": "notebooks/R_tutorial.html",
-    "title": "Tutorial: Self-installing R packages",
+    "objectID": "notebooks/data_sources_deprecated.html",
+    "href": "notebooks/data_sources_deprecated.html",
+    "title": "Data Sources",
     "section": "",
-    "text": "In this tutorial, we will demonstrate how to install R packages in your Run:AI workload. This is particularly useful when you need specific packages that are not included in the pre-installed image.\n\n\nFollow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.\n\n\n\n\nOpen a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.\n\n\n\n\nYou can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "text": "Data Sources\nData sources in Run:ai allow you to connect additional storage systems to your Run:ai projects, enabling seamless access to datasets required for your workloads. Run:ai supports various types of data sources, including PVC (Persistent Volume Claim), NFS, S3-compatible storage, and more.\nWhen a Run:ai project is created, a default data source (PVC) is automatically set up for this project. You can find the data source under the “Data Sources”, listed as pvc-&lt;dashr_project_shortcode&gt;:\n\n\n\nDefault Data Source\n\n\nThis dedicated persistent storage can be accessable from any workload running within the same project. The default mount path inside the container is /scratch/&lt;dashr_project_shortcode&gt;. It is especially useful for storing intermediate results, model checkpoints, and uploading data to the cluster from external sources (e.g. RDS)."
+  },
+  {
+    "objectID": "notebooks/data_transfer.html",
+    "href": "notebooks/data_transfer.html",
+    "title": "How to transfer data to and from the Persistent volume claim",
+    "section": "",
+    "text": "In this section we will describe methods of transferring data between the Research Data Store (RDS) and Gadi. For now, while we await the implementation of Globus for fast and efficient transfer to and from your Persistent Volume Claim (PVC), we will describe an interactive method for transferring data using a JupyterLab environment in the Run:ai web interface. In the future we will include instructions for copying data using the Run:AI CLI at the command line.\nHere we assume you already have set up a project and have some Persistent Volume Claim (PVC) storage available.\n\n\nYou can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an environment called data-transfer for you to do this.\nTo run the data-transfer environment from a template:\n\nLog into the Run:ai dashboard at gpu.sydney.edu.au and use Okta to login with your credentials via the “CONTINUE WITH SSO” sign in option.\nClick the ‘Workload manager’ icon in the left panel and then select ‘Workloads’ in the menu. Next select the green ‘+ NEW WORKLOAD’ icon in the top left of the workloads screen and select ‘Workspace’.\n\n\n\n\nNew Workload\n\n\n\nSelect your project from the projects available and select the data-transfer-workspace template and give your workspace a name before selecting ‘Advanced Setup’ on the bottom right.\nIf you have selected the data-transfer-workspace template, you should now have pre-populated the required Environment and Compute resources fields on the following page. You can double check this now.\nExpand the Data & storage box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.\n\n\n\n\nSelect a PVC in Data & storage\n\n\n\nWhen you are happy with everything, click CREATE WORKSPACE and your data transfer environment will be created. When this is provisioned click the CONNECT icon above the list of workloads.\n\n\n\n\nConnect\n\n\n\nYou will again be prompted for your Run:ai login and your newly created JupyterLab session will appear in a new tab in your browser. Select the ‘Terminal’ app there.\n\n\n\n\nTerminal\n\n\n\nIn the open terminal app you can now use the sftp command to copy data to/from your project space in RDS.\n\nTo copy data from RDS to the GPU cluster, you can type the following into the open terminal:\n\n\n\n\n\n\nNote\n\n\n\nBe sure to replace everything in brackets &lt; &gt; with values specific to the data you are trying to copy as follows:\n&lt;your_unikey&gt;: Your University of Sydney unikey, usually in the form abcd0123.\n&lt;rds_project&gt;: The name of the project you have on DashR with data stored in RDS.\n&lt;path_to_project_data&gt;: The location of your storage directory under your project on RDS. (e.g. my_project_data/my_project_data_for_dgx/)\n&lt;pvc_mount_point&gt;: The location your PVC has been mounted (this is established when your PVC is provisioned). (e.g. /scratch)\n&lt;path_to_pvc_data&gt;: The path of the data you have stored on the PVC. (e.g. my_dgx_data/workflow_output/)\n\n\nsftp -r &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\nAfter you execute this command, you will be prompted for the password associated with your unikey to establish a connection to RDS.\nTo copy data from the GPU cluster to RDS, reverse the order of source and destination in the above command:\nsftp &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;&lt;&lt; $\"put -r &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\"\nDuring file transfer, for larger files, you can close the browser and leave things running in the background. You can then reconnect to check its status by logging back into the web UI at gpu.sydney.edu.au.",
     "crumbs": [
       "Tutorials",
-      "How to self-install R packages"
+      "How to transfer data to/from the Apollo GPU Cluster"
     ]
   },
   {
-    "objectID": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
-    "href": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
-    "title": "Tutorial: Self-installing R packages",
+    "objectID": "notebooks/data_transfer.html#interactive-data-transfer-tofrom-rds-from-a-web-browser",
+    "href": "notebooks/data_transfer.html#interactive-data-transfer-tofrom-rds-from-a-web-browser",
+    "title": "How to transfer data to and from the Persistent volume claim",
     "section": "",
-    "text": "Follow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.",
+    "text": "You can easily transfer data between your Persistent Volume Claim (PVC) and RDS from inside the Run:ai web browser interface. We have set up an environment called data-transfer for you to do this.\nTo run the data-transfer environment from a template:\n\nLog into the Run:ai dashboard at gpu.sydney.edu.au and use Okta to login with your credentials via the “CONTINUE WITH SSO” sign in option.\nClick the ‘Workload manager’ icon in the left panel and then select ‘Workloads’ in the menu. Next select the green ‘+ NEW WORKLOAD’ icon in the top left of the workloads screen and select ‘Workspace’.\n\n\n\n\nNew Workload\n\n\n\nSelect your project from the projects available and select the data-transfer-workspace template and give your workspace a name before selecting ‘Advanced Setup’ on the bottom right.\nIf you have selected the data-transfer-workspace template, you should now have pre-populated the required Environment and Compute resources fields on the following page. You can double check this now.\nExpand the Data & storage box and select the small icon in the top left. You will see a list of PVCs associated with your project, select this from the list.\n\n\n\n\nSelect a PVC in Data & storage\n\n\n\nWhen you are happy with everything, click CREATE WORKSPACE and your data transfer environment will be created. When this is provisioned click the CONNECT icon above the list of workloads.\n\n\n\n\nConnect\n\n\n\nYou will again be prompted for your Run:ai login and your newly created JupyterLab session will appear in a new tab in your browser. Select the ‘Terminal’ app there.\n\n\n\n\nTerminal\n\n\n\nIn the open terminal app you can now use the sftp command to copy data to/from your project space in RDS.\n\nTo copy data from RDS to the GPU cluster, you can type the following into the open terminal:\n\n\n\n\n\n\nNote\n\n\n\nBe sure to replace everything in brackets &lt; &gt; with values specific to the data you are trying to copy as follows:\n&lt;your_unikey&gt;: Your University of Sydney unikey, usually in the form abcd0123.\n&lt;rds_project&gt;: The name of the project you have on DashR with data stored in RDS.\n&lt;path_to_project_data&gt;: The location of your storage directory under your project on RDS. (e.g. my_project_data/my_project_data_for_dgx/)\n&lt;pvc_mount_point&gt;: The location your PVC has been mounted (this is established when your PVC is provisioned). (e.g. /scratch)\n&lt;path_to_pvc_data&gt;: The path of the data you have stored on the PVC. (e.g. my_dgx_data/workflow_output/)\n\n\nsftp -r &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\nAfter you execute this command, you will be prompted for the password associated with your unikey to establish a connection to RDS.\nTo copy data from the GPU cluster to RDS, reverse the order of source and destination in the above command:\nsftp &lt;your_unikey&gt;@research-data-ext.sydney.edu.au:/rds/PRJ-&lt;Project Short ID&gt;/&lt;Path to File or Folder&gt; &lt;&lt;&lt; $\"put -r &lt;pvc_mount_point&gt;/&lt;path_to_pvc_data&gt;\"\nDuring file transfer, for larger files, you can close the browser and leave things running in the background. You can then reconnect to check its status by logging back into the web UI at gpu.sydney.edu.au.",
     "crumbs": [
       "Tutorials",
-      "How to self-install R packages"
+      "How to transfer data to/from the Apollo GPU Cluster"
     ]
   },
   {
-    "objectID": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
-    "href": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
-    "title": "Tutorial: Self-installing R packages",
+    "objectID": "notebooks/transcription_app_guide.html",
+    "href": "notebooks/transcription_app_guide.html",
+    "title": "Audio Transcription & Translation — User Guide",
     "section": "",
-    "text": "Open a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.",
+    "text": "This app transcribes and optionally translates audio files. You configure your settings in the sidebar on the left, upload your files, run processing, then download the results.\n\n\n\n\n\n\n\nconfiguration\n\n\n\n\nChoose the Whisper model to use for transcription:\n\n\n\nmodel\n\n\n\nturbo (default) — use this for English-only audio when you want faster processing.\nlarge-v3 — use this for non-English audio, or when you need the highest accuracy. Slower but more powerful.\n\n\n\n\nSelect the language spoken in your audio files.\n\n\n\nlanguage\n\n\n\nAuto-detect (default) — the model will guess the language automatically. Works well in most cases.\nIf you know the language, select it from the dropdown. This is more accurate than auto-detect and recommended when processing non-English audio.\n\n\n\n\nSpeaker Recognition\n\n\n\nspeaker recognition\n\n\n\nCheck this box only if your audio has more than one speaker and you want the transcript to identify who said what (e.g. “SPEAKER_01: Hello”).\n\nIf there is only one speaker, leave this unchecked. Enabling it for single-speaker audio can reduce accuracy and may incorrectly split one person’s speech across multiple “speakers.”\n\nWhen enabled, a Number of Speakers field appears:\n\nEnter 0 to let the app auto-detect how many speakers there are.\nEnter the exact number of speakers (e.g. 2) for more accurate results. Use this whenever you know how many people are in the recording.\nMaximum supported: 20 speakers.\n\n\nTranslate to English\n\n\n\ntranslation\n\n\n\nCheck this box if you want the output translated into English, regardless of the source language.\nCan be combined with Speaker Recognition — the transcript will show speaker labels and English text together.\n\n\n\n\n\n\nSupported formats: MP3, MP4, M4A, WAV, FLAC, OGG, WEBM\n\nIn the File Upload section, click Upload.\n\n\n\nbrowse\n\n\nYou can select multiple files at once.\n\nThe Files in ./data panel on the right shows everything currently queued for processing. From here you can:\n\n\n\nview_files\n\n\n\nClick Refresh to update the list.\nClick X next to a file to remove it individually.\nClick Delete All to clear every file in the queue.\n\n\n\n\n\nOnce your files are uploaded and your settings are configured, click the Start Transcription button.\n\n\n\nstart\n\n\n\nA progress bar and status message will appear showing which file is being processed and how many remain.\nLogs appear at the bottom of the page in real time.\nProcessing time depends on file length, the model chosen, and whether speaker recognition is enabled.\n\n\n\n\nprocess\n\n\n\n\n\n\n\n\nNote\n\n\n\nDo not change settings or navigate away while processing is running.\n\n\n\n\n\n\nWhen processing finishes, the Download Results section shows your output files.\n\nDownload All (ZIP) — downloads a transcriptions.zip archive containing your results:\n\n.srt and .txt files for your output\nif translation was used, the transcription in the original language as well as the translated English file\na reference.txt file with a research blurb and methodology\n\n\n\n\n\ndownload_all\n\n\n\nClick Delete All Outputs to remove all output files.\n\n\n\n\ndelete_all\n\n\n\n\n\n\nThe Processing Logs section at the bottom records what happened during each run — which files were processed, any errors, and when processing completed.\n\n\n\nlogs\n\n\nClick Clear Logs to reset the log view.\n\n\n\nlogs\n\n\n\n\n\n\n\n\n\n\n\n\n\nGoal\nSettings\n\n\n\n\nTranscribe English audio, fast\nModel: turbo, Language: English\n\n\nTranscribe non-English audio\nModel: large-v3, Language: select yours\n\n\nIdentify speakers in a recording\nEnable Speaker Recognition; set number of speakers if known\n\n\nGet an English translation of foreign audio\nEnable Translate to English\n\n\nTranscribed translation with speaker labels\nEnable both Speaker Recognition and Translate to English",
     "crumbs": [
       "Tutorials",
-      "How to self-install R packages"
+      "Transcription and translation tool: User guide"
     ]
   },
   {
-    "objectID": "notebooks/R_tutorial.html#verify-the-installation",
-    "href": "notebooks/R_tutorial.html#verify-the-installation",
-    "title": "Tutorial: Self-installing R packages",
+    "objectID": "notebooks/transcription_app_guide.html#overview",
+    "href": "notebooks/transcription_app_guide.html#overview",
+    "title": "Audio Transcription & Translation — User Guide",
     "section": "",
-    "text": "You can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "text": "This app transcribes and optionally translates audio files. You configure your settings in the sidebar on the left, upload your files, run processing, then download the results.",
     "crumbs": [
       "Tutorials",
-      "How to self-install R packages"
+      "Transcription and translation tool: User guide"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_app_guide.html#step-1-configure-settings-left-sidebar",
+    "href": "notebooks/transcription_app_guide.html#step-1-configure-settings-left-sidebar",
+    "title": "Audio Transcription & Translation — User Guide",
+    "section": "",
+    "text": "configuration\n\n\n\n\nChoose the Whisper model to use for transcription:\n\n\n\nmodel\n\n\n\nturbo (default) — use this for English-only audio when you want faster processing.\nlarge-v3 — use this for non-English audio, or when you need the highest accuracy. Slower but more powerful.\n\n\n\n\nSelect the language spoken in your audio files.\n\n\n\nlanguage\n\n\n\nAuto-detect (default) — the model will guess the language automatically. Works well in most cases.\nIf you know the language, select it from the dropdown. This is more accurate than auto-detect and recommended when processing non-English audio.\n\n\n\n\nSpeaker Recognition\n\n\n\nspeaker recognition\n\n\n\nCheck this box only if your audio has more than one speaker and you want the transcript to identify who said what (e.g. “SPEAKER_01: Hello”).\n\nIf there is only one speaker, leave this unchecked. Enabling it for single-speaker audio can reduce accuracy and may incorrectly split one person’s speech across multiple “speakers.”\n\nWhen enabled, a Number of Speakers field appears:\n\nEnter 0 to let the app auto-detect how many speakers there are.\nEnter the exact number of speakers (e.g. 2) for more accurate results. Use this whenever you know how many people are in the recording.\nMaximum supported: 20 speakers.\n\n\nTranslate to English\n\n\n\ntranslation\n\n\n\nCheck this box if you want the output translated into English, regardless of the source language.\nCan be combined with Speaker Recognition — the transcript will show speaker labels and English text together.",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: User guide"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_app_guide.html#step-2-upload-your-audio-files",
+    "href": "notebooks/transcription_app_guide.html#step-2-upload-your-audio-files",
+    "title": "Audio Transcription & Translation — User Guide",
+    "section": "",
+    "text": "Supported formats: MP3, MP4, M4A, WAV, FLAC, OGG, WEBM\n\nIn the File Upload section, click Upload.\n\n\n\nbrowse\n\n\nYou can select multiple files at once.\n\nThe Files in ./data panel on the right shows everything currently queued for processing. From here you can:\n\n\n\nview_files\n\n\n\nClick Refresh to update the list.\nClick X next to a file to remove it individually.\nClick Delete All to clear every file in the queue.",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: User guide"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_app_guide.html#step-3-run-transcription",
+    "href": "notebooks/transcription_app_guide.html#step-3-run-transcription",
+    "title": "Audio Transcription & Translation — User Guide",
+    "section": "",
+    "text": "Once your files are uploaded and your settings are configured, click the Start Transcription button.\n\n\n\nstart\n\n\n\nA progress bar and status message will appear showing which file is being processed and how many remain.\nLogs appear at the bottom of the page in real time.\nProcessing time depends on file length, the model chosen, and whether speaker recognition is enabled.\n\n\n\n\nprocess\n\n\n\n\n\n\n\n\nNote\n\n\n\nDo not change settings or navigate away while processing is running.",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: User guide"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_app_guide.html#step-4-download-results",
+    "href": "notebooks/transcription_app_guide.html#step-4-download-results",
+    "title": "Audio Transcription & Translation — User Guide",
+    "section": "",
+    "text": "When processing finishes, the Download Results section shows your output files.\n\nDownload All (ZIP) — downloads a transcriptions.zip archive containing your results:\n\n.srt and .txt files for your output\nif translation was used, the transcription in the original language as well as the translated English file\na reference.txt file with a research blurb and methodology\n\n\n\n\n\ndownload_all\n\n\n\nClick Delete All Outputs to remove all output files.\n\n\n\n\ndelete_all",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: User guide"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_app_guide.html#processing-logs",
+    "href": "notebooks/transcription_app_guide.html#processing-logs",
+    "title": "Audio Transcription & Translation — User Guide",
+    "section": "",
+    "text": "The Processing Logs section at the bottom records what happened during each run — which files were processed, any errors, and when processing completed.\n\n\n\nlogs\n\n\nClick Clear Logs to reset the log view.\n\n\n\nlogs",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: User guide"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_app_guide.html#quick-reference",
+    "href": "notebooks/transcription_app_guide.html#quick-reference",
+    "title": "Audio Transcription & Translation — User Guide",
+    "section": "",
+    "text": "Goal\nSettings\n\n\n\n\nTranscribe English audio, fast\nModel: turbo, Language: English\n\n\nTranscribe non-English audio\nModel: large-v3, Language: select yours\n\n\nIdentify speakers in a recording\nEnable Speaker Recognition; set number of speakers if known\n\n\nGet an English translation of foreign audio\nEnable Translate to English\n\n\nTranscribed translation with speaker labels\nEnable both Speaker Recognition and Translate to English",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: User guide"
+    ]
+  },
+  {
+    "objectID": "notebooks/CLI.html",
+    "href": "notebooks/CLI.html",
+    "title": "The Run:AI Command Line Interface (CLI)",
+    "section": "",
+    "text": "The Run:AI Command Line Interface (CLI) is a tool that allows researchers to manage and run workloads directly from the terminal. It provides commands to submit, monitor, and control jobs on the SIH GPU cluster, as well as to manage projects, resources, and configurations. Using the CLI, users can interact with Run:AI’s platform without needing to access the graphical interface.\n\n\nTo set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).\n\n\n\nYou can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the Apollo GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.\n\n\n\n\n\nUsing the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
+    "crumbs": [
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
+    ]
+  },
+  {
+    "objectID": "notebooks/CLI.html#setting-up-the-runai-cli",
+    "href": "notebooks/CLI.html#setting-up-the-runai-cli",
+    "title": "The Run:AI Command Line Interface (CLI)",
+    "section": "",
+    "text": "To set up the CLI in your terminal:\n\nLog into the Run:AI web interface and select the ‘Researcher Command Line Interface’ from the drop-down menu under the ‘?’ icon in the top right.\n\n\n\nSelect your preferred operating system and copy the command indicated in the box using the icon on the right - then paste this command into a terminal session on your local machine.\n\n\n\nFollow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using runai login at the command line.\n\nOnce the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (sydneyinformaticshub/dgx-interactive-gpu) and CPU (sydneyinformaticshub/dgx-interactive-cpu) workflows on dockerhub, including basic packages for interactive use (e.g. ipython).",
+    "crumbs": [
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
+    ]
+  },
+  {
+    "objectID": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
+    "href": "notebooks/CLI.html#how-to-run-a-terminal-environment-at-the-command-line",
+    "title": "The Run:AI Command Line Interface (CLI)",
+    "section": "",
+    "text": "You can start a workload from a terminal session on your own laptop as long as you are connected to the University VPN. You can run this interactively which provides a simple terminal environment running inside the Apollo GPU cluster.\n\n\n\nLogin to the Run:AI CLI at the command line:\n\nrunai login\nyou will be prompted for your password and Okta credentials in a browser window during this step.\n\nSet your project (replace &lt;my project&gt; with the name of your project):\n\nrunai project set &lt;my_project&gt;\n\nTo run an sydneyinformaticshub/dgx-interactive-terminal container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets &lt;...&gt; with values specific to your requirements):\n\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch/&lt;my_project&gt; --pod-running-timeout 10m --attach\nHere is a brief rundown of the arguments of the command above:\n\nrunai workspace submit &lt;workspace-name&gt; will run a new workspace and give it the name specified in &lt;workspace-name&gt;\n--image sydneyinformaticshub/dgx-interactive-terminal will run the base Docker image located at sydneyinformaticshub/dgx-interactive-terminal, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base\n--gpu-devices-request 1 --cpu-core-request 1.0 requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see here or use runai workspace submit --help for a full list of options\n--run-as-user will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace\n--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch will mount an existing PVC associated with your project into the running workload. Replace  with the name of your PVC. This will mount the PVC into /scratch inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.\n--pod-running-timeout 10m will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.\n--attach will run the container and attach to it, which in this case will provide an interactive shell session inside it.",
+    "crumbs": [
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
+    ]
+  },
+  {
+    "objectID": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
+    "href": "notebooks/CLI.html#run-a-workflow-in-the-background-and-connect-to-it-using-the-cli",
+    "title": "The Run:AI Command Line Interface (CLI)",
+    "section": "",
+    "text": "Using the CLI it is also possible to set up a workflow that persists in the background. You can then connect to it whenever you like or as many times as you like - this is a useful option if you want to reserve resources that you can keep available as you require or you want to share resources interactively amongst multiple users.\nTo set this up follow the steps 1 and 2 above, then change the command in step 3 to:\nrunai workspace submit &lt;workspace-name&gt; --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'\nThis will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:\nrunai workspace bash &lt;workspace-name&gt;\nyou can use this method to connect to any running workspace on the cluster as well as connect multiple terminals inside the running workspace.\nMake sure you terminate the background workspace when you are finished. You can do this using:\nrunai workspace suspend &lt;workspace-name&gt;\nto suspend the workspace so you can restart it again later or\nrunai workspace delete &lt;workspace-name&gt;\nto delete the workspace entirely. Please note that when deleting the workspace you will lose all data inside it not saved to a mounted PVC.",
+    "crumbs": [
+      "Tutorials",
+      "How to run a terminal using the Command Line Interface (CLI)"
     ]
   },
   {
@@ -486,26 +432,199 @@
     ]
   },
   {
-    "objectID": "notebooks/login.html",
-    "href": "notebooks/login.html",
-    "title": "Login",
+    "objectID": "notebooks/dashboards.html",
+    "href": "notebooks/dashboards.html",
+    "title": "Run:ai Dashboards",
     "section": "",
-    "text": "Login\n\n\n\n\n\n\nImportant\n\n\n\nBefore trying to log into the Apollo cluster, please make sure you are part of a DashR project that has been granted cluster access.\nPlease note that it may take some time for the DashR provisioner to grant SSO access and set up the project in Run:AI before you can view the landing page.\n\n\n\nIf you are not on the Sydney university network (e.g. working from home), you will need to connect to the VPN to see the login page.\nGo to: https://gpu.sydney.edu.au/.\nEnter your UniKey and password.\n\n\n\n\nSSO login page\n\n\n\nOnce the login is successful, you’ll be presented with the landing (“Workloads”) page.\n\n\n\n\nRun:ai Workloads page",
+    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads\n\n\n\n\n\n\nThis dashboard provides more detailed breakdowns of the Apollo GPU cluster running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
+  },
+  {
+    "objectID": "notebooks/dashboards.html#overview",
+    "href": "notebooks/dashboards.html#overview",
+    "title": "Run:ai Dashboards",
+    "section": "",
+    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads"
+  },
+  {
+    "objectID": "notebooks/dashboards.html#analytics",
+    "href": "notebooks/dashboards.html#analytics",
+    "title": "Run:ai Dashboards",
+    "section": "",
+    "text": "This dashboard provides more detailed breakdowns of the Apollo GPU cluster running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Apollo GPU Cluster Onboarding Guide",
+    "section": "",
+    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the Apollo GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals. More details can be found on the official Run:ai user guide (version 2.24)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
     "crumbs": [
-      "Getting Started with the Apollo GPU Cluster",
-      "Login"
+      "Home"
     ]
   },
   {
-    "objectID": "notebooks/cluster_intro.html",
-    "href": "notebooks/cluster_intro.html",
-    "title": "Introduction to the Apollo GPU Cluster",
+    "objectID": "notebooks/build_docker_image.html",
+    "href": "notebooks/build_docker_image.html",
+    "title": "Tutorial: Building and Using a Custom Docker Image",
     "section": "",
-    "text": "Introduction to the Apollo GPU Cluster\n\n\n\n\n\n\nImportant\n\n\n\nAccess to the GPU Cluster is now available through the Researcher Dashboard (DashR). Please follow instructions on this page to submit your request.\n\n\nThe Apollo GPU Cluster is a high-performance research compute platform designed to accelerate AI workflows, scientific modelling, image processing, and other GPU-intensive research across the University of Sydney. This cluster is built with three NVIDIA DGX H200 nodes (24 H200 GPUs in total), high-speed InfiniBand networking, and 1 PB DDN EXAScaler parallel filesystem for fast shared storage.\nThis cluster is managed by the Sydney Informatics Hub (SIH). More information about the Apollo GPU Cluster can be found on the SIH’s Research Computing page.",
+    "text": "This tutorial walks you through building a custom Docker image based on the SIH DGX base image, pushing it to Docker Hub, and using it to launch a Jupyter Lab workload on the SIH GPU cluster. This is useful when you need a personalised compute environment — for example, to pre-install packages, set up specific library versions, or include your own tools — while still being able to use Jupyter Lab as your interactive front end.\nIf you are new to workloads and Jupyter Lab on the cluster, read Tutorial: Running a Jupyter Lab Workload first.\n\n\n\n\n\n\nImportant\n\n\n\nThe exact steps in this tutorial may not cover every use case. Depending on the application you are building, you may need to adjust the Dockerfile, the environment configuration, or other workload settings.\nThe GPU cluster base image (sydneyinformaticshub/dgx-interactive-jupyterlab) will be updated from time to time. If you are unsure how to proceed or run into issues, please reach out to the SIH team for assistance.\n\n\n\n\nBefore starting, make sure you have:\n\nDocker installed on your local machine\nA free Docker Hub account\nBasic familiarity with the terminal\n\n\n\n\nCreate a new directory for your project and create a file named Dockerfile inside it. Start FROM the SIH DGX base image sydneyinformaticshub/dgx-interactive-jupyterlab, which already has Jupyter Lab and common data science packages (TensorFlow, PyTorch, pandas, ollama) installed.\nFROM sydneyinformaticshub/dgx-interactive-jupyterlab:latest\n\nENV PACKAGES=\"package1 \\\n              package2\"\n\nRUN apt-get update && apt-get install -y $PACKAGES\n# Create a separate requirements.txt file in the same folder with a list of python packages to install\nCOPY requirements.txt .\nRUN pip install -r requirements.txt\nReplace the RUN line with whatever packages or configuration your environment requires. You can add multiple RUN instructions, copy in files, or set environment variables — refer to the Docker documentation for the full Dockerfile syntax.\n\n\n\n\n\n\nTip\n\n\n\nDuring the image build process you have full sudo (root) access inside the container, so you can install system-level packages with apt-get or make other privileged changes. This flexibility is not available when running the container on the SIH GPU cluster, where sudo is disabled for security reasons. Any system-level setup should therefore be done here in the Dockerfile, not at runtime.\n\n\n\n\n\nFrom the directory containing your Dockerfile, run:\ndocker build -t &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt; .\nFor example:\ndocker build -t jdoe/my-gpu-env:latest .\nThe build may take several minutes depending on the packages you are installing. Once complete, verify the image was created:\ndocker images\n\n\n\nLog in to Docker Hub from the terminal:\ndocker login\nEnter your Docker Hub username and password when prompted. Then push the image:\ndocker push &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;\nFor example:\ndocker push jdoe/my-gpu-env:latest\nOnce the push completes, the image will be publicly accessible at &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;.\n\n\n\n\n\n\nNote\n\n\n\nDocker Hub free accounts allow unlimited public repositories. Make sure your repository visibility is set to Public so the cluster can pull it without authentication.\n\n\n\n\n\nYou can now use your custom image on the SIH GPU cluster by following the Tutorial: Running a Jupyter Lab Workload, with one change in Step 2: when selecting the Environment, choose the jupyter-notebook environment as usual, then replace the pre-filled image URL with the full path to your custom image (e.g. jdoe/my-gpu-env:latest).\n\n\n\nModify the image URL\n\n\nAll other steps remain the same. Because your image is built on top of sydneyinformaticshub/dgx-interactive-jupyterlab, the Jupyter Lab server will start automatically, and you will be able to connect via Jupyter under “CONNECT” once the workload is running — with your custom packages and configuration available inside the session.\n\n\n\nIf you need to add or change packages in the future, update your Dockerfile and repeat Steps 2 and 3 to rebuild and push the updated image. We recommend incrementing the tag each time (e.g. v1, v2) so you can track versions and roll back if needed. The next workload you launch using that image name will automatically pull the latest version.",
     "crumbs": [
-      "Getting Started with the Apollo GPU Cluster",
-      "Introduction to the Apollo GPU Cluster"
+      "Tutorials",
+      "Building and using a custom Docker image"
     ]
+  },
+  {
+    "objectID": "notebooks/build_docker_image.html#prerequisites",
+    "href": "notebooks/build_docker_image.html#prerequisites",
+    "title": "Tutorial: Building and Using a Custom Docker Image",
+    "section": "",
+    "text": "Before starting, make sure you have:\n\nDocker installed on your local machine\nA free Docker Hub account\nBasic familiarity with the terminal",
+    "crumbs": [
+      "Tutorials",
+      "Building and using a custom Docker image"
+    ]
+  },
+  {
+    "objectID": "notebooks/build_docker_image.html#step-1-write-a-dockerfile",
+    "href": "notebooks/build_docker_image.html#step-1-write-a-dockerfile",
+    "title": "Tutorial: Building and Using a Custom Docker Image",
+    "section": "",
+    "text": "Create a new directory for your project and create a file named Dockerfile inside it. Start FROM the SIH DGX base image sydneyinformaticshub/dgx-interactive-jupyterlab, which already has Jupyter Lab and common data science packages (TensorFlow, PyTorch, pandas, ollama) installed.\nFROM sydneyinformaticshub/dgx-interactive-jupyterlab:latest\n\nENV PACKAGES=\"package1 \\\n              package2\"\n\nRUN apt-get update && apt-get install -y $PACKAGES\n# Create a separate requirements.txt file in the same folder with a list of python packages to install\nCOPY requirements.txt .\nRUN pip install -r requirements.txt\nReplace the RUN line with whatever packages or configuration your environment requires. You can add multiple RUN instructions, copy in files, or set environment variables — refer to the Docker documentation for the full Dockerfile syntax.\n\n\n\n\n\n\nTip\n\n\n\nDuring the image build process you have full sudo (root) access inside the container, so you can install system-level packages with apt-get or make other privileged changes. This flexibility is not available when running the container on the SIH GPU cluster, where sudo is disabled for security reasons. Any system-level setup should therefore be done here in the Dockerfile, not at runtime.",
+    "crumbs": [
+      "Tutorials",
+      "Building and using a custom Docker image"
+    ]
+  },
+  {
+    "objectID": "notebooks/build_docker_image.html#step-2-build-the-image",
+    "href": "notebooks/build_docker_image.html#step-2-build-the-image",
+    "title": "Tutorial: Building and Using a Custom Docker Image",
+    "section": "",
+    "text": "From the directory containing your Dockerfile, run:\ndocker build -t &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt; .\nFor example:\ndocker build -t jdoe/my-gpu-env:latest .\nThe build may take several minutes depending on the packages you are installing. Once complete, verify the image was created:\ndocker images",
+    "crumbs": [
+      "Tutorials",
+      "Building and using a custom Docker image"
+    ]
+  },
+  {
+    "objectID": "notebooks/build_docker_image.html#step-3-push-the-image-to-docker-hub",
+    "href": "notebooks/build_docker_image.html#step-3-push-the-image-to-docker-hub",
+    "title": "Tutorial: Building and Using a Custom Docker Image",
+    "section": "",
+    "text": "Log in to Docker Hub from the terminal:\ndocker login\nEnter your Docker Hub username and password when prompted. Then push the image:\ndocker push &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;\nFor example:\ndocker push jdoe/my-gpu-env:latest\nOnce the push completes, the image will be publicly accessible at &lt;your-dockerhub-username&gt;/&lt;image-name&gt;:&lt;tag&gt;.\n\n\n\n\n\n\nNote\n\n\n\nDocker Hub free accounts allow unlimited public repositories. Make sure your repository visibility is set to Public so the cluster can pull it without authentication.",
+    "crumbs": [
+      "Tutorials",
+      "Building and using a custom Docker image"
+    ]
+  },
+  {
+    "objectID": "notebooks/build_docker_image.html#step-4-launch-a-jupyter-lab-workload-with-your-custom-image",
+    "href": "notebooks/build_docker_image.html#step-4-launch-a-jupyter-lab-workload-with-your-custom-image",
+    "title": "Tutorial: Building and Using a Custom Docker Image",
+    "section": "",
+    "text": "You can now use your custom image on the SIH GPU cluster by following the Tutorial: Running a Jupyter Lab Workload, with one change in Step 2: when selecting the Environment, choose the jupyter-notebook environment as usual, then replace the pre-filled image URL with the full path to your custom image (e.g. jdoe/my-gpu-env:latest).\n\n\n\nModify the image URL\n\n\nAll other steps remain the same. Because your image is built on top of sydneyinformaticshub/dgx-interactive-jupyterlab, the Jupyter Lab server will start automatically, and you will be able to connect via Jupyter under “CONNECT” once the workload is running — with your custom packages and configuration available inside the session.",
+    "crumbs": [
+      "Tutorials",
+      "Building and using a custom Docker image"
+    ]
+  },
+  {
+    "objectID": "notebooks/build_docker_image.html#future-maintenance-updating-your-image",
+    "href": "notebooks/build_docker_image.html#future-maintenance-updating-your-image",
+    "title": "Tutorial: Building and Using a Custom Docker Image",
+    "section": "",
+    "text": "If you need to add or change packages in the future, update your Dockerfile and repeat Steps 2 and 3 to rebuild and push the updated image. We recommend incrementing the tag each time (e.g. v1, v2) so you can track versions and roll back if needed. The next workload you launch using that image name will automatically pull the latest version.",
+    "crumbs": [
+      "Tutorials",
+      "Building and using a custom Docker image"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_workspace.html",
+    "href": "notebooks/transcription_workspace.html",
+    "title": "Audio Transcription & Translation — Apollo Guide",
+    "section": "",
+    "text": "Step 1: Create a workload\n\nNavigate to the “Workload manager” section.\nSelect “Workloads”.\nClick the “NEW WORKLOAD” button.\nSelect “Workspace” from the dropdown menu.\n\n\n\ncreate workload\n\n\n\nStep 2: Configure the workload\n\nThe “Cluster” section will be set automatically; you do not need to change this.\nUnder “Projects”, select the project it will be linked to (yours will differ from the examples in the image below depending on your project).\n\n\n\ncluster and projects\n\n\nUnder “Templates”, select “transcription-translation-tool”. It may not appear on the first page, so use the page numbers at the bottom to navigate through the list.\n\n\n\ntemplate\n\n\nProvide a descriptive name for the workload (e.g. transcription-translation-example).\n\n\n\nname\n\n\nClick the triangle next to “CREATE WORKSPACE”, then select “Advanced setup” from the pop-up menu.\n\n\n\nadvance set up\n\n\nUnder “Environment”, click “Tools”.\n\n\n\ntools\n\n\nUnder “Access”, the default setting is “All authenticated users”. To change this, click the pencil icon.\n\n\n\naccess\n\n\nIn the pop-up menu, select “Specific users and service accounts”, then enter your email address in the grey box.\n\n\n\nusers\n\n\nTo add additional users, click “+ USER OR SERVICE ACCOUNT”.\n\n\n\nmultiple users\n\n\nOnce you have added all users, click “SAVE”.\n\n\n\nsave\n\n\nFinally, scroll to the bottom of the page and click “CREATE WORKSPACE”.\n\n\n\nCreate\n\n\nYou will now be taken back to the Run:ai Workloads page.\n\nStep 3: Connect to the Transcription and Translation app\n\nYour workload status will start on “Initializing”. This may take a couple of minutes.\n\n\n\ninitializing\n\n\nWhen the status changes to “Running,” select your workload. You can then access the transcription and translation app interface by selecting “Connect.”\n\n\n\nconnect\n\n\nThe transcription and translation app will now open in a separate tab in your browser.\n\nFor instructions on how to use the app, see the App user guide.",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: Getting started"
+    ]
+  },
+  {
+    "objectID": "notebooks/transcription_workspace.html#creating-a-workload",
+    "href": "notebooks/transcription_workspace.html#creating-a-workload",
+    "title": "Audio Transcription & Translation — Apollo Guide",
+    "section": "",
+    "text": "Step 1: Create a workload\n\nNavigate to the “Workload manager” section.\nSelect “Workloads”.\nClick the “NEW WORKLOAD” button.\nSelect “Workspace” from the dropdown menu.\n\n\n\ncreate workload\n\n\n\nStep 2: Configure the workload\n\nThe “Cluster” section will be set automatically; you do not need to change this.\nUnder “Projects”, select the project it will be linked to (yours will differ from the examples in the image below depending on your project).\n\n\n\ncluster and projects\n\n\nUnder “Templates”, select “transcription-translation-tool”. It may not appear on the first page, so use the page numbers at the bottom to navigate through the list.\n\n\n\ntemplate\n\n\nProvide a descriptive name for the workload (e.g. transcription-translation-example).\n\n\n\nname\n\n\nClick the triangle next to “CREATE WORKSPACE”, then select “Advanced setup” from the pop-up menu.\n\n\n\nadvance set up\n\n\nUnder “Environment”, click “Tools”.\n\n\n\ntools\n\n\nUnder “Access”, the default setting is “All authenticated users”. To change this, click the pencil icon.\n\n\n\naccess\n\n\nIn the pop-up menu, select “Specific users and service accounts”, then enter your email address in the grey box.\n\n\n\nusers\n\n\nTo add additional users, click “+ USER OR SERVICE ACCOUNT”.\n\n\n\nmultiple users\n\n\nOnce you have added all users, click “SAVE”.\n\n\n\nsave\n\n\nFinally, scroll to the bottom of the page and click “CREATE WORKSPACE”.\n\n\n\nCreate\n\n\nYou will now be taken back to the Run:ai Workloads page.\n\nStep 3: Connect to the Transcription and Translation app\n\nYour workload status will start on “Initializing”. This may take a couple of minutes.\n\n\n\ninitializing\n\n\nWhen the status changes to “Running,” select your workload. You can then access the transcription and translation app interface by selecting “Connect.”\n\n\n\nconnect\n\n\nThe transcription and translation app will now open in a separate tab in your browser.\n\nFor instructions on how to use the app, see the App user guide.",
+    "crumbs": [
+      "Tutorials",
+      "Transcription and translation tool: Getting started"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html",
+    "href": "notebooks/R_tutorial.html",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "In this tutorial, we will demonstrate how to install R packages in your Run:AI workload. This is particularly useful when you need specific packages that are not included in the pre-installed image.\n\n\nFollow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.\n\n\n\n\nOpen a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.\n\n\n\n\nYou can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
+    "href": "notebooks/R_tutorial.html#create-a-runai-jupyter-lab-workload",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "Follow the instructions in the Jupyter Lab tutorial to create a new workload in Run:AI and connect to the Jupyter Lab interface. You will see the following landing page when the workload is created successfully:\n\n\n\nJupyter Lab Landing Page\n\n\nThere are three ways of accessing R in this default Jupyter Lab environment:\n\nR notebook\nR Console\nTerminal\n\nIn this tutorial, we will demonstrate how to use the Terminal application to install R packages.",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
+    "href": "notebooks/R_tutorial.html#install-r-packages-via-terminal",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "Open a new Terminal window by clicking on the Terminal icon in the Jupyter Lab interface.\nCreate a directory in your PVC to store any newly installed R packages. This ensures that the packages persist across sessions and are not removed after the workload is stopped running.\nYou can do this by creating a subdirectory in /scratch/${RUNAI_PROJECT}. For example:\nmkdir -p /scratch/${RUNAI_PROJECT}/my_username/R_libs\nwhich will create a directory named R_libs in the project PVC. You may want to change my_username to your own username (e.g., your unikey) or preferred directory name.\nSet the R_LIBS_USER environment variable to point to this new directory.\nexport R_LIBS_USER=/scratch/${RUNAI_PROJECT}/my_username/R_libs\nStart R by executing the command R in the terminal.\nCheck if the libary has already been installed in the image. You can either run\ninstalled.packages()\nto print out the full list of installed packages, or try loading the package using\nlibrary(package)\nYou need to replace package with the name of the package you want to check. If the package is not installed, you will receive an error message:\n\n\n\ncheck if the xgboost library is installed\n\n\nInstall the desired R package using the install.packages() function. For example:\ninstall.packages(\"xgboost\", repos=\"http://cran.ms.unimelb.edu.au/\")\nThis command will download and install the xgboost package into the directory specified by R_LIBS_USER.",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/R_tutorial.html#verify-the-installation",
+    "href": "notebooks/R_tutorial.html#verify-the-installation",
+    "title": "Tutorial: Self-installing R packages",
+    "section": "",
+    "text": "You can verify the installation by loading the package in R:\nlibrary(\"xgboost\")\nYou can also use the libary in an R notebook or R console by setting the lib variable (e.g., lib=\"/scratch/sihnextgen/jfan0290/R_libs\") when loading the library:\n\n\n\nload xgboost library in an R notebook",
+    "crumbs": [
+      "Tutorials",
+      "How to self-install R packages"
+    ]
+  },
+  {
+    "objectID": "notebooks/environments_deprecated.html",
+    "href": "notebooks/environments_deprecated.html",
+    "title": "Configure Environments",
+    "section": "",
+    "text": "In Run:AI, an environment consists of a set of configurations that define the software setup needed to run your AI workloads. An environment typically includes:\n\nBase Docker image (e.g., pytorch/pytorch, tensorflow/tensorflow:2.20.0-jupyter)\nTools (such as Jupyter, RStudio, etc.)\nCustom runtime settings to run scripts or setup commands (e.g., installing extra packages, configuring the base URL, etc.)\n\n\n\nThe Apollo GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments\n\n\n\n\n\nYou can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
+  },
+  {
+    "objectID": "notebooks/environments_deprecated.html#pre-defined-environments",
+    "href": "notebooks/environments_deprecated.html#pre-defined-environments",
+    "title": "Configure Environments",
+    "section": "",
+    "text": "The Apollo GPU platform has provided several basic environments for users to get started with:\n\n\n\nPre-defined environments"
+  },
+  {
+    "objectID": "notebooks/environments_deprecated.html#create-a-new-environment",
+    "href": "notebooks/environments_deprecated.html#create-a-new-environment",
+    "title": "Configure Environments",
+    "section": "",
+    "text": "You can follow the steps below to define a new environment:\n\nSelect “Environments” on the left panel, then click on “NEW ENVIRONMENT”\n\n\n\n\nCreate a new environment\n\n\n\nIn the new window, select the right scope in which the new environment should be made available\n\n\n\n\nSetting the scope\n\n\n\nProvide a descriptive name and a simple description to the environment\n\n\n\n\nEnvironment name\n\n\n\nInsert the URL of the docker image. In this example, we’re pulling an NVIDIA Rapids docker image from Docker Hub with specific rapids, CUDA, and python versions (rapidsai/notebooks:25.10a-cuda12.0-py3.12)\n\n\n\n\nSpecify the Docker image\n\n\n\nSpecify the “Workload architecture & type” depending on the workload you are intending to run. Hovering over the question mark icon to see more explanation on each option\n\n\n\n\nEnvironment architecture\n\n\n\nSelect and configure the right tool used to interact with the container. For instance, the below example configures a Jupyter server to run on the 8888 container port:\n\n\n\n\nAdd tools\n\n\n\nThe “Runtime settings” are also critical in correctly configuring the container when it’s up and running. You often can find such information on the container registry, github repo, or by reading through the Dockerfile. In this example, we\n\nSet the command as jupyter-lab\nenable the remote access of the Jupyter lab (--ServerApp.allow_remote_access=True),\nset up the notebook root directory (--notebook-dir=/home/rapids/notebooks),\nautomatically populate the base url (--NotebookApp.base_url=/${RUNAI_PROJECT}/${RUNAI_JOB_NAME}) which is especially important to avoid the conflicts between multiple workloads using Jupyter as the front end entry\ndisable the token authentication (--NotebookApp.token='')\nAn additional environment variable is defined to install extra dependencies (click “ENVIRONMENT VARIABLE” then enter Name as EXTRA_PIP_PACKAGES and Value as beautifulsoup4)\n\n\n\n\n\nRuntime settings\n\n\n\nUse the default UID and GID from the image\n\n\n\n\nSecurity\n\n\n\nFinally, select “CREATE ENVIRONMENT” to finish the setup."
   },
   {
     "objectID": "notebooks/marimo_tutorial.html",
@@ -574,11 +693,15 @@
     ]
   },
   {
-    "objectID": "notebooks/user_interface_deprecated.html",
-    "href": "notebooks/user_interface_deprecated.html",
-    "title": "Navigating the User Interface",
+    "objectID": "notebooks/cluster_intro.html",
+    "href": "notebooks/cluster_intro.html",
+    "title": "Introduction to the Apollo GPU Cluster",
     "section": "",
-    "text": "Navigating the User Interface\nThe Run:ai user interface is designed to be intuitive and user-friendly, allowing users to easily access and manage their resources and workloads.\n\n\n\nRun:ai navigation panel\n\n\nOn the left panel, there are several options to select:\n\nDashboards: Two system dashboards, namely “Overview” and “Analytics”, are accessible to users. They provide both system- and project-level information including system summaries, real-time resource allocation, cluster load, etc.\nProjects: This lists out the projects the user has been assigned to.\nWorkloads: This page provides a summary of the current workloads and allows users to create and configure new workloads.\nEnvironments: Both platform-wide and customised environments can be found in this page.\nData Sources: This page allows users to configure new data sources and view existing ones.\nCompute Resources: This page summaries all compute resources (similar to choosing the “flavours” in a cloud computing environment) and allows users to create new compute resources for their specific needs.\nTemplates: This feature allows users to manage bespoke templates configured for their specific workloads.\nCredentials: This space allows users to define secrets including access keys, passwords, or other sensitive information essential to the execution of workloads during runtime.\n\nThe instructions on how to use these features will be covered in the following “Run:ai Features” section."
+    "text": "Introduction to the Apollo GPU Cluster\n\n\n\n\n\n\nImportant\n\n\n\nAccess to the GPU Cluster is now available through the Researcher Dashboard (DashR). Please follow instructions on this page to submit your request.\n\n\nThe Apollo GPU Cluster is a high-performance research compute platform designed to accelerate AI workflows, scientific modelling, image processing, and other GPU-intensive research across the University of Sydney. This cluster is built with three NVIDIA DGX H200 nodes (24 H200 GPUs in total), high-speed InfiniBand networking, and 1 PB DDN EXAScaler parallel filesystem for fast shared storage.\nThis cluster is managed by the Sydney Informatics Hub (SIH). More information about the Apollo GPU Cluster can be found on the SIH’s Research Computing page.",
+    "crumbs": [
+      "Getting Started with the Apollo GPU Cluster",
+      "Introduction to the Apollo GPU Cluster"
+    ]
   },
   {
     "objectID": "notebooks/projects_deprecated.html",
@@ -588,34 +711,21 @@
     "text": "Projects\nIn Run:ai, users are organised into projects. This allows users to work collaboratively and access shared resources including granted GPU hours and disk storage.\nOnce you have been granted access to the Apollo GPU cluster, you will automatically be added to a project that shares the same name as your DashR project shortcode.\n\n\n\nListed Run:ai project\n\n\nApart from the basic information such as the number of allocated GPUs and total quota, you can also cutomise the project view. To do so, click the “COLUMNS” button and select the desired fields to display.\n\n\n\n\n\n\nNote\n\n\n\nAdjusting the project settings is restricted to system administrators only. If you require any changes to the project configuration, please contact the SIH support team."
   },
   {
-    "objectID": "notebooks/dashboards.html",
-    "href": "notebooks/dashboards.html",
-    "title": "Run:ai Dashboards",
+    "objectID": "notebooks/user_interface_deprecated.html",
+    "href": "notebooks/user_interface_deprecated.html",
+    "title": "Navigating the User Interface",
     "section": "",
-    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads\n\n\n\n\n\n\nThis dashboard provides more detailed breakdowns of the Apollo GPU cluster running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
+    "text": "Navigating the User Interface\nThe Run:ai user interface is designed to be intuitive and user-friendly, allowing users to easily access and manage their resources and workloads.\n\n\n\nRun:ai navigation panel\n\n\nOn the left panel, there are several options to select:\n\nDashboards: Two system dashboards, namely “Overview” and “Analytics”, are accessible to users. They provide both system- and project-level information including system summaries, real-time resource allocation, cluster load, etc.\nProjects: This lists out the projects the user has been assigned to.\nWorkloads: This page provides a summary of the current workloads and allows users to create and configure new workloads.\nEnvironments: Both platform-wide and customised environments can be found in this page.\nData Sources: This page allows users to configure new data sources and view existing ones.\nCompute Resources: This page summaries all compute resources (similar to choosing the “flavours” in a cloud computing environment) and allows users to create new compute resources for their specific needs.\nTemplates: This feature allows users to manage bespoke templates configured for their specific workloads.\nCredentials: This space allows users to define secrets including access keys, passwords, or other sensitive information essential to the execution of workloads during runtime.\n\nThe instructions on how to use these features will be covered in the following “Run:ai Features” section."
   },
   {
-    "objectID": "notebooks/dashboards.html#overview",
-    "href": "notebooks/dashboards.html#overview",
-    "title": "Run:ai Dashboards",
+    "objectID": "notebooks/login.html",
+    "href": "notebooks/login.html",
+    "title": "Login",
     "section": "",
-    "text": "This dashboard view provides holistic infrastructure information useful for both researchers and system administrators in managing and planning the resources.\n\n\nThis section presents high-level statistics of the GPU computing resources\n\n\n\nThe “Indicators” panel under “Overview”\n\n\n\n\n\nReal-time monitoring of the cluster status in terms of GPU and CPU utilisation.\n\n\n\nMonitoring system-wide workload\n\n\n\n\n\nInspecting queueing jobs. Possible reasons why your jobs are queueing include:\n\nThe number of GPUs requested to be allocated to the job has exceeded the remaining GPU quota in the project.\nThe GPU cluster is currently at full capacity and therefore has no available resources to schedule the job.\nThe job is waiting for other jobs to finish before it can be scheduled.\n\n\n\n\nQueueing jobs\n\n\n\n\n\nDisplaying the number of idle GPUs currently allocated to running workloads.\n\n\n\nIdle GPUs\n\n\n\n\n\nSummary of the list of running workloads.\n\n\n\nRunning workloads"
-  },
-  {
-    "objectID": "notebooks/dashboards.html#analytics",
-    "href": "notebooks/dashboards.html#analytics",
-    "title": "Run:ai Dashboards",
-    "section": "",
-    "text": "This dashboard provides more detailed breakdowns of the Apollo GPU cluster running status. Key statistics that are reported at separate levels:\n\nCluster\nProject\nWorkloads\nNodes\n\n\n\n\nSystem analytics"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Apollo GPU Cluster Onboarding Guide",
-    "section": "",
-    "text": "This Onboarding Guide is structured as follows:\n\n\n\nSection\nContent\n\n\nGetting Started with the Apollo GPU Cluster\nOverview and basic information about the GPU Cluster\n\n\nGetting Started with Run:ai\nIntroduction to Run:ai concepts and fundamentals. More details can be found on the official Run:ai user guide (version 2.24)\n\n\nTutorials\nPractical examples and demonstrations of different use cases",
+    "text": "Login\n\n\n\n\n\n\nImportant\n\n\n\nBefore trying to log into the Apollo cluster, please make sure you are part of a DashR project that has been granted cluster access.\nPlease note that it may take some time for the DashR provisioner to grant SSO access and set up the project in Run:AI before you can view the landing page.\n\n\n\nIf you are not on the Sydney university network (e.g. working from home), you will need to connect to the VPN to see the login page.\nGo to: https://gpu.sydney.edu.au/.\nEnter your UniKey and password.\n\n\n\n\nSSO login page\n\n\n\nOnce the login is successful, you’ll be presented with the landing (“Workloads”) page.\n\n\n\n\nRun:ai Workloads page",
     "crumbs": [
-      "Home"
+      "Getting Started with the Apollo GPU Cluster",
+      "Login"
     ]
   }
 ]
