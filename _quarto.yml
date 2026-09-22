@@ -1,6 +1,12 @@
 project:
   type: website
   output-dir: docs
+  # Everything renderable is a page of the site, except skills/ — those are agent assets
+  # (SKILL.md and its reference runbook), not pages, and must not be published as orphan HTML.
+  render:
+    - "*.qmd"
+    - "notebooks/*"
+    - "!skills/"
 
 website:
   title: "Apollo GPU Cluster Onboarding Guide"

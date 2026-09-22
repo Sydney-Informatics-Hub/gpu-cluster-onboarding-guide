@@ -11,3 +11,6 @@ __pycache__/
 */.ipynb_checkpoints/*
 docs
 **/*.quarto_ipynb
+
+# built skill bundles — reproduce with skills/build_skill.sh
+skills/dist/
