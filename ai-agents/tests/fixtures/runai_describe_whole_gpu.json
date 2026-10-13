@@ -1,0 +1,23 @@
+{
+  "name": "train-baseline",
+  "type": "Training",
+  "project": "example-project",
+  "phase": "Completed",
+  "createdAt": "2026-09-20T08:59:40Z",
+  "compute": {
+    "requestedResources": {"gpuCompute": 1, "cpu": 8, "memory": "64G"},
+    "allocatedResources": {"gpuCompute": 1, "cpu": 8, "memory": "64G"}
+  },
+  "podsInfo": {
+    "pods": [
+      {"name": "train-baseline-0-0", "phase": "Succeeded", "nodeName": "node-1"}
+    ]
+  },
+  "events": [
+    {"reason": "Submitted", "createdAt": "2026-09-20T08:59:40Z", "type": "Normal", "message": "workload submitted"},
+    {"reason": "Scheduled", "createdAt": "2026-09-20T09:00:00Z", "type": "Normal", "message": "assigned to node-1"},
+    {"reason": "Pulling", "createdAt": "2026-09-20T09:00:05Z", "type": "Normal", "message": "pulling image"},
+    {"reason": "Started", "createdAt": "2026-09-20T09:01:10Z", "type": "Normal", "message": "container started"},
+    {"reason": "Completed", "createdAt": "2026-09-20T11:30:00Z", "type": "Normal", "message": "workload completed"}
+  ]
+}
