@@ -65,7 +65,8 @@ class FakeGlobus(unittest.TestCase):
             task = json.loads(r.stdout)["task_id"]
             show = json.loads(run([g, "task", "show", task, "-F", "json"], env=env).stdout)
             self.assertEqual(show["status"], "FAILED")
-            self.assertEqual(run([g, "task", "wait", task, "--timeout", "5"], env=env).returncode, 0)
+            # like the real CLI, `task wait` exits non-zero when the task ended unsuccessfully
+            self.assertEqual(run([g, "task", "wait", task, "--timeout", "5"], env=env).returncode, 1)
         finally:
             sb.cleanup()
 
