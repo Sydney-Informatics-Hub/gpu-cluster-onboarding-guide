@@ -26,14 +26,17 @@ Scenario keys (all optional):
                   order; `times` limits how often it fires (default: always)
   simulate        run submitted commands locally (default true)
   running_polls   describe answers Running this many times before the terminal phase (default 1)
+  start_phase     the phase reported for those polls instead of Running (e.g. Pending)
   pods            pods to report per job; more than 1 imitates re-created pods (default 1)
   logs_not_ready  logs fails with "not ready to stream" this many times per job (default 0)
   delete_fail     delete fails this many times in total (default 0)
   list_training   JSON returned by `training list --json` (default: built from known jobs)
   list_workspace  JSON returned by `workspace list --json` (default: [])
-  describe_json   {name: JSON} returned by `describe NAME -o json` (default: synthesised)
+  describe_json   {name: JSON} returned by `describe NAME -o json` (default: synthesised); also
+                  answers for names that were never submitted, e.g. those in list_training
   user            email printed by whoami (default user@example.org)
 """
+import datetime
 import json
 import os
 import subprocess
@@ -165,6 +168,7 @@ def cmd_submit(state, scen, argv, words):
            "env": flag_values(head, "-e", "--environment-variable"),
            "workdir": (flag_values(head, "--working-dir") or [None])[0],
            "large_shm": "--large-shm" in head,
+           "created": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "exclude_node": flag_values(head, "--exclude-node"),
            "deleted": False}
     if scen.get("simulate", True) and cmd:
@@ -178,13 +182,16 @@ def cmd_submit(state, scen, argv, words):
 
 def phase_of(scen, job):
     if job["polls"] <= scen.get("running_polls", 1):
-        return "Running"
+        return scen.get("start_phase", "Running")
     return TERMINAL_OK if job["rc"] == 0 else TERMINAL_FAIL
 
 
 def cmd_describe(state, scen, argv):
     name = positional_after(argv, ["describe"])
     job = load_job(state, name)
+    custom = scen.get("describe_json", {}).get(name)
+    if job is None and custom is not None and "json" in flag_values(argv, "-o", "--output"):
+        out(stdout=json.dumps(custom))
     if job is None or job["deleted"]:
         out(stderr="Error: workload '{}' not found".format(name), rc=1)
     job["polls"] += 1
@@ -248,7 +255,8 @@ def cmd_list(state, scen, argv, kind):
         for p in sorted((state / "jobs").glob("*.json")):
             job = json.loads(p.read_text())
             if not job["deleted"]:
-                data.append({"name": job["name"], "phase": phase_of(scen, job)})
+                data.append({"name": job["name"], "phase": phase_of(scen, job),
+                             "createdAt": job.get("created", "")})
     else:
         data = []
     if "--json" in argv:
