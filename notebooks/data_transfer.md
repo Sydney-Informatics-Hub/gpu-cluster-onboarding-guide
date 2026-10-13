@@ -1,8 +1,41 @@
 # How to transfer data to and from the Persistent volume claim
 
-In this section we will describe methods of transferring data between the Research Data Store (RDS) and Gadi. For now, while we await the implementation of [Globus](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer) for fast and efficient transfer to and from your Persistent Volume Claim (PVC), we will describe an interactive method for transferring data using a JupyterLab environment in the Run:ai web interface. In the future we will include instructions for copying data using the Run:AI CLI at the command line.
+This page describes how to move data between your Persistent Volume Claim (PVC) on the Apollo GPU cluster, the Research Data Store (RDS), your own computer, and other institutions, and how to check that it arrived intact.
 
 Here we assume you already have set up a [project](runai_features.md#runai-projects) and have some Persistent Volume Claim (PVC) [storage](runai_features.md#runai-data-sources) available.
+
+## Choose a route
+
+| Route | Use it for | What you need |
+|---|---|---|
+| **Globus** | Anything sizeable: RDS ↔ PVC, another institution ↔ PVC, your computer ↔ PVC | A Globus login with your University account; [Globus Connect Personal](https://www.globus.org/globus-connect-personal) on your computer for laptop transfers |
+| **sftp from a data-transfer workspace** | RDS ↔ PVC when Globus is not set up for you, or a handful of files | Your UniKey password for RDS |
+| **Download inside a workload** | Public datasets and models | Nothing: workloads have internet access, so download straight to the PVC rather than via your computer |
+
+::: {.callout-important}
+Check your project's data rules before moving research data anywhere, including onto the cluster. Everything on a project's PVC can be read by every member of that project, and the PVC is **not backed up**. Never create a Globus share or guest collection of your PVC unless you mean to give other people access to it.
+:::
+
+## Before you transfer
+
+1. **Check there is room.** A DashR project's PVC is 1 TB by default, and it is shared by everyone in the project. In a terminal on the cluster (for example the data-transfer workspace below), run `df -h <pvc_mount_point>`.
+2. **Know what you are sending.** Note the number of files and the total size at the source, so you can compare them afterwards.
+3. **Do not hold a GPU while transferring.** Transfers only need a CPU workspace, or no workspace at all with Globus.
+
+## Transfer with Globus
+
+[Globus](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer) moves large amounts of data reliably. It retries failed files, checks every file's checksum after transfer, and keeps going if you close your browser.
+
+1. Go to [app.globus.org](https://app.globus.org) and log in with your University of Sydney account.
+2. Open the **File Manager**. In one panel, search for the collection you are copying **from**; in the other, the collection you are copying **to**. The names of the Apollo GPU cluster and RDS collections are listed on the University's [Globus page](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer). To transfer from or to your own computer, install [Globus Connect Personal](https://www.globus.org/globus-connect-personal) and select your computer's collection.
+3. Browse to your project's directory on the PVC (not the shared root, which is not writable) and to the source files, and select what to copy.
+4. Open **Transfer & Timer Options**:
+   * Tick **sync - only transfer new or changed files**, so that re-running the same transfer copies only what changed.
+   * Leave file-integrity verification on (the default), so every file is checksummed after it arrives.
+   * Leave the option to delete files on the destination that are not on the source switched off, unless you are sure: it deletes data.
+5. Click **Start**. The **Activity** page shows progress, and Globus emails you when the transfer finishes.
+
+## Interactive data transfer to/from RDS from a web-browser
 
 ## Interactive data transfer to/from RDS from a web-browser
 
@@ -64,8 +97,29 @@ sftp <your_unikey>@research-data-ext.sydney.edu.au:/rds/PRJ-<Project Short ID>/<
 
 During file transfer, for larger files, you can close the browser and leave things running in the background. You can then reconnect to check its status by logging back into the web UI at [gpu.sydney.edu.au](https://gpu.sydney.edu.au).
 
+### If an sftp transfer is interrupted
 
+Running the same `sftp -r` command again copies everything again. OpenSSH's `sftp` can instead resume partially copied files with `reget` (downloads) and `reput` (uploads), for example:
 
+```bash
+sftp <your_unikey>@research-data-ext.sydney.edu.au <<< "reget -r /rds/PRJ-<Project Short ID>/<Path to File or Folder> <pvc_mount_point>/<path_to_pvc_data>"
+```
 
+::: {.callout-note}
+We have not yet confirmed resuming against RDS. If it fails, re-run the original command. For very large transfers, Globus is the better choice.
+:::
 
+## After you transfer
 
+1. **Check that everything arrived.** At minimum, compare the number of files and the total size on both sides. In a terminal on the cluster:
+
+    ```bash
+    find <pvc_mount_point>/<path_to_pvc_data> -type f | wc -l
+    du -sh <pvc_mount_point>/<path_to_pvc_data>
+    ```
+
+    For a full check, the [`manifest.py`](https://github.com/Sydney-Informatics-Hub/gpu-cluster-onboarding-guide/blob/main/ai-agents/scripts/manifest.py) script records every file's size and checksum on one side (`python3 manifest.py build <folder> -o files.manifest`). It then checks the copy on the other side (`python3 manifest.py check <folder> files.manifest`) and lists anything missing or different. Globus already verifies checksums for you.
+
+2. **Stop the data-transfer workspace** when you are finished. It uses no GPU, but it holds CPU cores and memory on a shared node until you stop or delete it.
+
+3. **Copy results back the day you make them.** The PVC is temporary storage: unused files must be deleted within 30 days of job completion, and it is not backed up. Anything worth keeping, such as trained models and results, belongs on RDS.

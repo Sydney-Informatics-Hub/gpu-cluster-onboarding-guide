@@ -9,9 +9,48 @@ fails. A human can read it too, but the primary reader is the agent.
 the Sydney Informatics Hub. Nothing here is specific to any one research project; every
 project-specific value is discovered at runtime in §3 rather than hard-coded.
 
-**Provenance.** Facts marked *verified* were executed against the live cluster on **2026-09-22**
-with `runai-cli/2.24.65`. The CLI auto-updates, so re-run §3 if a command's shape looks wrong.
-Official docs: <https://sydney-informatics-hub.github.io/gpu-cluster-onboarding-guide/>.
+**Provenance.** Every claim carries its evidence:
+
+| tag | meaning |
+|---|---|
+| *verified YYYY-MM-DD* | executed against the live cluster on that date |
+| *observed once* | seen once, cause not established |
+| *vendor docs* | stated by NVIDIA / Run:ai documentation or the CLI's own `--help`, not yet checked on Apollo |
+| *unverified* | inferred; treat as a hypothesis |
+
+**The platform changed in October 2026.** A maintenance window upgraded Apollo to **Run:ai 2.25**
+(CLI `runai-cli/2.25.28` seen 2026-10-14), the NVIDIA driver from 550.163.01 to **580.82.07**,
+the GPU and Network Operators to 25.10, Knative Serving to 1.19, and the nodes' operating
+systems. Facts verified before 2026-10-08 were taken on Run:ai 2.24 with driver 550. Most
+describe the scheduler and CLI rather than the driver, but re-check one before building on it if
+the cluster behaves differently. The CLI auto-updates, so re-run §3 when a command's shape looks
+wrong. Official docs: <https://sydney-informatics-hub.github.io/gpu-cluster-onboarding-guide/>.
+
+**Companion guide.** [`GPU_EFFICIENCY_GUIDE.md`](GPU_EFFICIENCY_GUIDE.md) covers getting the
+most out of each GPU-hour on any cluster. §11 below is its Apollo summary, so this file stands on
+its own.
+
+**Contents.** Read §1–§4 before acting; then jump to what the task needs.
+
+| § | covers |
+|---|---|
+| 1–4 | what Apollo is; who does what; discovery; the ask-first policy |
+| 5 | cost, presets, fractions, threads and shared memory |
+| 6.1–6.3 | log in; run one command on the PVC (and its traps); check the GPU and CUDA |
+| 6.4 | workspaces, `exec`, start-up times |
+| 6.5 | real training jobs: crash loops, stuck starts, logs, signals, preemption |
+| 6.6 | packages, venvs, images, and getting code onto the PVC |
+| 6.7 | moving data: Globus, RDS sftp, copyparty, downloads — check before, verify after |
+| 6.8–6.9 | planned maintenance; long jobs that checkpoint and resume |
+| 7–8 | storage, permissions, retention; what is denied |
+| 9–10 | error strings; reporting back |
+| 11 | using GPU time well: gates, estimate, watch, verdicts, ledger |
+| A | agent-side shell pitfalls |
+
+**Scripts.** Paths like `scripts/apollo_run.sh` refer to `ai-agents/scripts/` in the
+[onboarding-guide repository](https://github.com/Sydney-Informatics-Hub/gpu-cluster-onboarding-guide),
+or to `scripts/` inside the installed Claude skill. Every script has a usage header, and any
+agent or person can run them.
 
 ---
 
@@ -31,8 +70,10 @@ commands that cannot work. Specifically:
 - **Containers are disposable.** Everything written inside a workload is destroyed with it. The
   only persistence is a **PVC** (Persistent Volume Claim) — shared network storage that the
   cluster mounts into the container. Anything that must survive a job goes there.
-- **Workloads may be preemptible.** Submitted trainings can be evicted to make room for
-  higher-priority work, so long jobs must checkpoint and resume by themselves.
+- **Workloads may be preempted, and maintenance ends them.** Submitted trainings can be evicted
+  to make room for higher-priority work, so long jobs must checkpoint and resume by themselves.
+  A planned maintenance window ends everything that is running, and someone has to resubmit it
+  afterwards (§6.8, §6.9).
 
 Two workload types matter:
 
@@ -42,7 +83,11 @@ Two workload types matter:
 | `training` | batch jobs, including anything an agent runs unattended | runs the command, then completes |
 
 **Prefer `training` for agent work.** It needs no TTY, exits on its own, and cannot be left
-running by accident.
+running by accident. It also starts more reliably. A CPU workspace sat `Pending` for 40+ minutes
+with no `Scheduled` event, while CPU trainings of the same size started in under a minute
+(*observed* 2026-09-30). Workspaces were listed `Preemptible: No` and trainings preemptible. That
+non-preemptible workloads must fit the project's in-quota share is the likely reason
+(*unverified*). So never make unattended work depend on a workspace starting.
 
 ---
 
@@ -65,6 +110,9 @@ in the credential cases, is actively wrong. Every recipe below is tagged.
 - **Anything with `--attach`** — implies a TTY. An agent session has none.
 - **`docker login`**, and any registry credential.
 - **The RDS password prompt** during `sftp` transfers.
+- **`globus login` and `globus session consent`** are browser sign-ins and consents. So is
+  installing **Globus Connect Personal** on a laptop. Once the user has done them, the agent may
+  drive `globus` CLI transfers within §4 (`[human-then-agent]`).
 - **Connecting the VPN.**
 
 Everything else — submitting, monitoring, reading logs, inspecting storage, building images — is
@@ -73,6 +121,17 @@ Everything else — submitting, monitoring, reading logs, inspecting storage, bu
 **When authentication expires** the CLI returns an auth error on every command. Do not retry, and
 do not attempt to re-authenticate. Stop and tell the user: *"the Run:ai token has expired, please
 run `runai login`"*.
+
+**When the VPN drops, `whoami` does not notice.** It answers from the cached token, and every real
+command then fails with a DNS error (*verified* 2026-10-01):
+
+```
+Error: failed to submit. Error: URL is incorrect or does not exist. DNS lookup failed for '<cluster host>': no such host
+```
+
+That is not an auth problem, and `runai login` will not fix it. Ask the user to reconnect the VPN.
+Check connectivity with a cheap real call (`runai project list`), not `whoami`, after any long
+idle period.
 
 ---
 
@@ -84,9 +143,11 @@ values from someone else's notes; projects, claim names and mount paths differ p
 ```bash
 # The CLI is often not on the PATH of a non-interactive shell. Find it before anything else.
 RUNAI=$(command -v runai || echo "$HOME/.runai/bin/runai")
-"$RUNAI" whoami                 # confirms an authenticated session
-"$RUNAI" project list           # the project name(s) and GPU quota
+"$RUNAI" whoami                 # a cached token is enough for this one...
+"$RUNAI" project list           # ...so this real call is the connectivity check; also lists quota
 ```
+
+If `project list` fails with `DNS lookup failed … no such host`, the VPN is down (§2).
 
 Pick the project (ask the user if more than one is listed — some accounts can see projects that
 are not theirs), then:
@@ -98,9 +159,21 @@ PROJECT=<from project list>
 "$RUNAI" datasource describe <name> --type pvc -p "$PROJECT" -o yaml   # claim name + mount path
 "$RUNAI" compute list -p "$PROJECT"             # named resource presets
 "$RUNAI" template list -p "$PROJECT"            # site-provided workload templates
+"$RUNAI" template describe <name> -p "$PROJECT" -o yaml   # before using any template
 ```
 
 `-o yaml` / `-o json` are available on several subcommands and are preferable to parsing tables.
+The list commands take `--json` instead (vendor docs: CLI help, 2.25).
+
+**Describe a template before you use it.** `template describe` shows the image, the arguments,
+the storage rights and the priority it will submit with. That is how the data-transfer copyparty
+template's default shows up: anonymous admin rights over the whole PVC (*verified* 2026-09-29;
+see §4).
+
+**Re-discover rather than reuse notes.** Presets change between sessions: `fifth-gpu` and
+`two-gpus-vllm` were not in the 2026-09-22 list but appeared by 2026-09-29 (*verified*).
+Re-discover after any maintenance window too. An update can change the CLI, presets, templates
+and node names (*unverified* for the October 2026 update, beyond the CLI version).
 
 Record the results so later steps and future sessions can reuse them:
 
@@ -116,6 +189,34 @@ EOF
 
 **Ask the user which directory under `$MOUNT` is theirs.** The mount root is typically shared
 across everyone in the project and is usually **not writable** — see §7.
+
+**Globus discovery (optional, for §6.7).** Globus can reach project PVCs through a Globus
+collection, as well as RDS and other institutions. The collection names come from SIH's Globus
+page on the Research Computing wiki, or from the user. Don't guess them. After the user's
+`globus login` (`[human]`):
+
+```bash
+globus endpoint search "<name from the wiki or the user>"   # note the collection IDs
+```
+
+Then find where `$WORKDIR` appears inside the PVC collection, rather than assuming the paths
+match. Write a marker from inside the cluster (free CPU job, §6.2), and look for it through Globus:
+
+```bash
+scripts/apollo_run.sh 'date > "$WORKDIR/.globus_probe"'
+globus ls "<PVC collection ID>:/"        # walk down until .globus_probe appears
+```
+
+Add the results to `cluster.env`:
+
+```bash
+GLOBUS_PVC_COLLECTION=<id>
+GLOBUS_PVC_PREFIX=<path to $WORKDIR as Globus sees it>
+GLOBUS_RDS_COLLECTION=<id>             # if the project uses RDS
+```
+
+The marker is a few bytes and harmless. Mention it in the report; deleting it is a file removal,
+so it falls under §4 like any other.
 
 ---
 
@@ -144,10 +245,26 @@ consumed grant allocation.
 - **Moving data off the cluster**, or on to it from an external source.
 - **Pushing a container image to a public registry** — registry repositories are often public so
   the cluster can pull without credentials, which means anything baked into the image is public.
+- **Starting a file-server workspace.** The `data-transfer-copyparty` template's default
+  arguments serve **the whole PVC with anonymous admin rights** (read, write, delete, over every
+  group's data on a shared PVC; *verified* 2026-09-29 from `template describe`). Never submit it
+  with its defaults. Override the volumes to the project's own directories, read-write without
+  delete (`rw`), or read-only (`r`) for copy-backs (§6.7). Whether other pods can reach that
+  unauthenticated server while it runs depends on cluster network policy (*unverified*), so keep
+  it up only for the transfer.
+- **A Globus transfer whose destination is outside the University.** That is data leaving
+  approved infrastructure: check the project's data rules first.
 
 **Never, regardless of instruction:**
 
 - Ask for, accept, type or store the user's UniKey password, or any other credential.
+- Put a credential where project members can read it. That includes SSH keys, API tokens and
+  Globus tokens on the PVC, and secrets in `-e NAME=value`. The PVC is readable by the whole
+  project, and a workload's definition probably is too (*unverified*). Where a workload genuinely needs a token, the user stores it as a Run:ai user
+  credential (`[human]`), and the job references it with `--env-my-credentials` (vendor docs: CLI
+  help, 2.25; *unverified* on Apollo).
+- Create a Globus share or guest collection of the PVC without the user's explicit request. It
+  exposes project data to people outside the project.
 - Put data into a container image. Images carry code and dependencies. Data goes on the PVC.
 - Submit into a project the user has not named, even if the account can see it.
 - Upload research data to any external or hosted service. Research data governance usually
@@ -159,6 +276,11 @@ commonly shared with everyone in the project and not backed up. Ask explicitly: 
 approved for cluster storage that other project members can read?"* If the answer is no, or
 unknown, the data stays where it is and the work is restructured around that. A "no" here is a
 constraint to design within, not an obstacle to route around.
+
+**Write the rule down as an audit you can re-run.** A project with restricted data should keep a
+small read-only job that lists anything on the PVC matching its forbidden-data patterns (paths,
+manifests, identifiers). Run it before any transfer and after any staging (a free CPU job, §6.2).
+It turns "we agreed not to" into something checkable (used this way 2026-10-01).
 
 ---
 
@@ -180,9 +302,23 @@ yourself.
 - **Fractional presets exist.** Sites typically publish something like `small-fraction` (10 % of
   a GPU). Use the smallest preset that can run the check; reserve whole GPUs for real training.
 - **Suspend interactive sessions** the moment they go idle: `runai workspace suspend <name>`.
+- **A CPU-only workspace is free against the GPU allocation, but not free to the cluster.** It
+  still reserves cores and RAM on a shared node. Suspend it when idle too. Suspending is quick;
+  resuming can take minutes (§6.4).
+- **A crashing job can hold its GPU repeatedly.** Run:ai re-creates a failed pod even with
+  `--backoff-limit 0` (§6.5). One crash loop held a GPU through five restarts (*verified*
+  2026-10-01).
 
 Keep a ledger file in the project repo — date, workload, GPUs, wall time, GPU-hours, running
-total — and update it after each GPU job. Nothing else will.
+total — and update it after each GPU job. Nothing else will. Take the numbers from the scheduler's
+own record, not from the `describe` table:
+- the allocation window comes from `describe -o json` events, from the first `Scheduled` or
+  `Bound` to the terminal event;
+- the size comes from the JSON's GPU fields, because the table shows **GPU Compute 1.00** for a
+  0.1 fraction (*verified* 2026-09-29).
+
+Whether SIH bills a fraction as a fraction is not confirmed, so record both fraction × wall time
+and whole-GPU wall time, and say which you are quoting. `scripts/gpu_ledger.py` does this (§11).
 
 ### 5.1 Compute resources — presets first, flags second
 
@@ -200,6 +336,14 @@ allocation (for training) to multi-GPU and CPU-only entries. Read the CPU memory
 carefully: a preset that grants a whole GPU but only a token amount of RAM will stall a
 data-heavy pipeline, and that is the most common bad pick. Attach one with `--compute <name>`.
 
+`small-fraction` itself grants only **100M** of CPU RAM (*verified* 2026-09-29). Anything beyond a
+trivial check needs `--cpu-core-request` / `--cpu-memory-request` alongside it.
+
+**What a fraction looks like from inside.** `nvidia-smi` in a fractional pod reports only the
+fraction's memory: 14,378 MiB of 143,771 at 0.1 (*verified* 2026-09-29, before the driver
+upgrade). That confirms you got a fraction. A fraction is time-shared, so timings measured on one
+are not throughput figures. Use a fraction to test a code path, and a whole GPU to measure speed.
+
 Use raw flags only when no preset fits, and say why when you do:
 
 | flag | meaning |
@@ -208,11 +352,32 @@ Use raw flags only when no preset fits, and say why when you do:
 | `--gpu-portion-request <0–1>` | a fraction of one GPU |
 | `--gpu-memory-request <size>` | GPU memory instead of a fraction (`--gpu-request-type memory`) |
 | `--cpu-core-request <n>` / `--cpu-memory-request <size>` | CPU cores and RAM |
-| `--large-shm` | a large `/dev/shm`, needed by many PyTorch dataloaders |
+| `--large-shm` | a large `/dev/shm`, needed by PyTorch DataLoader workers, in CPU jobs too |
 
 `*-request` is what the workload is guaranteed; the matching `*-limit` flags cap what it may burst
 to. Requesting a **fraction** of a GPU is the cheapest way to test an image or a code path — take
 a whole GPU only when the work genuinely needs one.
+
+**`--large-shm` whenever DataLoader workers are used, GPU or not.** Without it `/dev/shm` is 64M;
+with it, 2T (*verified* 2026-09-29). A CPU job with 8 DataLoader workers and no `--large-shm` died
+with (*verified* 2026-10-01):
+
+```
+ERROR: Unexpected bus error encountered in worker. This might be caused by insufficient shared memory (shm).
+```
+
+**Set thread counts to the cores you requested.** Pods have no CPU limit. In a pod requesting 8
+cores, `nproc` printed 224, `/sys/fs/cgroup/cpu.max` was `max 100000`, and torch defaulted to 112
+intra-op threads (*verified* 2026-10-01). One single-process feature extraction ran about 4×
+slower with default threading than with one thread. The request is a guarantee, not a limit, and
+the node is shared, so put this in every job command:
+
+```bash
+export OMP_NUM_THREADS=<cores> MKL_NUM_THREADS=<cores> OPENBLAS_NUM_THREADS=<cores>
+```
+
+and call `torch.set_num_threads(<cores>)` in PyTorch code. DataLoader workers already run
+single-threaded.
 
 ### 5.2 Environments and templates
 
@@ -256,31 +421,69 @@ attempt it.
 
 The workhorse. Inspect files, check sizes, verify a path — without leaving anything behind.
 
-**Cost.** Free (CPU-only). **Duration.** 30–60 s including container start.
+**Cost.** Free (CPU-only). **Duration.** 30–60 s including container start, longer if the node
+must pull the image.
+
+**Use the scripts when you can.** They are CPU-only by construction:
 
 ```bash
-NAME=peek-$RANDOM
+scripts/apollo_run.sh 'du -sh "$WORKDIR"/*'          # one command
+scripts/apollo_script.sh check_env.sh arg1 arg2       # a local multi-line script file
+```
+
+They read `cluster.env`, and their exit status is the remote command's own. They also handle the
+four traps that catch hand-written submissions:
+
+1. **The command is parsed twice:** locally, then by the pod's `bash -c`. A `>` inside a quoted
+   regex became a redirection in the pod and created a stray empty file in a shared project
+   directory (*verified* 2026-09-29). The scripts send the command base64-encoded and decode it in
+   the pod.
+2. **A failing command loops.** Run:ai re-creates a pod whose container exits non-zero, even with
+   `--backoff-limit 0` (§6.5). The scripts' container records the real exit code, prints
+   `[apollo] exit <rc>`, and exits 0. The script then reads the code back from the logs.
+3. **Logs race the phase.** `logs` can answer `workload is not ready to stream: pod is not ready`
+   for a few seconds even after the phase is terminal (*verified* 2026-09-30 and 2026-10-01). The
+   scripts retry.
+4. **Cleanup must happen.** The scripts delete their own job, retry once, print the name if that
+   still fails, and set a 30-minute auto-deletion backstop. `scripts/apollo_cleanup.sh` lists
+   anything left over.
+
+`apollo_script.sh` also keeps a copy of the script and a log of its output under
+`$WORKDIR/logs/apollo/`, because the logs of a deleted pod are gone (§6.5). Base64 and the wrapper
+add overhead, so a script over about 6,500 characters no longer fits Run:ai's 10,000-character
+command limit, and the script refuses it before submitting. Larger code goes to the PVC first
+(§6.6) and runs from there: `scripts/apollo_run.sh 'bash "$WORKDIR/tools/<script>.sh"'`.
+
+**By hand, when the scripts are not available:**
+
+```bash
+NAME=peek-$(date +%H%M%S)-$$-$RANDOM                        # unique under parallel submission
+CMD_B64=$(printf '%s' 'ls -la "$WORKDIR"' | base64 | tr -d '\n')
 "$RUNAI" training submit "$NAME" -p "$PROJECT" \
   -i <site base image> \
   --cpu-core-request 1 --cpu-memory-request 2G --run-as-user \
-  --existing-pvc "claimname=$PVC,path=$MOUNT" \
-  --command -- bash -c "ls -la $WORKDIR"
+  --existing-pvc "claimname=$PVC,path=$MOUNT" -e WORKDIR="$WORKDIR" --backoff-limit 0 \
+  --command -- bash -c "echo $CMD_B64 | base64 -d > /tmp/c.sh; bash /tmp/c.sh; echo \"[apollo] exit \$?\"; exit 0"
 ```
 
 **Then poll until terminal, and only then read logs:**
 
 ```bash
 "$RUNAI" training standard describe "$NAME" -p "$PROJECT" | grep '^Phase:'
-"$RUNAI" training standard logs     "$NAME" -p "$PROJECT"
-"$RUNAI" training standard delete   "$NAME" -p "$PROJECT"    # ask first if it is not your own throwaway
+"$RUNAI" training standard logs     "$NAME" -p "$PROJECT"    # retry while "not ready to stream"
+"$RUNAI" training standard delete   "$NAME" -p "$PROJECT"    # your own throwaway; ask for anything else
 ```
 
-**Expected.** `Phase: Initializing` → `Running` → `Completed`, then the command's stdout.
+**Expected.** `Phase: Initializing` → `Running` → `Completed`, then the command's stdout and the
+`[apollo] exit 0` line.
 **Failure modes.**
 - `failed to print logs. workload is not ready to stream: pod is not ready` — **not an error.**
-  The container is still starting. Keep polling `describe`.
+  The container is starting, or has only just finished. Keep polling `describe`, then retry
+  `logs` a few times.
 - `unknown command "logs" for "runai training"` — the sub-noun is required:
   `runai training standard logs`.
+- `value for Value must have at most 10000 characters` — the command is too long. Send code
+  separately (§6.6).
 - `Permission denied` on a write — you are probably at the mount root; see §7.
 
 ### 6.3 Verify the GPU environment `[agent, ask first]`
@@ -288,17 +491,20 @@ NAME=peek-$RANDOM
 The first GPU workload of a session. Confirms the device, the container identity, storage and
 network in one go.
 
-**Cost.** ~0.1 GPU-hours including the first image pull. **Ask before running.**
+**Cost.** ~0.1 GPU-hours with a whole GPU, including the first image pull; less with a fraction.
+**Ask before running.** A fraction (`--gpu-portion-request 0.1`, or the `small-fraction` preset
+plus CPU flags, §5.1) is enough to check the device, the driver and a code path.
 
 ```bash
-"$RUNAI" training submit gpu-check-$RANDOM -p "$PROJECT" \
+"$RUNAI" training submit gpu-check-$(date +%H%M%S)-$$ -p "$PROJECT" \
   -i <site base image> \
-  --gpu-devices-request 1 --cpu-core-request 1 --cpu-memory-request 8G --run-as-user \
-  --existing-pvc "claimname=$PVC,path=$MOUNT" \
-  --command -- bash -c 'nvidia-smi --query-gpu=name,memory.total,driver_version,compute_cap --format=csv; id; df -h '"$MOUNT"'; curl -sI --max-time 10 https://huggingface.co | head -1'
+  --gpu-portion-request 0.1 --cpu-core-request 1 --cpu-memory-request 8G --run-as-user \
+  --existing-pvc "claimname=$PVC,path=$MOUNT" --backoff-limit 0 \
+  --command -- bash -c 'nvidia-smi --query-gpu=name,memory.total,driver_version,compute_cap --format=csv; id; df -h '"$MOUNT"'; curl -sI --max-time 10 https://huggingface.co | head -1; exit 0'
 ```
 
-**Expected** (Apollo, verified 2026-09-22 — values will differ at other sites):
+**Expected** (Apollo, *verified* 2026-09-22 on a whole GPU — values will differ at other sites,
+and the driver changed since):
 
 ```
 name, memory.total [MiB], driver_version, compute_cap
@@ -308,10 +514,26 @@ uid=<your uid> gid=10000(dgxgroup) groups=10000(dgxgroup),...
 HTTP/2 200
 ```
 
+Since the October 2026 maintenance the driver should read **580.82.07** (per SIH's maintenance
+notice; re-check). On a 0.1 fraction, `memory.total` reads about a tenth of the full figure (§5.1).
+
 The `compute_cap` line matters: build GPU libraries for that architecture (9.0 = Hopper/sm_90).
 The `HTTP/2 200` line means **pods have outbound internet**, so public datasets and packages can
 be downloaded by the cluster directly rather than staged from a laptop. Re-check it rather than
 assuming — network policy can change.
+
+**CUDA versions after the driver upgrade.** Driver 580 runs CUDA 13.0 and older natively
+(vendor docs: NVIDIA's CUDA compatibility table). So CUDA 12.x and 13.0 wheels and images need
+no forward-compatibility libraries. Two consequences:
+- **Do not put an image's `/usr/local/cuda/compat/lib` on `LD_LIBRARY_PATH`.** That directory
+  holds a forward-compatibility `libcuda` for an older driver. NVIDIA lists every CUDA 12.x
+  compat package as incompatible with driver 580. Loading one over the host driver is the
+  documented cause of `CUDA error 803: system has unsupported display driver / cuda driver
+  combination` (vendor docs; *unverified* on Apollo). An environment built on the old driver with
+  that path first on `LD_LIBRARY_PATH` needs it removed. Check that environment with a fraction
+  before its next real job.
+- Only CUDA 13.1 or newer would need a forward-compatibility package again, and then only one
+  NVIDIA lists as compatible with 580.
 
 ### 6.4 Interactive workspaces `[mixed — see below]`
 
@@ -373,6 +595,18 @@ Error: failed to exec output. command terminated with exit code 3
 So test success/failure on `runai`'s own exit status (0 or 1) and parse stderr if the specific
 code matters; do not expect `$?` to be the remote command's.
 
+**The agent's working loop inside a workspace, without a TTY** (*verified* 2026-09-29):
+- `exec` runs in the workload's `--working-dir`. Variables from your local shell are not in the
+  pod. Pass them with `-e NAME=value` at submit, or inline in the command.
+- Run anything long as `nohup <cmd> > "$WORKDIR/logs/<name>.log" 2>&1 &`, then poll the log with
+  short `exec`s. A dropped `exec` connection then kills nothing.
+- `exec -i` cannot take piped stdin without a TTY: it fails with
+  `Error: failed to exec output. inappropriate ioctl for device`. Run:ai also rejects any
+  `--command` or exec payload over **10,000 characters**
+  (`value for Value must have at most 10000 characters`). Together these rule out pasting code
+  through stdin or a long command line. `scripts/pvc_sync_code.sh` sends files as base64 chunks
+  of plain `exec` calls and checks a sha256 round trip (§6.6).
+
 `port-forward` is a **blocking** command — it holds the terminal open while the tunnel exists, so
 run it in the background and kill it when done (verified 2026-09-22):
 
@@ -386,6 +620,22 @@ kill $PF
 It prints `port-forward started, opening ports [8080:8090]` when the tunnel is up. `--port` may
 be repeated for several ports, and `--address 0.0.0.0` requires privileges — keep it on
 `localhost`.
+
+**How long things take to start.** All *verified* 2026-09-29 to 2026-10-01 on Run:ai 2.24.
+Node operating systems were updated in October 2026, which may have emptied image caches
+(*unverified*).
+
+| workload | start-up observed |
+|---|---|
+| training, image cached on the node (event `Pulled … already present on machine`) | 12 s to ~2.5 min |
+| fractional-GPU training, image cached | 2 min 23 s in `ContainerCreating` |
+| CPU workspace | 20 s fresh; ~5 min on resume; 13+ min in `Init:0/1` (twice) |
+| CPU workspace with `--large-shm` and an empty `-e` variable | never started in 41 min (*observed once*, cause not established) |
+| any pod on one particular node, three days running | hung at start-up with no events; resubmitting with `--exclude-node` started in ~15 s (§6.5) |
+
+Images are cached per node. The CLI cannot pin a node; it can only exclude one
+(`--exclude-node`). `node list` is denied (§8). So prefer training workloads for anything that
+must start promptly. Never let a long wait pass silently while a GPU is allocated (§6.5).
 
 **Suspend and resume — what actually happens** (verified 2026-09-22). `suspend` moves the
 workspace to Phase `Stopped` and its allocation drops to zero, so it genuinely stops spending.
@@ -413,7 +663,9 @@ user's own machine.
 
 ### 6.5 Submit a real training job `[agent, ask first]`
 
-**Cost.** Whatever you estimate — state it when asking.
+**Cost.** Whatever you estimate (§11) — state the GPUs, the hours and the GPU-hours when asking.
+**Before any GPU job,** pass the free gates in §11: a CPU dry run on real data, a resume test,
+and the code path checked on a fraction.
 
 ```bash
 "$RUNAI" training submit <job-name> -p "$PROJECT" \
@@ -422,17 +674,86 @@ user's own machine.
   --run-as-user \
   --existing-pvc "claimname=$PVC,path=$MOUNT" \
   --working-dir "$WORKDIR" \
-  --pod-running-timeout 30m \
-  --command -- <your command>
+  --large-shm -e OMP_NUM_THREADS=<cores> \
+  --backoff-limit 0 --pod-running-timeout 30m \
+  --command -- bash "$WORKDIR/tools/train_wrapper.sh" \
+      --log "$WORKDIR/logs/<job-name>.log" --done-marker "$WORKDIR/runs/<run>/DONE" \
+      -- python train.py --resume auto
 ```
 
 Prefer a named `--compute` preset over hand-rolled CPU/memory flags: site admins maintain them.
+`train_wrapper.sh` (from `scripts/`, copied once into the project directory, §6.6) implements the
+first four rules below. If you don't use it, follow them by hand.
 
-**Because workloads can be preempted**, any job longer than a few minutes must write checkpoints
-to the PVC and resume from the newest checkpoint automatically on restart. Check whether the job
-is preemptible: `describe` prints `Preemptible: true|false` and a `Priority`. If training code
-cannot resume unattended, say so before submitting — that is a code problem to fix first, not a
-risk to accept silently.
+**Rule 1 — a crashing job must not loop.** Without care, a job whose container exits non-zero is
+re-created by Run:ai, and `--backoff-limit 0` does **not** stop it (*verified* 2026-10-01, twice):
+- a 1-GPU job crashed on the same batch about every 2.5 min and was re-created five times (pods
+  `…-0-0` to `…-0-4`), holding the GPU throughout;
+- a CPU job produced four `Error` pods 12–18 s apart.
+
+So make the **container** exit 0 after recording the real exit code:
+
+```bash
+python train.py …; rc=$?; echo "[job] exit $rc"; exit 0
+```
+
+The scheduler then ends the job instead of looping. A preemption is an eviction, not a container
+exit, so it is re-queued either way. Run:ai 2.25 also has `--restart-policy Always|OnFailure|Never`
+(vendor docs: CLI help). Whether `Never` with `--backoff-limit 0` ends the loop on Apollo is
+*unverified*; keep the exit-0 rule regardless. How `--backoff-limit` interacts with eviction is
+also *unverified*.
+
+**Rule 2 — the job's own log goes on the PVC.** The stdout of a re-created or deleted pod is lost
+(*verified* 2026-10-01). `logs --pod=<pod>` reads one pod only while it exists. `--previous`
+exists (vendor docs). The 2.25 web UI can show logs from a container's earlier instances (vendor
+docs; *unverified* on Apollo). So any job whose failure you may need to diagnose writes its own
+log. Put this near the top of its script:
+
+```bash
+mkdir -p "$WORKDIR/logs"; exec > >(tee -a "$WORKDIR/logs/<job>_$HOSTNAME.log") 2>&1
+```
+
+Read it afterwards with a free CPU job. An append-mode training log (JSONL) on the PVC is a
+record across restarts too. Repeated sequences in such a log are what revealed rule 1.
+
+**Rule 3 — SIGTERM must reach the program.** When the command is `bash -c '…; python train.py'`,
+bash is PID 1. A preemption's SIGTERM can reach bash without reaching Python, so the
+checkpoint-on-SIGTERM path never runs (*verified* 2026-10-01). Use `exec python …` when Python is
+the last step. Otherwise trap TERM in the wrapper, forward it, and wait again: a trapped signal
+interrupts `wait` before the child has finished checkpointing:
+
+```bash
+trap 'kill -TERM "$child" 2>/dev/null' TERM
+python train.py … & child=$!
+wait "$child"; rc=$?
+while kill -0 "$child" 2>/dev/null; do wait "$child"; rc=$?; done   # the child's real exit code
+```
+
+Exit 143 only after a real SIGTERM, and 0 otherwise (rule 1). The time between SIGTERM and the
+kill is `--termination-grace-period` (vendor docs: CLI help; Kubernetes defaults to 30 s). Set it
+longer than one checkpoint write.
+
+**Rule 4 — a finished job resubmitted is a no-op.** Write a done-marker only at the real end, and
+check for it at start. Then resubmitting after maintenance (§6.8) cannot retrain a finished run.
+
+**Rule 5 — never let a stuck start pass silently.** `--pod-running-timeout` does **not** end a
+pod stuck in `ContainerCreating`. A GPU pod sat there 11 minutes, GPU allocated, past an 8-minute
+timeout (*verified* 2026-10-01). After submitting a GPU job:
+1. Poll the phase. If it is not `Running` within ~3 minutes and the events end at
+   `Bound`/`ContainerCreating`, find the node, read-only:
+   `runai training standard describe <job> -p "$PROJECT" -o json` → `podsInfo.pods[].nodeName`.
+2. Report the node. Ask whether to delete the job and resubmit with `--exclude-node <node>`. That
+   started pods in ~15 s (*verified* 2026-10-01). Waiting costs GPU time.
+
+Keep `--pod-running-timeout` as a backstop for `Pending` only. Node exclusions go stale. Don't
+carry an `--exclude-node` list across a maintenance window, because the nodes were updated.
+
+**Preemption.** Check whether the job is preemptible: `describe` prints `Preemptible: true|false`
+and a `Priority`. Trainings on Apollo were preemptible (*verified* 2026-09-22). So any job longer
+than a few minutes must checkpoint to the PVC and resume from its newest checkpoint on restart
+(§6.9). If the training code cannot resume unattended, say so before submitting. That is a code
+problem to fix first, not a risk to accept silently. 2.25 has `--preemptibility` (vendor docs). A
+non-preemptible training probably has to fit the project's in-quota share (*unverified*).
 
 **Monitor:**
 
@@ -440,7 +761,13 @@ risk to accept silently.
 "$RUNAI" training list -p "$PROJECT"
 "$RUNAI" training standard describe <job> -p "$PROJECT"   # Phase, Pods, and an Events table
 "$RUNAI" training standard logs     <job> -p "$PROJECT" --follow
+"$RUNAI" training standard exec     <job> -p "$PROJECT" -- nvidia-smi   # works on a running training pod
 ```
+
+**Check the GPU in the first ten minutes of every long job** (`exec … nvidia-smi` *verified*
+2026-09-29). A 1-GPU run measured 35–51 % utilisation with its main Python process at 100 % of
+one core — paying for an H200 to wait on the host. `scripts/gpu_watch.sh` samples it and names
+the bottleneck (§11).
 
 When a workload sits in `Pending`, the **Events** table in `describe` gives the reason (quota,
 scheduling, image pull). Read it before speculating.
@@ -488,6 +815,23 @@ Three things to get right, or this bites:
 
 This route cannot install **system** packages — no `sudo` — so anything needing `apt-get` goes to B.
 
+**Route A on an NVIDIA NGC framework image** (e.g. `nvcr.io/nvidia/pytorch:<yy.mm>-py3`). These
+images ship a tuned torch, but they pin it in ways a venv inherits unless you undo them. Both
+behaviours below were *verified* 2026-09-29 on `pytorch:25.06-py3`:
+- **The image pins its own torch** through `PIP_CONSTRAINT=/etc/pip/constraint.txt`. A venv that
+  needs a *different* torch must clear it (`PIP_CONSTRAINT=` for the install). Otherwise pip
+  resolves against the image's version.
+- **The image puts its torch's `lib/` first on `LD_LIBRARY_PATH`.** A venv with its own torch
+  must set `LD_LIBRARY_PATH` explicitly, or it loads the image's libtorch. Do **not** include the
+  image's `/usr/local/cuda/compat/lib` since the driver upgrade (§6.3).
+- **Probe the image first, in a free CPU job:** Python version, torch and CUDA versions,
+  `env | grep -i -e pip -e ld_library`, and which tools are missing. That image had no `ffmpeg`,
+  for instance.
+- **Build in a CPU job,** with the caches on the PVC. `pip freeze` into a lock file kept in the
+  project's repository. Rebuild when the image changes.
+- **Then test once on a fraction** (ask first): import torch and run one CUDA operation. A CPU job
+  cannot test CUDA initialisation.
+
 **B. Build a custom image `[agent builds, human logs in]`.** The durable, reproducible answer,
 and the one to use for anything that will run more than a few times or that someone else must
 reproduce. Start `FROM` the site's published base image so its tooling still works:
@@ -526,15 +870,245 @@ JupyterLab base; the notebook server then still starts correctly.
 **Choosing:** iterate with A, freeze into B once the dependency set settles, and ask for C only
 when other people need to launch the same thing from the UI.
 
-### 6.7 Move data `[agent for public downloads, human-in-the-loop for institutional storage]`
+**Getting your own code onto the PVC.** Jobs run code that is already on the PVC, or in the image.
+In order of preference:
+1. **`git clone` / `git pull` inside a free CPU job,** when the repository is reachable from the
+   cluster without credentials. Pods have outbound internet (§6.3). Run:ai 2.25 can also mount a
+   repository with `--git-sync` (vendor docs: CLI help; *unverified* on Apollo).
+2. **Globus** for a directory tree (§6.7).
+3. **`scripts/pvc_sync_code.sh <workspace> <dest> <paths…>`** into a running CPU workspace. It
+   takes code and config files only, sends them as base64 chunks under the 10,000-character
+   limit, and checks a sha256 round trip.
 
-- **Public datasets:** download from inside a cluster workload, straight to the PVC. Never
-  round-trip through the user's laptop.
-- **From institutional storage (e.g. the USyd Research Data Store):** the documented route is a
-  CPU-only data-transfer workspace whose terminal runs `sftp` against the storage host. The
-  password prompt is the user's. Never hold a GPU during a transfer.
-- **Results back:** cluster scratch is not backed up. Copy anything valuable back to durable
-  institutional storage the day it is produced.
+A container image is the wrong carrier for code you are still changing: every change needs a new
+tag and a fresh pull on each node (§6.6 B). And never paste a large script into `--command`
+(§6.4).
+
+**Keep a `tools/` directory in the project's PVC directory** with the few scripts that must run
+*inside* jobs. Copy them there once by any route above: `scripts/train_wrapper.sh` (§6.5) and
+`scripts/manifest.py` (§6.7).
+
+### 6.7 Move data: choose a route, check before, verify after `[mixed — see each route]`
+
+Moving data on to or off the cluster is ask-first, and the project's data rules decide what may
+move at all (§4). Never hold a GPU during a transfer.
+
+**Choose the route:**
+
+| route | use when | who does what | cluster cost | integrity |
+|---|---|---|---|---|
+| **Globus** | the default for anything sizeable: RDS ↔ PVC, another institution ↔ PVC, a laptop with Globus Connect Personal ↔ PVC | user: `globus login` and consent once; agent: submit, wait, report | no workload needed (*unverified*) | Globus verifies checksums (vendor docs); re-runs with `--sync-level checksum` send only what changed |
+| **sftp from the data-transfer workspace** | RDS when Globus isn't set up for the user, or a handful of files | agent: commands, checks, verification; user: types the RDS password | a CPU workspace: free, but suspend it afterwards | `manifest.py check` |
+| **copyparty workspace** (fallback) | laptop ↔ PVC with no RDS and no Globus Connect Personal | agent end to end, ask-first | a CPU workspace, only for the transfer | `manifest.py`; resume by size |
+| **download inside a pod** | public datasets and models | agent | a CPU job | the publisher's checksums |
+
+**Before any transfer:**
+1. **The data rules** (§4). For restricted data, run the project's audit job first.
+2. **Free space.** Run `scripts/apollo_run.sh 'df -h "$MOUNT"; du -sh "$WORKDIR"'`. A DashR
+   project's PVC defaults to 1 TB, and it is shared by the whole project.
+3. **Source size and file count,** stated when asking.
+4. **A source manifest,** built wherever the source is readable: the laptop, RDS mounted as a
+   network drive, or a pod for PVC → elsewhere. It travels with the data, so the destination can
+   be checked against it.
+
+   ```bash
+   scripts/manifest.py build <source dir> -o <name>.manifest            # path, size, sha256
+   scripts/manifest.py build <source dir> --no-hash -o <name>.manifest  # sizes only: fast for huge trees
+   ```
+
+**After it:**
+1. **Verify at the destination.** On the PVC, run `manifest.py` from the project's `tools/`
+   directory (§6.6) in a free CPU job:
+   `scripts/apollo_run.sh 'python3 "$WORKDIR/tools/manifest.py" check "$WORKDIR/data/<name>" "$WORKDIR/data/<name>.manifest"'`.
+   It reports missing, changed and unexpected files, and exits non-zero on any mismatch. Its
+   summary `digest` lets two sides be compared by one string.
+2. **Report** the route, the Globus task ID or the commands, files and bytes moved, and the
+   verification result (§10).
+3. **Suspend or delete any transfer workspace** (deleting is ask-first).
+4. **Results going back leave the PVC the day they are made** (§7.3).
+
+#### (a) Globus `[human-then-agent]`
+
+The user signs in once (`globus login`; and `globus session consent …` if the CLI asks for it).
+After that the agent can drive transfers with the IDs recorded during discovery (§3):
+
+```bash
+# dry run: prints both collections' names, the paths, and the exact command; submits nothing
+scripts/globus_xfer.sh "$GLOBUS_RDS_COLLECTION:/<path on RDS>/" "$GLOBUS_PVC_COLLECTION:$GLOBUS_PVC_PREFIX/data/<name>/"
+# after the user approves
+scripts/globus_xfer.sh --yes "$GLOBUS_RDS_COLLECTION:/<path on RDS>/" "$GLOBUS_PVC_COLLECTION:$GLOBUS_PVC_PREFIX/data/<name>/"
+```
+
+The script refuses a destination outside the collections in `cluster.env` unless
+`--allow-external` is given, which needs the user's explicit OK (§4). It prints the task ID at
+once, waits, and exits 0 only when the task `SUCCEEDED`. When it times out, the task keeps
+running at Globus: check it with `globus task show <id>` or in the web app. Without the script,
+the same transfer is:
+
+```bash
+globus transfer SRC_ID:/path/ DST_ID:/path/ --recursive --sync-level checksum --label <label>
+globus task wait <task id> --timeout 3600
+globus task show <task id>
+```
+
+The user can equally start the transfer from the Globus web app. The agent then does only the
+checks before and after. Two things are *unverified* until checked live:
+- the ownership and mode of files Globus writes on a shared PVC (check with `ls -ln` in a CPU job
+  after the first transfer, §7);
+- whether a Globus transfer needs any Run:ai workload at all.
+
+#### (b) RDS by sftp from the data-transfer workspace `[agent prepares, human types the password]`
+
+The site's `data-transfer-workspace` template starts a CPU workspace with a terminal (see the
+"transfer data" page of the onboarding guide; run `template describe` first, §3). The password
+prompt is the user's, so the agent writes the commands and hands them over:
+
+```bash
+# in the data-transfer workspace terminal
+cd <pvc destination>
+sftp -r <unikey>@research-data-ext.sydney.edu.au:/rds/PRJ-<shortcode>/<path> .
+```
+
+If a large transfer is interrupted, resume the partial files instead of starting again. OpenSSH
+`sftp` has `reget` and `reput` (*unverified* against RDS):
+
+```bash
+sftp <unikey>@research-data-ext.sydney.edu.au <<< "reget -r /rds/PRJ-<shortcode>/<path> <pvc destination>"
+```
+
+Whether `rsync` works against RDS is *unverified*. If it does, `rsync -a --partial` is better for
+large or repeated transfers. Never automate this by storing a password or SSH key on the PVC
+(§4). Afterwards: verify with the manifest, then suspend the workspace.
+
+#### (c) Laptop ↔ PVC through a copyparty workspace `[agent, ask first]` — fallback
+
+Use this only when there is no RDS and no Globus Connect Personal. It needs no credentials, which
+is exactly why it must be restricted:
+1. `runai template describe data-transfer-copyparty -p "$PROJECT" -o yaml` shows the default
+   arguments, `--chdir /tmp -v /w:/:A --theme 1`: the **whole PVC, anonymous admin** (§4).
+2. Submit with the volumes overridden to the project's own directories, read-write without
+   delete. The arguments after `--` are copyparty's. This shape worked on 2026-09-29:
+
+   ```bash
+   "$RUNAI" workspace submit xfer-$(date +%m%d) -p "$PROJECT" --template data-transfer-copyparty \
+     --existing-pvc "claimname=$PVC,path=/w" --run-as-user \
+     --cpu-core-request 4 --cpu-memory-request 8G \
+     -- --chdir /tmp -v /w/<project dir>/incoming:/in:rw --theme 1
+   ```
+
+   `small-fraction`-style presets grant too little RAM for this (§5.1). Expect a slow start: the
+   workspace sat in `Init:0/1` for ~13 minutes, twice (*verified* 2026-09-29).
+3. Tunnel to it in the background: `"$RUNAI" workspace port-forward <name> -p "$PROJECT" --port
+   <local>:<copyparty port from the template> --address localhost &` (§6.4).
+4. Upload with `scripts/pvc_upload.py`. It takes a TSV of `local<TAB>remote` paths and one or
+   more `--allow-root` directories, and refuses anything outside them, symlinks included. It is
+   a dry run by default. Send `--one-file --yes` as a route test, then `--yes` for the rest. It
+   resumes by skipping remote files of equal size.
+5. Verify with the manifest, then suspend or delete the workspace. Its server is unauthenticated
+   while it runs.
+
+What copyparty does on the PVC (all *verified* 2026-09-29):
+- **It never overwrites.** Without delete permission, a second PUT to an existing name stores a
+  renamed copy. So `pvc_upload.py` reports a size mismatch for a human decision rather than
+  re-sending.
+- **It leaves a `.hist/` index in every directory it serves.** Report it; `manifest.py` ignores
+  it.
+- Directories it creates come out `750` and files `660` (§7).
+
+**Results back to a laptop** use a second workspace serving read-only (`:r`), and
+`scripts/pvc_download.py`. That script writes `.part` files, checks each against a `manifest.py`
+manifest built on the cluster, and only then renames them; a mismatch is deleted and reported. A
+read-only copyparty returned ~1 GB sha256-identical this way (*verified* 2026-09-29). A workspace
+serves only the volumes fixed when it was submitted (*verified* 2026-10-01). So export every
+run's artefacts *and* its training record into one `release/<run>/` tree, and one read-only
+workspace can serve every later copy-back.
+
+#### (d) Public data `[agent]`
+
+Download from inside a CPU job, straight to the PVC. Never round-trip through the user's laptop.
+Check the publisher's checksums where they exist, and keep the download command: the PVC copy is
+not durable (§7.3).
+
+### 6.8 Planned maintenance — before, during, after `[mixed]`
+
+SIH takes the cluster down for updates; the October 2026 window upgraded Run:ai, the driver and
+the nodes' OS. SIH's notice asked users to checkpoint long jobs, plan around the window, move data
+they need during it to RDS, and resubmit incomplete jobs afterwards. Ask the user where SIH
+announces windows. The channel is *unverified*; the October notice reached users directly.
+
+**Before the window:**
+- **Compare every submission with the window.** Take the job's expected end (duration, plus
+  start-up §6.4, plus a margin). Don't start a GPU job or a long transfer that would still be
+  running when the window opens, unless it checkpoints and someone will resubmit it. Say so when
+  asking to submit.
+- **Assume maintenance ends workloads rather than pausing them.** Whether Run:ai re-queues,
+  fails or deletes running workloads during an update is *unverified*. Preemption auto-resume
+  (§6.9) can't be relied on, so plan a manual resubmit.
+- **Record what is in flight.** For each workload: its name, the exact submit command, the
+  experiment directory, and the newest checkpoint step. `scripts/apollo_snapshot.sh save` saves
+  the `training list`, the `workspace list` and each `describe` to a local, timestamped
+  directory; it is read-only and free. The logs of deleted pods are lost (§6.5), so the job's own
+  log on the PVC is the record.
+- **Move anything out of container filesystems.** A workspace's `/tmp`, home directory and
+  runtime `pip install`s go with its pod. Only the PVC survives (§6.4).
+
+**During the window:**
+- **The PVC is unreachable, not just at risk.** It can only be read from inside a workload, and
+  there are none. Before the window, copy whatever the user will need during it to durable
+  storage: results, the checkpoint they will evaluate, training records. Use RDS where the project
+  has it (Globus, §6.7), otherwise the user's own machine. The data rules still decide what may
+  leave.
+- **Copy off any checkpoint that would be expensive to lose.** The PVC is not backed up, and a
+  storage-level update is a plausible way to lose one (*unverified*).
+- **Agent behaviour:** cluster commands fail during the window. Don't retry in a loop, and don't
+  treat it as an auth problem (don't ask for `runai login`; §2). Tell the user the cluster is in
+  maintenance, and stop the cluster side of the work. The exact error during a window has not
+  been captured yet; record it verbatim when you see one.
+
+**After the window:**
+1. **Re-run discovery (§3),** including `runai version`, presets and templates. Drop any
+   `--exclude-node` list: the nodes changed.
+2. **Check storage and environment before any GPU job:**
+   - the working tree is intact;
+   - the data audit passes (§4);
+   - the PVC venv still imports in its image, in a CPU job;
+   - after a driver change, one CUDA operation runs on a fraction (§6.3, ask first).
+3. **Classify every workload recorded before the window.** Run `scripts/apollo_snapshot.sh
+   compare <dir>`, then check the PVC:
+   - **finished:** its done-marker is present (§6.5 rule 4); nothing to do;
+   - **interrupted:** no done-marker; note the newest checkpoint step;
+   - **never started.**
+4. **Resubmit the interrupted ones** with the same command. This is safe only if the job resumes
+   from its newest checkpoint and a done-marker turns a finished run into a no-op; say so if it
+   does not. Use a fresh name, or ask before deleting the old workload object. Resubmitting GPU
+   jobs is still ask-first: one message listing each job, its GPUs and its remaining duration.
+5. **Report** which jobs resumed from which step, and the GPU-hours lost to recomputing steps since
+   the last checkpoint (§10).
+
+### 6.9 Long jobs — checkpoint, resume, finish cleanly `[agent, ask first]`
+
+Two things end long jobs on Apollo: **preemption** (trainings are preemptible, §6.5) and
+**maintenance** (§6.8). Auto-resume covers preemption only if Run:ai re-queues the same workload;
+maintenance needs a resubmit. The same discipline makes both safe. The framework-neutral detail,
+with snippets, is in `GPU_EFFICIENCY_GUIDE.md` ("Guards in training code"); in short:
+- **Checkpoint to the PVC** at a fixed step cadence *and* on SIGTERM. Write to a temporary file,
+  then rename.
+- **Resume from the newest checkpoint that loads,** skipping a truncated one.
+- **Save everything that decides the next step:** model, optimiser, LR scheduler, AMP scaler,
+  sampler position, every RNG state, and any module attribute that changes during training but is
+  not in `state_dict()`. A resume test caught one of those (*verified* 2026-09-29). Restore the RNG
+  *after* creating the DataLoader iterator, because creating it draws a seed.
+- **Finish correctly.** Exit 143 only on a real SIGTERM, and 0 otherwise (§6.5 rules 1 and 3).
+  Write the done-marker only at the real end. Keep a best checkpoint outside keep-last pruning.
+- **Test before the first long job, on CPU, for free:**
+  1. Run a tiny model uninterrupted, then the same run SIGTERM'd mid-step and resumed. The final
+     weights should match to ~1e-6.
+  2. Resubmit the finished run: it must exit at once without training.
+  3. Do a short dry run on the real data in a CPU job.
+  The first and third each caught real bugs (*verified* 2026-09-29).
+
+`scripts/train_wrapper.sh` provides the signal forwarding, the exit codes, the log on the PVC and
+the done-marker check. The checkpoint logic itself belongs in the training code.
 
 ---
 
@@ -599,6 +1173,13 @@ succeeds. If the project has no directory for this work yet, **an administrator 
 members cannot, and there is no `sudo`. Ask the site support desk for a directory owned by the
 project group and group-writable (mode `2775` keeps group ownership on files created inside it).
 
+**What you write gets your uid and your primary group.** That holds for files written by pods
+run with `--run-as-user`. Directories created by a copyparty transfer came out `750` and files
+`660` (*verified* 2026-09-29): group members could read but not add to them. For working
+directories other members must write to, set `umask 002` in the job's command, or fix the modes
+after a transfer (`chmod -R g+w`, in a CPU job, on your own files only). The mode of files written
+by Globus is *unverified*; check it with `ls -ln` after the first transfer.
+
 Three consequences worth stating to users who expect a normal filesystem:
 
 1. **Everything written is readable by the whole project.** Plan data placement accordingly, and
@@ -620,8 +1201,9 @@ Two practical consequences for an agent:
 
 - **Copy anything worth keeping to the Research Data Store the day it is produced** — trained
   models, exported artefacts, result tables. RDS is redundantly backed up and is the intended
-  long-term home; the PVC is not.
-- **Do not treat a dataset staged on the PVC as durable.** A corpus that took hours to download
+  long-term home; the PVC is not. Globus is the usual route (§6.7). A project without RDS copies
+  results to the user's own machine (§6.7 c), then on to whatever durable storage they use.
+- **Do not treat a dataset staged on the PVC as durable.** A dataset that took hours to download
   may not be there next month, so keep the command that reproduces it, and re-check before
   assuming a path still exists.
 
@@ -638,6 +1220,10 @@ retry them or conclude the cluster is broken:
 - Creating or reconfiguring projects, quotas and environments — administrator-only. Membership is
   managed upstream, through DashR by the project's Chief Investigator or administrator (§7.1),
   not in Run:ai.
+
+**Not covered by this guide:** inference serving (`runai inference …`, which runs on Knative) and
+multi-node jobs over InfiniBand. Both exist in Run:ai 2.25 (vendor docs). Whether researcher
+accounts may use them on Apollo is *unverified*; ask SIH before planning around either.
 
 **Support is a request form, not an email address.** SIH takes Apollo enquiries through the
 Research Computing support form linked from the
@@ -656,8 +1242,17 @@ Facility of the University of Sydney."* If the work being run leads to a paper, 
 | message | cause | fix |
 |---|---|---|
 | `runai: command not found` | the binary is not on a non-interactive shell's PATH | use the absolute path (`$HOME/.runai/bin/runai`) |
-| any auth / 401 error | the SSO token expired | **stop**; ask the user to run `runai login` |
-| `workload is not ready to stream: pod is not ready` | container still starting | poll `describe` until Phase is terminal; first image pull can take minutes |
+| any auth / 401 error, e.g. `Error: failed to get email and ID from token. Authentication failed. the token has expired` | the SSO token expired | **stop**; ask the user to run `runai login` |
+| `Error: failed to submit. Error: URL is incorrect or does not exist. DNS lookup failed for '<host>': no such host` | the VPN is down (`whoami` still works from its cache) | **stop**; ask the user to reconnect the VPN (§2) |
+| `workload is not ready to stream: pod is not ready` | container still starting — or just finished (a race seen for a few seconds after a terminal phase) | poll `describe` until Phase is terminal, then retry `logs` a few times |
+| `Error: failed to submit standard training. Value: value for Value must have at most 10000 characters` | the `--command` is over Run:ai's limit | send code separately (§6.6); `apollo_script.sh` checks this first |
+| `Error: failed to exec output. inappropriate ioctl for device` | `exec -i` with piped stdin and no TTY | plain `exec` calls in chunks: `pvc_sync_code.sh` (§6.4) |
+| `Error: failed to exec output. command terminated with exit code N` | the remote command failed; `runai` itself exits 1 | read N from stderr (§6.4) |
+| `Operation cannot be fulfilled on podgroups.scheduling.run.ai "…": the object has been modified` (PodGrouperWarning in events) | benign; seen on nearly every submission (*verified* 2026-09-29) | ignore |
+| pods `<job>-0-1`, `-0-2`, … appearing after an `Error` | the container exited non-zero and Run:ai re-created it, `--backoff-limit 0` notwithstanding | stop the job (ask); make the container exit 0 after logging its code (§6.5 rule 1) |
+| pod in `ContainerCreating` or `Init:0/1` for many minutes, events stop at `Bound` | a slow image pull, or a stuck node; `--pod-running-timeout` does not end it | GPU job: report the node, offer `--exclude-node` (§6.5 rule 5); CPU: wait, or use a training job (§6.4) |
+| `ERROR: Unexpected bus error encountered in worker. This might be caused by insufficient shared memory (shm).` | DataLoader workers with the default 64M `/dev/shm` | resubmit with `--large-shm` (§5.1) |
+| `CUDA error 803: system has unsupported display driver / cuda driver combination` | a forward-compat `libcuda` loaded over the newer host driver (vendor docs) | remove `/usr/local/cuda/compat/lib` from `LD_LIBRARY_PATH` (§6.3) |
 | `unknown command "logs" for "runai training"` | missing sub-noun | `runai training standard logs` |
 | `unknown flag: --project` on some subcommands | flag name varies per subcommand | use `-p`, and check `--help` for that subcommand |
 | `required flag(s) "type" not set` | `datasource describe` needs `--type pvc` | add `--type pvc` |
@@ -674,11 +1269,136 @@ Facility of the University of Sydney."* If the work being run leads to a paper, 
 When work is done, report what was actually observed rather than what was expected:
 
 - the workload names created and their final phase;
-- **GPU-hours consumed**, and the running total against any allocation;
-- what was written to shared storage, and where;
-- anything still running or suspended — and if something is holding a GPU, say so first.
+- **GPU-hours consumed**, and the running total against any allocation — saying how fractions
+  were counted (fraction × wall, or whole-GPU wall; §5);
+- the GPU utilisation observed in each long job's first minutes, and the verdict (§11);
+- what was written to shared storage, and where — including anything a tool left behind, such as
+  copyparty's `.hist/` index directories or a probe file;
+- every transfer: the route, the Globus task ID or the commands, files and bytes moved, and the
+  verification result (§6.7);
+- anything still running or suspended — CPU workspaces included — and if something is holding a
+  GPU, say so first.
 
 If a step failed, quote the error. If a step was skipped, say which and why. An agent that
 reports a clean run it did not verify is worse than one that reports a messy one accurately —
 the user is accountable for this allocation and this data, and can only exercise that
 responsibility with an honest account of what happened.
+
+---
+
+## 11. Using GPU time well on Apollo
+
+Most GPU money is lost to GPUs that are **held but not computing**. A job stuck starting, a crash
+loop, an idle interactive session or a job waiting on its host all count, and they cost more than
+slow kernels. Every case in the October 2026 sessions was caught by a check or a measurement, not
+by a guess. This section is the Apollo procedure. [`GPU_EFFICIENCY_GUIDE.md`](GPU_EFFICIENCY_GUIDE.md)
+has the cluster-agnostic detail: diagnosis, the fix catalogue and guards in training code.
+
+**Principles.**
+- GPU time is money (§5).
+- Measure before fixing. Two plausible bottleneck guesses were both wrong, and measurement found
+  the real one.
+- An unspent budget is not a reason to run.
+- Decide the stop rule and the evaluation before the run, and never tune on the evaluation set.
+
+### 11.1 Free gates before any GPU job
+
+| gate | how | cost |
+|---|---|---|
+| the code runs on real data | a short dry run in a CPU job (`scripts/apollo_script.sh`) | free |
+| it resumes exactly | SIGTERM a tiny CPU run mid-step and resume; weights match to ~1e-6 (§6.9) | free |
+| every epoch yields batches | print batches per epoch and the padding ratio in the dry run. A bucketing sampler with `drop_last` once yielded **zero** batches per epoch, with no error (*verified* 2026-09-30) | free |
+| the input pipeline can keep up | `scripts/loader_bench.py` in a CPU job: units/s the loader can deliver | free |
+| the GPU code path works | one short job on a fraction — a correctness check, not a speed figure (§5.1) | ask first; ~0.05 GPU-h |
+| throughput, for the estimate | ≤ 15 minutes on one whole GPU with the input cache warm | ask first |
+
+### 11.2 Estimate, then ask
+
+```bash
+scripts/gpu_ledger.py estimate --units <per epoch> --epochs <n> --throughput <units/s measured> --gpus 1
+```
+
+Wall time = units × epochs ÷ throughput × (1 + validation share) + start-up. State GPUs, hours and
+GPU-hours when asking, and for a fraction both fraction × wall and whole-GPU wall (§5).
+
+### 11.3 Watch the first ten minutes `[agent, free]`
+
+Run this about 5 minutes into every long job, and again at about 10. It is read-only and holds
+nothing:
+
+```bash
+scripts/gpu_watch.sh -n 12 -i 5 --train-log "$WORKDIR/logs/<job>.jsonl" \
+  -- "$RUNAI" training standard exec <job> -p "$PROJECT" --
+```
+
+It samples `nvidia-smi` (utilisation, memory, power) and `top` through `exec`, reads the tail of
+the job's training log if there is one, and names the bottleneck. Without the script, run
+`"$RUNAI" training standard exec <job> -p "$PROJECT" -- nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total,power.draw --format=csv`
+a few times, plus `top -bn1`, and read them against this table:
+
+| verdict | what it looks like | action |
+|---|---|---|
+| `stuck-starting` | no samples: the pod is not running, or no GPU is visible | if events stop at `Bound`/`ContainerCreating`, report the node and offer `--exclude-node` (§6.5 rule 5) |
+| `restart-loop` | the job has more than one pod (`-0-1`, `-0-2`, …) | stop it (ask); read its PVC log; exit-0 rule (§6.5 rule 1) |
+| `nonfinite-streak` | the training log shows consecutive NaN/inf losses | stop it (ask); fix the numerics before spending more |
+| `idle-held` | utilisation ≈ 0 throughout | nothing is using the GPU: suspend or stop the workload |
+| `input-bound` | utilisation < 60 %, high data-wait share or busy loader workers | more workers, faster storage, precomputed inputs |
+| `host-bound` | utilisation < 60 %, one process at ~100 % of a core, little data wait | remove host-device syncs, bigger batches, compile |
+| `bursty` | utilisation swings between idle and full, little data wait | batch composition or per-step host work: profile the step |
+| `gpu-bound` | utilisation ≥ 85 % | the GPU is busy: tune batch size and precision, then leave it |
+| `unclear` | in between | measure: `step_profile.py`, `loader_bench.py` |
+| `memory-headroom` (advisory) | peak memory < 25 % of the GPU | a smaller fraction, or a bigger batch |
+
+The reference case is a 1-GPU job at 35–51 % utilisation, ~200 W of 700 W, 17 of 141 GB, with its
+main Python process at 100 % of one core (*verified* 2026-09-29). That is `host-bound` with
+`memory-headroom`: an H200 paid for to wait on the host. Watch whole-GPU jobs. On a fraction, the
+utilisation probably includes the other workloads sharing the GPU (*unverified*).
+
+### 11.4 Diagnose by measuring, then fix
+
+Read the cluster-agnostic guide's "Diagnose" and "Fix catalogue" sections. On Apollo, the
+measurements cost nothing when they run in CPU jobs:
+- `scripts/loader_bench.py` gives input capacity, with the thread environment reported (§5.1);
+- `scripts/step_profile.py` gives per-phase step time and top-level op counts;
+- a data-wait share in the training log separates input-bound from host-bound.
+
+### 11.5 Account for every hour
+
+After each GPU job, append a ledger row from the scheduler's own record (§5):
+
+```bash
+"$RUNAI" training standard describe <job> -p "$PROJECT" -o json --pod-limit -1 --event-limit -1 > describe.json
+scripts/gpu_ledger.py add runai --json describe.json --purpose "<why this ran>"
+```
+
+`--pod-limit -1 --event-limit -1` matters: `describe` shows at most 10 pods and 50 events by
+default (vendor docs: CLI help), and a crash loop needs every pod counted. The ledger records both
+fraction × wall and whole-GPU wall, and prints which JSON fields it used. Its field paths come
+from captures made before the 2.25 upgrade and are partly *unverified*; if it reports an
+unrecognised shape, fall back to `gpu_ledger.py add manual`.
+
+### 11.6 Spending strategy
+
+- Run the cheapest gated experiment first, and stop early on a failed gate.
+- Run parallel short jobs only when the project's quota allows, and gate each one independently.
+- An allocation left at the end of a grant is not a reason to run anything.
+
+**Free:** everything in 11.1 except the last two rows, plus 11.3, 11.4 (in CPU jobs) and 11.5.
+**Ask first:** any GPU request, stopping or deleting a job, and resubmitting with
+`--exclude-node`.
+
+---
+
+## Appendix A. Agent-side pitfalls
+
+Not Apollo's fault, but each cost a session real time (*verified* 2026-10-01 unless noted):
+- **macOS's default shell is zsh.**
+  - `for f in $LIST` and `set -- $pair` do not word-split (use `${=LIST}`, or put the logic in a
+    bash script).
+  - A word starting with `=` is expanded as a command path, so quote it.
+  - `cat -A` doesn't exist; use `cat -v`.
+  - There is no `timeout`; use a background job and a sleep-and-kill watchdog.
+- **Never run `bash -x submit_script.sh | head` to inspect a submit script.** It runs the script,
+  and the job is submitted. Read the script, or use `bash -n`.
+- **Don't hide exit codes behind pipes.** `script | tail -2` reported success for a sync that had
+  aborted. Capture the code first: `${PIPESTATUS[0]}` in bash, `${pipestatus[1]}` in zsh.

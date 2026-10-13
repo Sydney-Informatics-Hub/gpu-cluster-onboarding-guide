@@ -48,14 +48,31 @@ class Build(unittest.TestCase):
                 with self.subTest(skill=skill, file=str(rel)):
                     self.assertEqual(f.read_bytes(), src.read_bytes())
 
-    def test_scripts_named_in_a_skill_are_bundled_with_it(self):
+    def test_scripts_named_in_a_bundle_are_bundled_with_it(self):
+        # SKILL.md and every bundled guide refer to scripts as scripts/<name>; a self-contained
+        # bundle must carry each one.
         for skill in self.skills():
-            text = (AI_AGENTS / "skills" / skill / "SKILL.md").read_text()
-            for name in sorted(set(re.findall(r"scripts/([\w.-]+\.(?:sh|py))", text))):
+            texts = [p.read_text() for p in (self.dist / skill).rglob("*.md")]
+            names = set()
+            for text in texts:
+                names.update(re.findall(r"scripts/([\w.-]+\.(?:sh|py))", text))
+            for name in sorted(names):
                 with self.subTest(skill=skill, script=name):
                     self.assertTrue((self.dist / skill / "scripts" / name).is_file(),
                                     "{} mentions scripts/{} but the bundle lacks it".format(
                                         skill, name))
+
+    def test_helpers_a_bundled_script_sources_are_bundled_too(self):
+        # e.g. apollo_run.sh sources _apollo_lib.sh; no document names the lib, so check here.
+        for skill in self.skills():
+            scripts = self.dist / skill / "scripts"
+            if not scripts.is_dir():
+                continue
+            for f in sorted(scripts.iterdir()):
+                for helper in sorted(set(re.findall(r"(?<![\w.-])(_[\w]+\.sh)", f.read_text()))):
+                    with self.subTest(skill=skill, script=f.name, helper=helper):
+                        self.assertTrue((scripts / helper).is_file(),
+                                        "{} uses {} but the bundle lacks it".format(f.name, helper))
 
 
 if __name__ == "__main__":

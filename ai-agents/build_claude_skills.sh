@@ -31,10 +31,14 @@ guides_for() {
     *) return 1 ;;
   esac
 }
+# apollo-gpu carries every script, because its runbook (§6.5, §11) uses the GPU ones too.
+GPU_SCRIPTS="gpu_watch.sh gpu_watch_verdict.py gpu_ledger.py train_wrapper.sh step_profile.py loader_bench.py"
 scripts_for() {
   case "$1" in
-    apollo-gpu)     echo apollo_run.sh ;;
-    gpu-efficiency) echo ;;
+    apollo-gpu)     echo _apollo_lib.sh apollo_run.sh apollo_script.sh apollo_cleanup.sh \
+                         apollo_snapshot.sh manifest.py globus_xfer.sh pvc_sync_code.sh \
+                         pvc_upload.py pvc_download.py "$GPU_SCRIPTS" ;;
+    gpu-efficiency) echo "$GPU_SCRIPTS" ;;
     *) return 1 ;;
   esac
 }
