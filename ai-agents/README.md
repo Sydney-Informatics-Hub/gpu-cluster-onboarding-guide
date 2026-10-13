@@ -82,13 +82,13 @@ guide tells the agent to write the request out for you to paste.
 
 ## The Claude skill (optional)
 
-`claude-skill/` packages the same guide as a Claude skill, a folder Claude loads by itself
+`skills/apollo-gpu/` packages the same guide as a Claude skill, a folder Claude loads by itself
 whenever a request looks like cluster work. You then do not have to remember to attach the guide.
 This format is specific to Claude. With any other tool, use the guide directly as described
 above.
 
 ```bash
-ai-agents/build_claude_skill.sh            # writes ai-agents/dist/apollo-gpu{,.skill}
+ai-agents/build_claude_skills.sh           # writes ai-agents/dist/apollo-gpu{,.skill}
 cp -r ai-agents/dist/apollo-gpu ~/.claude/skills/
 ```
 
@@ -96,7 +96,7 @@ There is a build step because the skill needs the runbook at `references/APOLLO_
 Committing a second copy would let the two versions drift apart. `dist/` is git ignored. The
 sources are what gets reviewed, and anyone can rebuild the bundle from them.
 
-The skill also ships `claude-skill/scripts/apollo_run.sh`, which is useful on its own. It runs a
+The skill also ships `scripts/apollo_run.sh`, which is useful on its own. It runs a
 single command inside a workload and cleans up afterwards. It never requests a GPU, so it costs
 nothing against your allocation:
 

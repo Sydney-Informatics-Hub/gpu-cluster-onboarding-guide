@@ -26,9 +26,9 @@ error-string lookup table, storage and provisioning detail. Read it when you nee
 exact shape or when something fails. This file is what you need to act safely.
 
 <!-- Reading this in the gpu-cluster-onboarding-guide repository rather than in an installed
-skill? The runbook is one level up, at ai-agents/APOLLO_AGENT_GUIDE.md — it is the primary,
-tool-agnostic artefact, and ai-agents/build_claude_skill.sh copies it into references/ when it
-assembles the bundle. -->
+skill? The runbook is at ai-agents/APOLLO_AGENT_GUIDE.md and the scripts at ai-agents/scripts/ —
+they are the primary, tool-agnostic artefacts, and ai-agents/build_claude_skills.sh copies them
+into references/ and scripts/ when it assembles the bundle. -->
 
 
 ## First moves in any session
