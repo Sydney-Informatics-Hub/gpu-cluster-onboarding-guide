@@ -145,7 +145,7 @@ Prefer them over hand-written submissions: they handle the traps below.
 "$RUNAI" training submit <name> -p "$PROJECT" \
   -i <image> --compute <preset from `runai compute list`> --run-as-user \
   --existing-pvc "claimname=$PVC,path=$MOUNT" --working-dir "$WORKDIR" \
-  --large-shm -e OMP_NUM_THREADS=<cores> --backoff-limit 0 --pod-running-timeout 30m \
+  --large-shm -e OMP_NUM_THREADS=<cores> --backoff-limit 1 --pod-running-timeout 30m \
   --command -- bash "$WORKDIR/tools/train_wrapper.sh" --log "$WORKDIR/logs/<name>.log" \
       --done-marker "$WORKDIR/runs/<run>/DONE" -- python train.py --resume auto
 ```
@@ -159,8 +159,10 @@ directory on the PVC.
 
 The rules that save GPU-hours — each was learned by losing some (runbook §6.5):
 
-1. **A failing container is re-created even with `--backoff-limit 0`** — one crash loop held a GPU
-   through five restarts. Make the container exit 0 after logging its real exit code.
+1. **A failing container is re-created, and `--backoff-limit 0` is ignored** (treated as unset:
+   6 retries, 7 pods; `--backoff-limit 1` is honoured). One crash loop held a GPU through five
+   restarts. Submit with `--backoff-limit 1` and make the container exit 0 after logging its real
+   exit code.
 2. **Logs of re-created or deleted pods are lost** — tee the job's output to a file on the PVC.
 3. **`bash -c '…; python train.py'` makes bash PID 1**, and a preemption's SIGTERM may never reach
    Python — `exec` it, or forward TERM. Exit 143 only on a real SIGTERM.
@@ -197,17 +199,19 @@ with `scripts/gpu_ledger.py` from `describe -o json --pod-limit -1 --event-limit
 §11), with both fraction × wall
 and whole-GPU wall: whether fractions are billed as fractions is unconfirmed.
 
-**After the driver upgrade (580, CUDA ≤ 13.0 native)**, never put an image's
-`/usr/local/cuda/compat/lib` on `LD_LIBRARY_PATH` — an old compat `libcuda` over the new driver
-gives `CUDA error 803`. Check any pre-upgrade environment on a fraction before its next real job.
+**After the driver upgrade (580.173.02, CUDA ≤ 13.0 native)**, NGC PyTorch 25.06 images and
+their venvs work unchanged (checked on a fraction, 2026-10-14). If an environment fails with
+`CUDA error 803`, an old compat `libcuda` is on `LD_LIBRARY_PATH`: remove that entry.
 
 ## Moving data
 
 Moving data on or off is ask-first; the data rules decide what may move (runbook §6.7).
 
 - **Globus** is the default for anything sizeable — RDS ↔ PVC, other institutions, a laptop with
-  Globus Connect Personal. The user signs in; you run `scripts/globus_xfer.sh` (dry run, then
-  `--yes`), which waits and exits 0 only on success.
+  Globus Connect Personal. Collections: "The University of Sydney Apollo GPU cluster (on-/off-campus
+  transfers)", projects under `/mnt/gpu/<project>/` if exported, and "PRJ-<shortcode> on Sydney
+  RDS". The user signs in; you run `scripts/globus_xfer.sh` (dry run, then `--yes`), which waits
+  and exits 0 only on success.
 - **RDS by sftp** from the site's `data-transfer-workspace` — you prepare the commands and the
   checks, the user types the password.
 - **copyparty** only when there is neither RDS nor Globus — restricted volumes, `port-forward`,

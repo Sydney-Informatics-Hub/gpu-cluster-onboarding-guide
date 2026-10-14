@@ -289,6 +289,12 @@ def main():
         cmd_submit(state, scen, argv, ["submit"])
     if words[:3] == ["training", "standard", "submit"]:
         cmd_submit(state, scen, argv, ["submit"])
+    if words[:2] == ["workspace", "describe"]:
+        name = positional_after(argv, ["describe"])
+        custom = scen.get("describe_json", {}).get(name)
+        if custom is None:
+            out(stderr="Error: workload '{}' not found".format(name), rc=1)
+        out(stdout=json.dumps(custom))
     if words[:3] == ["training", "standard", "describe"]:
         cmd_describe(state, scen, argv)
     if words[:3] == ["training", "standard", "logs"]:

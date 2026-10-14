@@ -373,7 +373,7 @@ for batch in loader:
   bash is PID 1, and the signal can stop at bash (*verified*). Use `exec python …`, or a wrapper
   that forwards it.
 - **Exit codes.** Exit 143 only after a real SIGTERM. Some schedulers re-create a pod whose
-  container exits non-zero, whatever the retry limit says: Run:ai did, five times (*verified*). On
+  container exits non-zero: Run:ai ignores a retry limit of 0 and retries 6 times (*verified*). On
   those, exit 0 after logging the real code, so a crash ends the job instead of looping it.
 - **Done-marker.** Write it only at the real end, and check for it at start. A resubmitted
   finished job then exits at once. Resubmission after maintenance or preemption becomes safe.
@@ -437,7 +437,7 @@ scripts/gpu_ledger.py show
 |---|---|---|---|---|
 | `gpu_watch.sh` prefix | `-- runai training standard exec <job> -p <project> --` | `-- srun --jobid <id> --overlap` | `-- kubectl exec <pod> --` | (none) |
 | allocation record | `runai training standard describe <job> -p <project> -o json --pod-limit -1 --event-limit -1` | `sacct -j <id> --format=JobID,Start,End,AllocTRES` | pod events and status times | your own timer |
-| restart behaviour | re-creates failed pods even with `--backoff-limit 0` (*verified*); exit 0 after logging | `--requeue` only if asked | Job `backoffLimit`, `restartPolicy` | — |
+| restart behaviour | re-creates failed pods; `--backoff-limit 0` is ignored (6 retries) but `1` is honoured (*verified*); exit 0 after logging | `--requeue` only if asked | Job `backoffLimit`, `restartPolicy` | — |
 | stuck start | pod stays `ContainerCreating` past `--pod-running-timeout` (*verified*); exclude the node | `PD` with a reason in `squeue` | pod events | — |
 | restart count for `--restarts` | pods listed in `describe`, minus 1 | `sacct` requeue count | `restartCount` | — |
 

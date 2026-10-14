@@ -6,8 +6,10 @@
 #   - A command string is parsed twice: by the local shell that builds it, then by bash in the
 #     pod. A quoted '>' once became a redirection in the pod and wrote a stray file to shared
 #     storage. So the script and its arguments travel base64-encoded and are decoded in the pod.
-#   - A container that exits non-zero is re-created, even with --backoff-limit 0 (seen 5 times,
-#     holding resources each time). So the pod-side wrapper records the real exit code as a last
+#   - A container that exits non-zero is re-created. Run:ai treats --backoff-limit 0 as unset, so
+#     Kubernetes' default of 6 retries applies (7 pods; verified 2026-10-14 on Run:ai 2.25, with
+#     --restart-policy Never too), while --backoff-limit 1 is honoured. So jobs are submitted with
+#     --backoff-limit 1 as a cap, and the pod-side wrapper records the real exit code as a last
 #     log line, "[apollo] exit N", and always exits 0; the local side reads the code back.
 #   - A submitted command is capped at 10,000 characters, so anything bigger is refused here,
 #     before submitting, with directions to put the code on the PVC first.
@@ -231,7 +233,7 @@ _apollo_submit() {
   args=(training submit "$name" -p "$PROJECT" -i "$IMAGE"
     --cpu-core-request "${CPU:-1}" --cpu-memory-request "${MEM:-2G}" --run-as-user
     --existing-pvc "claimname=$PVC,path=$MOUNT"
-    --backoff-limit 0
+    --backoff-limit 1
     -e "MOUNT=$MOUNT" -e "WORKDIR=$WORKDIR")
   case ${LARGE_SHM:-0} in 0 | "") ;; *) args+=(--large-shm) ;; esac
   # shellcheck disable=SC2086  # one flag per word is the point

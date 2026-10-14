@@ -53,16 +53,19 @@ COLUMNS = ["date", "workload", "gpus", "fraction", "wall_h", "gpu_h_fraction", "
            "total_fraction", "total_whole", "purpose", "method"]
 DEFAULT_LEDGER = "gpu_ledger.csv"
 
-# Run:ai describe -o json: assumed field names. `events[].reason` and `events[].createdAt` are
-# verified; the rest are tolerant guesses until real captures confirm them (tests/fixtures).
+# Run:ai describe -o json field names. Verified on real output (Run:ai 2.25, 2026-10-14):
+# events[].reason/createdAt, general.phase, compute.requestedResources.gpuCompute.requested
+# (allocatedResources.gpuCompute reads 0 once the job has ended), podsInfo.pods[].completedAt
+# (no pod start time), and the BackoffLimitExceeded event that ends a failed job. The other paths
+# are tolerant fallbacks for other versions.
 START_REASONS = ("Scheduled", "Bound")
-END_REASONS = ("Completed", "Succeeded", "Failed")      # plus any reason containing "delet"
+END_REASONS = ("Completed", "Succeeded", "Failed", "BackoffLimitExceeded")  # + any "delet..."
 RUNNING_PHASES = ("Pending", "Initializing", "Creating", "ContainerCreating", "Running",
                   "Resuming", "Restarting")
 TERMINAL_PHASES = ("Completed", "Succeeded", "Failed", "Stopped", "Deleted", "Deleting")
 EVENT_PATHS = ("events", "status.events")
-PHASE_PATHS = ("phase", "status.phase", "status")
-NAME_PATHS = ("name", "metadata.name", "workloadName")
+PHASE_PATHS = ("general.phase", "phase", "status.phase", "status")
+NAME_PATHS = ("general.name", "name", "metadata.name", "workloadName")
 POD_PATHS = ("podsInfo.pods", "pods", "status.pods")
 POD_START_KEYS = ("startedAt", "startTime", "scheduledAt", "createdAt", "creationTimestamp")
 POD_END_KEYS = ("completedAt", "finishedAt", "endTime", "completionTime", "deletedAt",
@@ -83,7 +86,7 @@ GPU_PATHS = (     # (path, kind): allocated first, then requested
 )
 DEVICE_KEYS = ("devices", "gpuDevices", "gpuDevicesRequest", "deviceCount", "count", "gpus")
 PORTION_KEYS = ("portion", "gpuPortion", "gpuPortionRequest", "fraction")
-AMOUNT_KEYS = ("amount", "value", "request", "total", "gpu", "gpuCompute")
+AMOUNT_KEYS = ("requested", "amount", "value", "request", "total", "gpu", "gpuCompute")
 DEFAULT_EVENT_LIMIT = 50   # describe's default caps: hitting one means the list may be cut
 DEFAULT_POD_LIMIT = 10
 
@@ -380,6 +383,10 @@ def interpret_gpu(value):
 def find_gpu(data):
     """(devices, fraction, path, kind, notes) from the describe JSON."""
     notes = []
+    req = get_path(data, "compute.requestedResources.gpuCompute")
+    if req is not None and interpret_gpu(req) == "zero":
+        raise Refused("this workload requested no GPU (compute.requestedResources.gpuCompute is "
+                      "0): it is CPU-only and used no GPU-hours, so there is nothing to record")
     for path, kind in GPU_PATHS:
         v = get_path(data, path)
         if v is None:
@@ -465,11 +472,24 @@ def runai_window(data, now=None):
     phase, _ = _first(data, PHASE_PATHS)
     phase = phase if isinstance(phase, str) else None
     restarted_after_end = bool(ends) and any(t > ends[-1][0] for t in starts)
+    if phase in TERMINAL_PHASES and not ends:
+        # Run:ai does not always emit a terminal event (a Completed job with none was seen
+        # 2026-10-14): end at the last pod's completedAt, else at general.updatedAt.
+        pods_, _ = _first(data, POD_PATHS)
+        done = [parse_iso(p["completedAt"], "pod completedAt") for p in (pods_ or [])
+                if isinstance(p, dict) and p.get("completedAt")]
+        upd = get_path(data, "general.updatedAt")
+        if done:
+            ends = [(max(done), "last pod completedAt (phase {}, no terminal event)".format(phase))]
+        elif upd:
+            ends = [(parse_iso(upd, "general.updatedAt"),
+                     "general.updatedAt (phase {}, no terminal event)".format(phase))]
+        else:
+            raise LedgerError("phase is {} but there is no {} or deletion event, and no pod "
+                              "completedAt; re-run describe with --event-limit -1, or record it "
+                              "with `add manual`".format(phase, "/".join(END_REASONS)))
+        restarted_after_end = False
     if phase in RUNNING_PHASES or not ends or restarted_after_end:
-        if phase in TERMINAL_PHASES and not ends:
-            raise LedgerError("phase is {} but there is no {} or deletion event; re-run describe "
-                              "with --event-limit -1, or record it with `add manual`".format(
-                                  phase, "/".join(END_REASONS)))
         if now is None:
             raise LedgerError("the workload is still running (phase {}, no terminal event "
                               "after the last {}); pass --now ISO (or --now now) to record it "

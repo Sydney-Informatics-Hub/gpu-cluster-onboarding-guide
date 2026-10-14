@@ -8,7 +8,7 @@ This page collects the habits that save the most GPU time and protect long jobs.
 
 * **Stop or suspend interactive workspaces as soon as you pause.** A Jupyter or Marimo workspace with a GPU is charged overnight whether or not a cell is running. In the web UI, select the workload and click **STOP**. From the CLI, run `runai workspace suspend <name> -p <project>`. Files on your PVC are kept. Anything outside the PVC is lost, including packages installed with `pip` at runtime.
 * **Test on a CPU or a GPU fraction first.** CPU-only workloads do not use your GPU allocation. A fractional GPU (for example a `small-fraction` compute resource, one tenth of a GPU) is enough to check that your code runs on a GPU. Take a whole GPU only for the real run.
-* **Don't leave failed jobs restarting.** If a training job's script crashes, the cluster may start it again, holding the GPU each time. Check a new job's status a few minutes after it starts, and stop it if it keeps restarting.
+* **Don't leave failed jobs restarting.** If a training job's script crashes, the cluster starts it again, up to 6 more times, holding the GPU each time. Submitting with `--backoff-limit 0` does not prevent this; `--backoff-limit 1` limits it to one retry. Check a new job's status a few minutes after it starts, and stop it if it keeps restarting.
 * **Watch for jobs that never start.** If a GPU job stays in *ContainerCreating* or *Initializing* for more than a few minutes, the GPU may already be allocated. Check the job's events, and contact SIH if it does not move.
 
 ## Check that your job actually uses the GPU
@@ -76,7 +76,7 @@ SIH takes the cluster down for maintenance from time to time. All running worklo
 **After the window**
 
 * Check your files are where you left them.
-* Check your software environment still works, especially after driver or software upgrades. Since the October 2026 update, the NVIDIA driver supports CUDA up to version 13.0. Images and Python environments built for CUDA 12 keep working, but don't force older "CUDA compatibility" libraries onto `LD_LIBRARY_PATH`.
+* Check your software environment still works, especially after driver or software upgrades. Since the October 2026 update, the NVIDIA driver supports CUDA up to version 13.0. Images and Python environments built for CUDA 12 keep working (we checked the NVIDIA PyTorch 25.06 image). If one fails with "CUDA error 803", remove any `.../cuda/compat/lib` entry from `LD_LIBRARY_PATH`.
 * Resubmit jobs that had not finished. If they resume from their newest checkpoint, they lose only the work since that checkpoint.
 
 ## Estimate before you run

@@ -106,7 +106,7 @@ class ApolloScript(unittest.TestCase):
         self.assertEqual(values("--cpu-memory-request"), ["4G"])
         self.assertEqual(values("--exclude-node"), ["n-a", "n-b"])
         self.assertEqual(values("-i"), ["img:1"])
-        self.assertEqual(values("--backoff-limit"), ["0"])
+        self.assertEqual(values("--backoff-limit"), ["1"])
         self.assertIn("--large-shm", head)
         self.assertFalse([a for a in head if a.startswith("--gpu") or a == "-g"], head)
         self.assertTrue(self.name().startswith("my-job-"), self.name())

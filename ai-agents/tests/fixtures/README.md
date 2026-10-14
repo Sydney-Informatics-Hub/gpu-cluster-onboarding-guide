@@ -42,3 +42,17 @@ timestamps.
 - `podsInfo.pods[]`, with optional per-pod `startedAt` and `completedAt` timestamps. The
   alternative names tried are listed in `POD_START_KEYS` and `POD_END_KEYS`.
 - A top-level `name`.
+
+## Real captures (2026-10-14, Run:ai 2.25)
+
+`runai_describe_real_fraction.json` (a 0.1-GPU job) and `runai_describe_real_crashloop.json` (a
+CPU-only job that failed 7 times) are real `runai training standard describe JOB -p PROJECT -o json
+--pod-limit -1 --event-limit -1` outputs, cut down to the fields the ledger reads and scrubbed of
+emails, IDs, IP addresses and project, node, workload and image names. They confirm:
+
+- `general.phase` (not a top-level `phase`), and `general.submittedBy`;
+- `compute.requestedResources.gpuCompute` is `{"requested": 0.1}`, while
+  `compute.allocatedResources.gpuCompute` reads `0` once the job has ended;
+- `podsInfo.pods[]` carry `completedAt` but no start time, so the event window is used;
+- `events[]` with `reason` and `createdAt`; a job ends at `Completed` ("RunaiJob completed") or
+  `BackoffLimitExceeded`.

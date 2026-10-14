@@ -19,11 +19,12 @@ project-specific value is discovered at runtime in §3 rather than hard-coded.
 | *unverified* | inferred; treat as a hypothesis |
 
 **The platform changed in October 2026.** A maintenance window upgraded Apollo to **Run:ai 2.25**
-(CLI `runai-cli/2.25.28` seen 2026-10-14), the NVIDIA driver from 550.163.01 to **580.82.07**,
+(CLI `runai-cli/2.25.28`), the NVIDIA driver from 550.163.01 to 580 (`nvidia-smi` reports
+**580.173.02**, *verified* 2026-10-14; SIH's notice said 580.82.07),
 the GPU and Network Operators to 25.10, Knative Serving to 1.19, and the nodes' operating
-systems. Facts verified before 2026-10-08 were taken on Run:ai 2.24 with driver 550. Most
-describe the scheduler and CLI rather than the driver, but re-check one before building on it if
-the cluster behaves differently. The CLI auto-updates, so re-run §3 when a command's shape looks
+systems. Facts verified before 2026-10-08 were taken on Run:ai 2.24 with driver 550. The ones
+that matter most were re-checked on 2026-10-14 and carry that date; re-check any other before
+building on it if the cluster behaves differently. The CLI auto-updates, so re-run §3 when a command's shape looks
 wrong. Official docs: <https://sydney-informatics-hub.github.io/gpu-cluster-onboarding-guide/>.
 
 **Companion guide.** [`GPU_EFFICIENCY_GUIDE.md`](GPU_EFFICIENCY_GUIDE.md) covers getting the
@@ -167,8 +168,8 @@ The list commands take `--json` instead (vendor docs: CLI help, 2.25).
 
 **Describe a template before you use it.** `template describe` shows the image, the arguments,
 the storage rights and the priority it will submit with. That is how the data-transfer copyparty
-template's default shows up: anonymous admin rights over the whole PVC (*verified* 2026-09-29;
-see §4).
+template's default shows up: anonymous admin rights over the whole PVC (*verified* 2026-09-29,
+unchanged on 2026-10-14; see §4).
 
 **Re-discover rather than reuse notes.** Presets change between sessions: `fifth-gpu` and
 `two-gpus-vllm` were not in the 2026-09-22 list but appeared by 2026-09-29 (*verified*).
@@ -190,17 +191,26 @@ EOF
 **Ask the user which directory under `$MOUNT` is theirs.** The mount root is typically shared
 across everyone in the project and is usually **not writable** — see §7.
 
-**Globus discovery (optional, for §6.7).** Globus can reach project PVCs through a Globus
-collection, as well as RDS and other institutions. The collection names come from SIH's Globus
-page on the Research Computing wiki, or from the user. Don't guess them. After the user's
-`globus login` (`[human]`):
+**Globus discovery (optional, for §6.7).** Globus reaches Apollo, RDS and other institutions.
+After the user's `globus login` (`[human]`), find the collections and confirm the IDs with the
+user (all *verified* 2026-10-14):
 
 ```bash
-globus endpoint search "<name from the wiki or the user>"   # note the collection IDs
+globus endpoint search "University of Sydney"
 ```
 
-Then find where `$WORKDIR` appears inside the PVC collection, rather than assuming the paths
-match. Write a marker from inside the cluster (free CPU job, §6.2), and look for it through Globus:
+- Apollo has two collections: **"The University of Sydney Apollo GPU cluster (on-campus
+  transfers)"** and **"... (off-campus transfers)"**. They are high-assurance GCSv5 mapped
+  collections, and project storage appears under `/mnt/gpu/<project>/`.
+- Each RDS project has its own pair: **"PRJ-<shortcode> on Sydney RDS (on-campus transfers)"**
+  and **"(off-campus transfers)"**. Use the on-campus pair between RDS and Apollo, and the
+  off-campus collections from a laptop off campus (*unverified* rule of thumb, from the names).
+- **Not every PVC is exported.** A project's directory appears under `/mnt/gpu/` only if SIH
+  exported it. An admin-created PVC checked on 2026-10-14 was not. If the project's directory is
+  missing, ask SIH rather than using another route for sizeable data.
+
+`globus ls` worked straight after `globus login`, with no extra consent. Then find where
+`$WORKDIR` appears inside the collection, rather than assuming the paths match. Write a marker from inside the cluster (free CPU job, §6.2), and look for it through Globus:
 
 ```bash
 scripts/apollo_run.sh 'date > "$WORKDIR/.globus_probe"'
@@ -340,8 +350,9 @@ data-heavy pipeline, and that is the most common bad pick. Attach one with `--co
 trivial check needs `--cpu-core-request` / `--cpu-memory-request` alongside it.
 
 **What a fraction looks like from inside.** `nvidia-smi` in a fractional pod reports only the
-fraction's memory: 14,378 MiB of 143,771 at 0.1 (*verified* 2026-09-29, before the driver
-upgrade). That confirms you got a fraction. A fraction is time-shared, so timings measured on one
+fraction's memory: 14,378 MiB of 143,771 at 0.1 (*verified* 2026-09-29 and again 2026-10-14 on
+driver 580). Its utilisation, though, reflects the whole GPU: a 0.1 job running a matmul loop
+alone read 92–100 % (*verified* 2026-10-14). That confirms you got a fraction. A fraction is time-shared, so timings measured on one
 are not throughput figures. Use a fraction to test a code path, and a whole GPU to measure speed.
 
 Use raw flags only when no preset fits, and say why when you do:
@@ -359,7 +370,7 @@ to. Requesting a **fraction** of a GPU is the cheapest way to test an image or a
 a whole GPU only when the work genuinely needs one.
 
 **`--large-shm` whenever DataLoader workers are used, GPU or not.** Without it `/dev/shm` is 64M;
-with it, 2T (*verified* 2026-09-29). A CPU job with 8 DataLoader workers and no `--large-shm` died
+with it, 2T (*verified* 2026-09-29 and 2026-10-14). A CPU job with 8 DataLoader workers and no `--large-shm` died
 with (*verified* 2026-10-01):
 
 ```
@@ -368,7 +379,7 @@ ERROR: Unexpected bus error encountered in worker. This might be caused by insuf
 
 **Set thread counts to the cores you requested.** Pods have no CPU limit. In a pod requesting 8
 cores, `nproc` printed 224, `/sys/fs/cgroup/cpu.max` was `max 100000`, and torch defaulted to 112
-intra-op threads (*verified* 2026-10-01). One single-process feature extraction ran about 4×
+intra-op threads (*verified* 2026-10-01; `nproc` and `cpu.max` unchanged on 2026-10-14). One single-process feature extraction ran about 4×
 slower with default threading than with one thread. The request is a guarantee, not a limit, and
 the node is shared, so put this in every job command:
 
@@ -437,9 +448,10 @@ four traps that catch hand-written submissions:
 1. **The command is parsed twice:** locally, then by the pod's `bash -c`. A `>` inside a quoted
    regex became a redirection in the pod and created a stray empty file in a shared project
    directory (*verified* 2026-09-29). The scripts send the command base64-encoded and decode it in
-   the pod.
-2. **A failing command loops.** Run:ai re-creates a pod whose container exits non-zero, even with
-   `--backoff-limit 0` (§6.5). The scripts' container records the real exit code, prints
+   the pod; the same command round-tripped byte for byte, with no stray file (*verified*
+   2026-10-14). A throwaway job took about 20 s end to end that day.
+2. **A failing command loops.** Run:ai re-creates a pod whose container exits non-zero, and
+   ignores `--backoff-limit 0` (§6.5). The scripts' container records the real exit code, prints
    `[apollo] exit <rc>`, and exits 0. The script then reads the code back from the logs.
 3. **Logs race the phase.** `logs` can answer `workload is not ready to stream: pod is not ready`
    for a few seconds even after the phase is terminal (*verified* 2026-09-30 and 2026-10-01). The
@@ -465,7 +477,7 @@ CMD_B64=$(printf '%s' 'ls -la "$WORKDIR"' | base64 | tr -d '\n')
 "$RUNAI" training submit "$NAME" -p "$PROJECT" \
   -i <site base image> \
   --cpu-core-request 1 --cpu-memory-request 2G --run-as-user \
-  --existing-pvc "claimname=$PVC,path=$MOUNT" -e WORKDIR="$WORKDIR" --backoff-limit 0 \
+  --existing-pvc "claimname=$PVC,path=$MOUNT" -e WORKDIR="$WORKDIR" --backoff-limit 1 \
   --command -- bash -c "echo $CMD_B64 | base64 -d > /tmp/c.sh; bash /tmp/c.sh; echo \"[apollo] exit \$?\"; exit 0"
 ```
 
@@ -517,8 +529,8 @@ uid=<your uid> gid=10000(dgxgroup) groups=10000(dgxgroup),...
 HTTP/2 200
 ```
 
-Since the October 2026 maintenance the driver should read **580.82.07** (per SIH's maintenance
-notice; re-check). On a 0.1 fraction, `memory.total` reads about a tenth of the full figure (§5.1).
+Since the October 2026 maintenance the driver reads **580.173.02** (*verified* 2026-10-14; SIH's
+notice said 580.82.07). On a 0.1 fraction, `memory.total` reads 14378 MiB (§5.1).
 
 The `compute_cap` line matters: build GPU libraries for that architecture (9.0 = Hopper/sm_90).
 The `HTTP/2 200` line means **pods have outbound internet**, so public datasets and packages can
@@ -527,16 +539,24 @@ assuming — network policy can change.
 
 **CUDA versions after the driver upgrade.** Driver 580 runs CUDA 13.0 and older natively
 (vendor docs: NVIDIA's CUDA compatibility table). So CUDA 12.x and 13.0 wheels and images need
-no forward-compatibility libraries. Two consequences:
-- **Do not put an image's `/usr/local/cuda/compat/lib` on `LD_LIBRARY_PATH`.** That directory
-  holds a forward-compatibility `libcuda` for an older driver. NVIDIA lists every CUDA 12.x
-  compat package as incompatible with driver 580. Loading one over the host driver is the
-  documented cause of `CUDA error 803: system has unsupported display driver / cuda driver
-  combination` (vendor docs; *unverified* on Apollo). An environment built on the old driver with
-  that path first on `LD_LIBRARY_PATH` needs it removed. Check that environment with a fraction
-  before its next real job.
-- Only CUDA 13.1 or newer would need a forward-compatibility package again, and then only one
-  NVIDIA lists as compatible with 580.
+no forward-compatibility libraries. What was checked on Apollo, with `nvcr.io/nvidia/pytorch:25.06-py3`
+on a 0.1 fraction (*verified* 2026-10-14):
+- the image's default `LD_LIBRARY_PATH` lists `/usr/local/cuda/compat/lib` (Run:ai's `--command`
+  skips NGC's entrypoint), but at runtime that directory holds **no** `libcuda`, so the host's
+  `libcuda.so.580.173.02` is loaded either way;
+- torch 2.8 (CUDA 12.9) found the GPU and ran CUDA operations with the image's default path, and
+  with the compat entry removed.
+
+So a pre-upgrade venv on that image keeps working. In general, a forward-compatibility `libcuda`
+loaded over a newer driver is the documented cause of `CUDA error 803: system has unsupported
+display driver / cuda driver combination` (vendor docs). If a custom image or environment shows
+it, take its compat directory off `LD_LIBRARY_PATH`. Only CUDA 13.1 or newer would need a
+forward-compatibility package again.
+
+One unexplained start (*observed once*, 2026-10-14): a fraction job's first two pods failed
+about 3 s into their first CUDA call and were re-created; the third ran. An identical job minutes
+later worked first time. The failed pods' logs were lost (§6.5 rule 2). If a GPU job fails at
+CUDA initialisation once, resubmit once before debugging.
 
 ### 6.4 Interactive workspaces `[mixed — see below]`
 
@@ -605,8 +625,9 @@ code matters; do not expect `$?` to be the remote command's.
   short `exec`s. A dropped `exec` connection then kills nothing.
 - `exec -i` cannot take piped stdin without a TTY: it fails with
   `Error: failed to exec output. inappropriate ioctl for device`. Run:ai also rejects any
-  `--command` or exec payload over **10,000 characters**
-  (`value for Value must have at most 10000 characters`). Together these rule out pasting code
+  `--command` over **10,000 characters**
+  (`value for Value must have at most 10000 characters`). Both *verified* again 2026-10-14, as
+  was `exec` hiding the remote exit code. Together these rule out pasting code
   through stdin or a long command line. `scripts/pvc_sync_code.sh` sends files as base64 chunks
   of plain `exec` calls and checks a sha256 round trip (§6.6).
 
@@ -678,7 +699,7 @@ and the code path checked on a fraction.
   --existing-pvc "claimname=$PVC,path=$MOUNT" \
   --working-dir "$WORKDIR" \
   --large-shm -e OMP_NUM_THREADS=<cores> \
-  --backoff-limit 0 --pod-running-timeout 30m \
+  --backoff-limit 1 --pod-running-timeout 30m \
   --command -- bash "$WORKDIR/tools/train_wrapper.sh" \
       --log "$WORKDIR/logs/<job-name>.log" --done-marker "$WORKDIR/runs/<run>/DONE" \
       -- python train.py --resume auto
@@ -688,27 +709,29 @@ Prefer a named `--compute` preset over hand-rolled CPU/memory flags: site admins
 `train_wrapper.sh` (from `scripts/`, copied once into the project directory, §6.6) implements the
 first four rules below. If you don't use it, follow them by hand.
 
-**Rule 1 — a crashing job must not loop.** Without care, a job whose container exits non-zero is
-re-created by Run:ai, and `--backoff-limit 0` does **not** stop it (*verified* 2026-10-01, twice):
+**Rule 1 — a crashing job must not loop.** A job whose container exits non-zero is re-created by
+Run:ai, and **`--backoff-limit 0` is ignored**: Run:ai treats it as unset, so Kubernetes' default
+of 6 retries applies:
 - a 1-GPU job crashed on the same batch about every 2.5 min and was re-created five times (pods
-  `…-0-0` to `…-0-4`), holding the GPU throughout;
-- a CPU job produced four `Error` pods 12–18 s apart.
+  `…-0-0` to `…-0-4`) before it was stopped, holding the GPU throughout (*verified* 2026-10-01);
+- on Run:ai 2.25, a CPU job that exits 1 ran **7 pods** in about 50 s and ended with
+  `RunaiJob has reached the specified backoff limit`. Adding `--restart-policy Never` changed
+  nothing. **`--backoff-limit 1` is honoured**: 2 pods, then Failed (*verified* 2026-10-14).
 
-So make the **container** exit 0 after recording the real exit code:
+So submit with `--backoff-limit 1` as a cap, and make the **container** exit 0 after recording
+the real exit code, so a crash ends the job at once:
 
 ```bash
 python train.py …; rc=$?; echo "[job] exit $rc"; exit 0
 ```
 
 The scheduler then ends the job instead of looping. A preemption is an eviction, not a container
-exit, so it is re-queued either way. Run:ai 2.25 also has `--restart-policy Always|OnFailure|Never`
-(vendor docs: CLI help). Whether `Never` with `--backoff-limit 0` ends the loop on Apollo is
-*unverified*; keep the exit-0 rule regardless. How `--backoff-limit` interacts with eviction is
-also *unverified*.
+exit, so it is re-queued either way. How `--backoff-limit` interacts with eviction is
+*unverified*.
 
 **Rule 2 — the job's own log goes on the PVC.** The stdout of a re-created or deleted pod is lost
-(*verified* 2026-10-01). `logs --pod=<pod>` reads one pod only while it exists. `--previous`
-exists (vendor docs). The 2.25 web UI can show logs from a container's earlier instances (vendor
+(*verified* 2026-10-01). On 2026-10-14, `logs --pod=<pod>` for re-created pods of a finished job
+answered `one of requested resource was not found`, and `--previous` found nothing either. The 2.25 web UI can show logs from a container's earlier instances (vendor
 docs; *unverified* on Apollo). So any job whose failure you may need to diagnose writes its own
 log. Put this near the top of its script:
 
@@ -955,10 +978,14 @@ globus task show <task id>
 ```
 
 The user can equally start the transfer from the Globus web app. The agent then does only the
-checks before and after. Two things are *unverified* until checked live:
+checks before and after. Apollo's collections and their `/mnt/gpu/<project>/` layout are
+described in §3 (*verified* 2026-10-14). Still *unverified*:
+- how a project's `/mnt/gpu/<project>/` maps onto the pod's `$MOUNT` (run the marker probe in
+  §3);
 - the ownership and mode of files Globus writes on a shared PVC (check with `ls -ln` in a CPU job
   after the first transfer, §7);
-- whether a Globus transfer needs any Run:ai workload at all.
+- whether a Globus transfer needs any Run:ai workload at all. The collection is served from the
+  storage side, so probably not.
 
 #### (b) RDS by sftp from the data-transfer workspace `[agent prepares, human types the password]`
 
@@ -988,7 +1015,8 @@ large or repeated transfers. Never automate this by storing a password or SSH ke
 Use this only when there is no RDS and no Globus Connect Personal. It needs no credentials, which
 is exactly why it must be restricted:
 1. `runai template describe data-transfer-copyparty -p "$PROJECT" -o yaml` shows the default
-   arguments, `--chdir /tmp -v /w:/:A --theme 1`: the **whole PVC, anonymous admin** (§4).
+   arguments, `--chdir /tmp -v /w:/:A --theme 1`: the **whole PVC, anonymous admin** (§4), and
+   the container port, 3923 (*verified* 2026-10-14).
 2. Submit with the volumes overridden to the project's own directories, read-write without
    delete. The arguments after `--` are copyparty's. This shape worked on 2026-09-29:
 
@@ -1010,13 +1038,20 @@ is exactly why it must be restricted:
 5. Verify with the manifest, then suspend or delete the workspace. Its server is unauthenticated
    while it runs.
 
-What copyparty does on the PVC (all *verified* 2026-09-29):
+What copyparty does on the PVC:
 - **It never overwrites.** Without delete permission, a second PUT to an existing name stores a
-  renamed copy. So `pvc_upload.py` reports a size mismatch for a human decision rather than
-  re-sending.
-- **It leaves a `.hist/` index in every directory it serves.** Report it; `manifest.py` ignores
-  it.
-- Directories it creates come out `750` and files `660` (§7).
+  renamed copy (*verified* 2026-09-29). So `pvc_upload.py` reports a size mismatch for a human
+  decision rather than re-sending (*verified* 2026-10-14).
+- **It may leave a `.hist/` index in the directories it serves** (seen 2026-09-29; not seen
+  2026-10-14). Report it if present; `manifest.py` ignores it.
+- Directories it creates come out `750` and files `660` (§7; *verified* again 2026-10-14).
+
+A full round trip was *verified* 2026-10-14 on a workspace that started in seconds:
+- upload with `pvc_upload.py` (dry run, `--one-file`, full, and a re-run that skipped
+  everything);
+- `manifest.py check` on the PVC;
+- download with `pvc_download.py`;
+- a local `manifest.py check`, with the same digest on all three sides.
 
 **Results back to a laptop** use a second workspace serving read-only (`:r`), and
 `scripts/pvc_download.py`. That script writes `.part` files, checks each against a `manifest.py`
@@ -1177,7 +1212,8 @@ members cannot, and there is no `sudo`. Ask the site support desk for a director
 project group and group-writable (mode `2775` keeps group ownership on files created inside it).
 
 **What you write gets your uid and your primary group.** That holds for files written by pods
-run with `--run-as-user`. Directories created by a copyparty transfer came out `750` and files
+run with `--run-as-user`. Inside a directory with default ACLs, new directories inherit them: a
+pod's `mkdir` came out `drwxrwx---+` (*verified* 2026-10-14). Directories created by a copyparty transfer came out `750` and files
 `660` (*verified* 2026-09-29): group members could read but not add to them. For working
 directories other members must write to, set `umask 002` in the job's command, or fix the modes
 after a transfer (`chmod -R g+w`, in a CPU job, on your own files only). The mode of files written
@@ -1255,6 +1291,8 @@ Facility of the University of Sydney."* If the work being run leads to a paper, 
 | pods `<job>-0-1`, `-0-2`, … appearing after an `Error` | the container exited non-zero and Run:ai re-created it, `--backoff-limit 0` notwithstanding | stop the job (ask); make the container exit 0 after logging its code (§6.5 rule 1) |
 | pod in `ContainerCreating` or `Init:0/1` for many minutes, events stop at `Bound` | a slow image pull, or a stuck node; `--pod-running-timeout` does not end it | GPU job: report the node, offer `--exclude-node` (§6.5 rule 5); CPU: wait, or use a training job (§6.4) |
 | `ERROR: Unexpected bus error encountered in worker. This might be caused by insufficient shared memory (shm).` | DataLoader workers with the default 64M `/dev/shm` | resubmit with `--large-shm` (§5.1) |
+| `RunaiJob has reached the specified backoff limit` (phase message) | the container kept exiting non-zero: 7 pods with `--backoff-limit 0` (treated as unset), 2 with `1` | read the job's PVC log; exit-0 rule and `--backoff-limit 1` (§6.5 rule 1) |
+| `Error: failed to print logs. one of requested resource was not found: not found` (with `--pod`) | that pod has gone (re-created or the job finished) | its output is lost; read the job's own log on the PVC (§6.5 rule 2) |
 | `CUDA error 803: system has unsupported display driver / cuda driver combination` | a forward-compat `libcuda` loaded over the newer host driver (vendor docs) | remove `/usr/local/cuda/compat/lib` from `LD_LIBRARY_PATH` (§6.3) |
 | `unknown command "logs" for "runai training"` | missing sub-noun | `runai training standard logs` |
 | `unknown flag: --project` on some subcommands | flag name varies per subcommand | use `-p`, and check `--help` for that subcommand |
@@ -1376,9 +1414,14 @@ scripts/gpu_ledger.py add runai --json describe.json --purpose "<why this ran>"
 
 `--pod-limit -1 --event-limit -1` matters: `describe` shows at most 10 pods and 50 events by
 default (vendor docs: CLI help), and a crash loop needs every pod counted. The ledger records both
-fraction × wall and whole-GPU wall, and prints which JSON fields it used. Its field paths come
-from captures made before the 2.25 upgrade and are partly *unverified*; if it reports an
-unrecognised shape, fall back to `gpu_ledger.py add manual`.
+fraction × wall and whole-GPU wall, and prints which JSON fields it used. Its field paths were checked
+against real 2.25 output (*verified* 2026-10-14):
+- the phase is `general.phase`, and the request is `compute.requestedResources.gpuCompute.requested`;
+- the allocated amount reads 0 once a job has ended;
+- a finished job does not always get a `Completed` event, so the ledger then ends the window at
+  the last pod's `completedAt`.
+
+If it reports an unrecognised shape, fall back to `gpu_ledger.py add manual`.
 
 ### 11.6 Spending strategy
 

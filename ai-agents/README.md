@@ -39,7 +39,8 @@ real charge against someone's grant, and a shared PVC is readable by the whole p
 backed up. The guide makes an agent ask before it does anything of that kind.
 
 Commands marked *verified* in the guide were run against the live cluster on the date given.
-Those dated before 2026-10-08 used Run:ai 2.24. The platform was upgraded to Run:ai 2.25 and the
+Those dated before 2026-10-08 used Run:ai 2.24; the key ones were re-checked on Run:ai 2.25 on
+2026-10-14. The platform was upgraded to Run:ai 2.25 and the
 NVIDIA 580 driver in October 2026, and the guide says which facts that affects.
 
 ## Point your agent at it

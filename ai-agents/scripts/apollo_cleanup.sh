@@ -12,8 +12,9 @@
 #
 # Only finished jobs (Completed, Succeeded, Failed, Stopped, Error) are deleted; Running,
 # Pending and Initializing ones are listed and never touched. --all-tags never deletes, even
-# with --yes, because other members' jobs match too. Suspended workspaces in the project are
-# listed as a reminder and never deleted; the command to delete one is printed for the user.
+# with --yes, because other members' jobs match too. Your own suspended workspaces (by
+# `submittedBy` in `runai workspace describe`) are listed as a reminder, with the command to
+# delete one, and never deleted here; other members' are only counted.
 #
 # Reads `runai training list --json` and `runai workspace list --json`. Their field names are
 # not documented, so they are read tolerantly (a list, or an object holding it under
@@ -122,14 +123,38 @@ else
   echo "Dry run: nothing deleted. Re-run with --yes to delete the $n_delete marked 'would delete'."
 fi
 
+# Suspended workspaces: the list does not say who submitted them, so describe each (up to 30)
+# and show only the caller's. A delete command for someone else's workspace on a shared project
+# is the last thing to hand an agent.
 if grep -q '^W' "$APOLLO_TMP/rows"; then
-  echo
-  echo "Suspended workspaces in project $PROJECT (never deleted here; they may belong to other"
-  echo "members). If one is yours and no longer needed, the user can delete it:"
+  me=""
+  if [[ $APOLLO_WHOAMI =~ User\ ([^[:space:]]+)\ logged ]]; then me=${BASH_REMATCH[1]}; fi
+  mine="" others=0 unknown=0 n=0
   while IFS=$'\t' read -r kind name phase age _; do
     [ "$kind" = W ] || continue
-    printf '  %-40s %-10s %-7s runai workspace delete %s -p %s\n' \
-      "$name" "$phase" "$age" "$name" "$PROJECT"
+    n=$((n + 1))
+    if [ "$n" -gt 30 ]; then unknown=$((unknown + 1)); continue; fi
+    owner=$("$RUNAI" workspace describe "$name" -p "$PROJECT" -o json 2>/dev/null |
+      python3 -c 'import json,sys; print((json.load(sys.stdin).get("general") or {}).get("submittedBy") or "")' \
+      2>/dev/null) || owner=""
+    if [ -z "$owner" ] || [ -z "$me" ]; then
+      unknown=$((unknown + 1))
+    elif [ "$owner" = "$me" ]; then
+      mine="$mine$(printf '  %-40s %-10s %-7s runai workspace delete %s -p %s' \
+        "$name" "$phase" "$age" "$name" "$PROJECT")"$'\n'
+    else
+      others=$((others + 1))
+    fi
   done <"$APOLLO_TMP/rows"
+  echo
+  if [ -n "$mine" ]; then
+    echo "Your suspended workspaces in project $PROJECT (never deleted here). Deleting one destroys"
+    echo "everything in it that is not on the PVC; if one is no longer needed, the user can run:"
+    printf '%s' "$mine"
+  else
+    echo "No suspended workspaces of yours in project $PROJECT."
+  fi
+  [ "$others" = 0 ] || echo "($others suspended workspace(s) belong to other members; not shown.)"
+  [ "$unknown" = 0 ] || echo "($unknown suspended workspace(s) whose owner could not be read; not shown.)"
 fi
 exit 0

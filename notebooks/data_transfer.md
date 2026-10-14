@@ -27,7 +27,12 @@ Check your project's data rules before moving research data anywhere, including 
 [Globus](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer) moves large amounts of data reliably. It retries failed files, checks every file's checksum after transfer, and keeps going if you close your browser.
 
 1. Go to [app.globus.org](https://app.globus.org) and log in with your University of Sydney account.
-2. Open the **File Manager**. In one panel, search for the collection you are copying **from**; in the other, the collection you are copying **to**. The names of the Apollo GPU cluster and RDS collections are listed on the University's [Globus page](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer). To transfer from or to your own computer, install [Globus Connect Personal](https://www.globus.org/globus-connect-personal) and select your computer's collection.
+2. Open the **File Manager**. In one panel, search for the collection you are copying **from**; in the other, the collection you are copying **to**:
+   * the GPU cluster is **The University of Sydney Apollo GPU cluster (on-campus transfers)**, or **(off-campus transfers)** when the other end is off campus. Project storage is under `/mnt/gpu/<your project>/`. If your project is not there, ask SIH whether it has been made available to Globus;
+   * your RDS project is **PRJ-&lt;your project short ID&gt; on Sydney RDS (on-campus transfers)**, or **(off-campus transfers)**;
+   * to transfer from or to your own computer, install [Globus Connect Personal](https://www.globus.org/globus-connect-personal) and select your computer's collection.
+
+   More detail is on the University's [Globus page](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/3492052996/Globus+Data+Transfer).
 3. Browse to your project's directory on the PVC (not the shared root, which is not writable) and to the source files, and select what to copy.
 4. Open **Transfer & Timer Options**:
    * Tick **sync - only transfer new or changed files**, so that re-running the same transfer copies only what changed.

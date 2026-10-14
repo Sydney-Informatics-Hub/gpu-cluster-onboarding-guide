@@ -26,13 +26,19 @@ TRAININGS = {"workloads": [
     {"name": UNRELATED, "phase": "Completed"},
 ]}
 WORKSPACES = [{"name": "ws-old", "phase": "Stopped"}, {"name": "ws-live", "phase": "Running"},
-              {"name": "ws-paused", "status": "Suspended"}]
+              {"name": "ws-paused", "status": "Suspended"}, {"name": "ws-theirs", "phase": "Stopped"}]
+# `runai workspace describe -o json` holds the submitter at general.submittedBy (verified
+# 2026-10-14); the fake's whoami reports user@example.org.
+WS_OWNERS = {"ws-old": {"general": {"submittedBy": "user@example.org"}},
+             "ws-paused": {"general": {"submittedBy": "user@example.org"}},
+             "ws-theirs": {"general": {"submittedBy": "someone.else@example.org"}}}
 
 
 class ApolloCleanup(unittest.TestCase):
     def setUp(self):
         self.sb = Sandbox(runai_scenario={"list_training": TRAININGS,
-                                          "list_workspace": WORKSPACES})
+                                          "list_workspace": WORKSPACES,
+                                          "describe_json": WS_OWNERS})
 
     def tearDown(self):
         self.sb.cleanup()
@@ -90,6 +96,8 @@ class ApolloCleanup(unittest.TestCase):
         self.assertIn("runai workspace delete ws-old -p test-proj", r.stdout)
         self.assertIn("runai workspace delete ws-paused -p test-proj", r.stdout)
         self.assertNotIn("ws-live", r.stdout)
+        self.assertNotIn("ws-theirs", r.stdout)
+        self.assertIn("1 suspended workspace(s) belong to other members", r.stdout)
         self.assertEqual(calls_matching(self.sb.runai_calls(), "workspace", "delete"), [])
 
     def test_kubernetes_style_items(self):

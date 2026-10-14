@@ -232,7 +232,7 @@ class Submit(ApolloRunBase):
         self.assertEqual(r.returncode, 0, r.stderr)
         argv = self.submits()[0]
         head = argv[:argv.index("--command")]
-        self.assertEqual(self.flag_values(head, "--backoff-limit"), ["0"])
+        self.assertEqual(self.flag_values(head, "--backoff-limit"), ["1"])
         self.assertEqual(self.flag_values(head, "-e"),
                          ["MOUNT=" + str(self.sb.pvc), "WORKDIR=" + str(self.sb.workdir)])
         self.assertEqual(self.flag_values(head, "--cpu-core-request"), ["1"])

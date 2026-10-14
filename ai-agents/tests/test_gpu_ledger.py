@@ -228,6 +228,35 @@ class AddRunai(unittest.TestCase):
         self.assertIn("0.400 as a fraction", r.stdout)
         self.assertIn("4.000 as whole GPUs", r.stdout)
 
+    def test_real_fraction_capture(self):
+        # scrubbed `describe -o json` of a 0.1-GPU job, Run:ai 2.25 (2026-10-14): the phase is under
+        # general, the request is {"requested": 0.1}, allocated reads 0 after the job ended, and
+        # pods carry only completedAt, so the event window is used
+        r = self.add("real_fraction")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("1 device at fraction 0.1 from compute.requestedResources.gpuCompute",
+                      r.stdout)
+        self.assertIn("events Bound -> Completed", r.stdout)
+        row = self.only_row()
+        self.assertEqual((row["workload"], row["fraction"]), ("job-a", "0.1"))
+
+    def test_terminal_phase_without_terminal_event_ends_at_last_pod(self):
+        # seen live: a Completed job whose events stop at Started; its pod has completedAt
+        d = json.loads((FIXTURES / "runai_describe_real_fraction.json").read_text())
+        d["events"] = [e for e in d["events"] if e["reason"] != "Completed"]
+        last = max(p["completedAt"] for p in d["podsInfo"]["pods"])
+        r = self.add(self.write_json(d))
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("last pod completedAt", r.stdout)
+        self.assertIn(last, r.stdout)
+
+    def test_real_cpu_only_capture_is_refused_clearly(self):
+        # a CPU-only crash-loop job (7 pods, BackoffLimitExceeded): no GPU-hours to record
+        r = self.add("real_crashloop")
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("CPU-only", r.stdout + r.stderr)
+        self.assertFalse(self.path.exists())
+
     def test_recreated_pods_use_the_union_of_pod_windows(self):
         r = self.add("recreated_pods")
         self.assertEqual(r.returncode, 0, r.stderr)

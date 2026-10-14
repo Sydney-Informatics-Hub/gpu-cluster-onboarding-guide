@@ -1,0 +1,340 @@
+{
+ "general": {
+  "name": "job-a",
+  "phase": "Failed",
+  "phaseMessage": "RunaiJob has reached the specified backoff limit",
+  "createdAt": "2026-10-14T05:17:36.764369Z",
+  "updatedAt": "2026-10-14T05:18:33.776998Z",
+  "project": "test-proj",
+  "submittedBy": "user@example.org",
+  "type": "Training"
+ },
+ "compute": {
+  "requestedResources": {
+   "gpuCompute": {
+    "requested": 0
+   },
+   "cpuCores": {
+    "requested": 0.5
+   },
+   "gpuMemory": {
+    "request": "",
+    "limit": ""
+   },
+   "cpuMemory": {
+    "request": "1G",
+    "limit": ""
+   }
+  },
+  "allocatedResources": {
+   "gpuCompute": 0,
+   "cpuCores": 0,
+   "gpuMemory": "",
+   "cpuMemory": ""
+  },
+  "requestedNodePools": [
+   "default"
+  ],
+  "currentNodePools": [
+   "default"
+  ]
+ },
+ "podsInfo": {
+  "pods": [
+   {
+    "name": "job-a-0-0",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:17:46Z"
+   },
+   {
+    "name": "job-a-0-1",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:17:55Z"
+   },
+   {
+    "name": "job-a-0-2",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:18:01Z"
+   },
+   {
+    "name": "job-a-0-3",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:18:11Z"
+   },
+   {
+    "name": "job-a-0-4",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:18:21Z"
+   },
+   {
+    "name": "job-a-0-5",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:18:26Z"
+   },
+   {
+    "name": "job-a-0-6",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:18:31Z"
+   }
+  ]
+ },
+ "events": [
+  {
+   "createdAt": "2026-10-14T05:17:39Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-0"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:43Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-0 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:43Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:44Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:45Z",
+   "reason": "Pulled",
+   "message": "Container image \"registry.example/base-image\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:45Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:46Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:49Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-1"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:53Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:53Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-1 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:54Z",
+   "reason": "Pulled",
+   "message": "Container image \"registry.example/base-image\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:54Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:54Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:55Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:58Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-2 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:58Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:58Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-2"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:59Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:00Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:00Z",
+   "reason": "Pulled",
+   "message": "Container image \"registry.example/base-image\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:01Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:04Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-3"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:08Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-3 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:08Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:09Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:10Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:10Z",
+   "reason": "Pulled",
+   "message": "Container image \"registry.example/base-image\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:11Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:14Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-4"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:19Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:19Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-4 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:19Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:20Z",
+   "reason": "Pulled",
+   "message": "Container image \"registry.example/base-image\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:20Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:21Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:23Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-5"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:24Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-5 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:24Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:25Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:25Z",
+   "reason": "Pulled",
+   "message": "Container image \"registry.example/base-image\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:25Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:26Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:28Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-6"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:29Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:29Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-6 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:30Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:30Z",
+   "reason": "Pulled",
+   "message": "Container image \"registry.example/base-image\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:30Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:31Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:33Z",
+   "reason": "BackoffLimitExceeded",
+   "message": "RunaiJob has reached the specified backoff limit"
+  }
+ ]
+}
