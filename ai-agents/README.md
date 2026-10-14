@@ -98,7 +98,8 @@ guide tells the agent to write the request out for you to paste.
 
 ## The scripts
 
-Each script in [`scripts/`](scripts/) has a usage header, needs only Python 3.9+ or bash, and
+Each script in [`scripts/`](scripts/) has a usage header, needs only bash or Python ≥ 3.9 with the
+standard library (3.12 is the version they are developed and tested on), and
 reads the `cluster.env` file the guide's discovery step writes. The job scripts never request a
 GPU, so they cost nothing against your allocation. The transfer scripts do nothing until given
 `--yes`.

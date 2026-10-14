@@ -114,7 +114,7 @@ def parse_iso(text, what="time"):
         return datetime.now(timezone.utc).replace(microsecond=0)
     s = re.sub(r"[zZ]$", "+00:00", s)
     s = re.sub(r"([+-]\d\d)(\d\d)$", r"\1:\2", s)
-    # Python 3.9 accepts only 3 or 6 fractional digits; Kubernetes may give 0-9.
+    # fromisoformat before Python 3.11 accepts only 3 or 6 fractional digits; Kubernetes may give 0-9.
     m = re.match(r"^(.*?[T ]\d\d:\d\d(?::\d\d)?)(?:\.(\d+))?(.*)$", s)
     if m and m.group(2):
         s = m.group(1) + "." + (m.group(2) + "000000")[:6] + m.group(3)

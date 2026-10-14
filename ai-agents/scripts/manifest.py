@@ -3,7 +3,7 @@
 
 The one integrity tool for every transfer route — Globus, sftp, copyparty, a download inside a
 pod. Build a manifest where the data is, move the data by any route, then check the copy where
-it landed. Standard library only (Python 3.9+), so it runs on a laptop and inside any pod.
+it landed. Standard library only (Python >= 3.9), so it runs on a laptop and inside any pod.
 
   manifest.py build ~/data/run1 -o run1.manifest                 # on the source (laptop)
   manifest.py build /Volumes/RDS/project/run1 -o run1.manifest   # RDS mounted as a network drive

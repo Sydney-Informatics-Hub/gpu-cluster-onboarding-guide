@@ -1,7 +1,8 @@
 """Shared test helpers: paths, a sandbox with fake CLIs on PATH, and a subprocess wrapper.
 
 Tests use only the standard library (unittest), so `python3 -m unittest discover -s ai-agents/tests`
-runs them on a stock Python 3.9 with nothing installed. pytest runs them too.
+runs them on any Python >= 3.9 with nothing installed (3.12 is the reference version). pytest
+runs them too.
 """
 import json
 import os

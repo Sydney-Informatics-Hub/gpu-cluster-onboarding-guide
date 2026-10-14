@@ -17,8 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        # 3.9 is the oldest Python the scripts promise to run on (macOS system Python).
-        python-version: ["3.9", "3.12"]
+        # 3.12 is the reference version; 3.9 is the minimum the scripts support (Python >= 3.9).
+        python-version: ["3.12", "3.9"]
     steps:
       - uses: actions/checkout@v4
 
