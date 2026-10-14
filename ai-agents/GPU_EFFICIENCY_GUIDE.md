@@ -439,7 +439,7 @@ scripts/gpu_ledger.py show
 | allocation record | `runai training standard describe <job> -p <project> -o json --pod-limit -1 --event-limit -1` | `sacct -j <id> --format=JobID,Start,End,AllocTRES` | pod events and status times | your own timer |
 | restart behaviour | re-creates failed pods even with `--backoff-limit 0` (*verified*); exit 0 after logging | `--requeue` only if asked | Job `backoffLimit`, `restartPolicy` | — |
 | stuck start | pod stays `ContainerCreating` past `--pod-running-timeout` (*verified*); exclude the node | `PD` with a reason in `squeue` | pod events | — |
-| restart count for `--restarts` | number of pods in `describe` | `sacct` requeue count | `restartCount` | — |
+| restart count for `--restarts` | pods listed in `describe`, minus 1 | `sacct` requeue count | `restartCount` | — |
 
 For Run:ai on Apollo specifically, see `APOLLO_AGENT_GUIDE.md` §6.5 and §11.
 

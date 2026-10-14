@@ -31,7 +31,8 @@
 #   EXCLUDE_NODE      node names to avoid, space-separated
 #   AUTO_DELETE       Run:ai deletes the job this long after it ends, as a backstop in case our
 #                     own cleanup fails (default 30m; empty disables; KEEP=1 disables it unless set)
-#   TIMEOUT_S         give up waiting after this many seconds (default 900)
+#   TIMEOUT_S         give up waiting after this many seconds (default 900). A job still
+#                     Running then is left in place, not deleted: raise this for long work
 #   STUCK_S           warn once if the job is not Running after this many seconds (default 180)
 #   POLL_S            seconds between status polls (default 5)
 #   LOG_RETRIES, LOG_RETRY_S   retries while logs are "not ready to stream" (default 6 x 5 s)
@@ -45,6 +46,7 @@ APOLLO_TMP=""
 APOLLO_WHOAMI=""
 APOLLO_PHASE=""
 APOLLO_RC=1
+APOLLO_AUTODEL=""   # the auto-deletion delay Run:ai accepted, if any
 _APOLLO_TAG=""
 
 # Settings that keep the value they already have when cluster.env is read, so that a one-off
@@ -241,6 +243,7 @@ _apollo_submit() {
     # if this CLI or cluster rejects it, submit once more without it.
     if out=$("$RUNAI" "${args[@]}" --auto-deletion-time-after-completion "$auto" \
       --command -- bash -c "$wrapper" 2>&1); then
+      APOLLO_AUTODEL=$auto
       return 0
     fi
     case $out in
@@ -370,10 +373,21 @@ apollo_job() {
   if [ -s "$APOLLO_TMP/rc" ]; then
     APOLLO_RC=$(cat "$APOLLO_TMP/rc")
     [ "$APOLLO_RC" = 0 ] || apollo_say "the command exited with status $APOLLO_RC"
+  elif [ "$timed_out" = 1 ] && [ "$APOLLO_PHASE" = Running ]; then
+    # Deleting a job that is still working would throw its work away, and deletes are the
+    # user's call: leave it, and say how to follow it.
+    APOLLO_RC=1
+    APOLLO_JOB=""
+    apollo_say "timed out after ${TIMEOUT_S:-900}s, but $name is still Running, so it was left" \
+      "in place. Follow it: runai training standard logs $name -p $PROJECT (the last line" \
+      "'[apollo] exit N' gives its exit code). Delete it when done:" \
+      "runai training standard delete $name -p $PROJECT${APOLLO_AUTODEL:+ (or Run:ai deletes it $APOLLO_AUTODEL after it ends)}." \
+      "Next time, raise TIMEOUT_S."
   elif [ "$timed_out" = 1 ]; then
     APOLLO_RC=1
     apollo_say "timed out after ${TIMEOUT_S:-900}s waiting for $name (phase:" \
-      "${APOLLO_PHASE:-never reported}); a first image pull can take several minutes — raise TIMEOUT_S"
+      "${APOLLO_PHASE:-never reported}); it never started, so it is deleted. A first image pull" \
+      "can take several minutes — raise TIMEOUT_S"
   else
     APOLLO_RC=1
     apollo_say "workload $name ended in phase $APOLLO_PHASE without reporting an exit code;" \

@@ -94,12 +94,22 @@ class ExitStatus(ApolloRunBase):
         self.assertEqual((r.returncode, r.stdout), (0, ""), r.stderr)
         self.assertEqual(len(self.deletes()), 1)
 
-    def test_timeout_reports_the_phase(self):
+    def test_timeout_leaves_a_running_job_in_place(self):
+        # deleting a job that is still working would throw its work away
         r = self.run_cmd("true", scenario={"running_polls": 10 ** 6, "simulate": False},
                          TIMEOUT_S=1)
         self.assertEqual(r.returncode, 1)
         self.assertIn("timed out", r.stderr)
-        self.assertIn("Running", r.stderr)
+        self.assertIn("still Running", r.stderr)
+        self.assertIn("runai training standard logs", r.stderr)
+        self.assertEqual(len(self.deletes()), 0)
+
+    def test_timeout_deletes_a_job_that_never_started(self):
+        r = self.run_cmd("true", scenario={"running_polls": 10 ** 6, "simulate": False,
+                                           "start_phase": "Pending"}, TIMEOUT_S=1)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("Pending", r.stderr)
+        self.assertIn("never started", r.stderr)
         self.assertEqual(len(self.deletes()), 1)
 
     def test_failed_workload_without_exit_code(self):

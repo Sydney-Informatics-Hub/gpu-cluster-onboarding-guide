@@ -444,9 +444,12 @@ four traps that catch hand-written submissions:
 3. **Logs race the phase.** `logs` can answer `workload is not ready to stream: pod is not ready`
    for a few seconds even after the phase is terminal (*verified* 2026-09-30 and 2026-10-01). The
    scripts retry.
-4. **Cleanup must happen.** The scripts delete their own job, retry once, print the name if that
-   still fails, and set a 30-minute auto-deletion backstop. `scripts/apollo_cleanup.sh` lists
-   anything left over.
+4. **Cleanup must happen, but not of live work.** The scripts delete their own job, retry once,
+   print the name if that still fails, and set a 30-minute auto-deletion backstop.
+   `scripts/apollo_cleanup.sh` lists anything left over. When the wait (`TIMEOUT_S`, default
+   900 s) runs out while the job is still `Running`, the job is **left in place**, because
+   deleting it would throw its work away, and the script prints how to follow it. For long work
+   such as hashing a large tree, set `TIMEOUT_S` to match.
 
 `apollo_script.sh` also keeps a copy of the script and a log of its output under
 `$WORKDIR/logs/apollo/`, because the logs of a deleted pod are gone (§6.5). Base64 and the wrapper
