@@ -42,6 +42,8 @@ website:
           href: notebooks/transcription_workspace.html
         - text: "Transcription and translation tool: User guide"
           href: notebooks/transcription_app_guide.html 
+        - text: "Transcription and translation tool: Human validation of your transcript"
+          href: notebooks/transcription_check.html 
   page-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
 
 format:
