@@ -56,3 +56,18 @@ This is especially important when:
 12. Finally click **Save**
 
     ![save_srt](../fig/transcription_save_srt.png)
+
+# Human validation of your translation
+
+Before validating your translation, first follow the steps above to check and correct the .srt transcript in the original language.
+
+Once you are satisfied that the original-language transcript is accurate:
+
+1. Open the checked .srt file in the original language in your preferred text editor.
+Open the English translation .srt file in a second window and place the two files side by side.
+
+2. Work through the files line by line, comparing the English translation with the checked original-language transcript.
+
+3. Correct any translation errors, missing information, or wording that does not accurately reflect the meaning of the original transcript.
+
+4. Save the corrected English translation as a new .srt file.
