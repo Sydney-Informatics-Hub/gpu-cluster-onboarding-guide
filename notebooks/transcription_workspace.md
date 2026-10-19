@@ -1,9 +1,10 @@
 # Audio Transcription & Translation — Apollo Guide
 
 ## Login
-:::{.callout-important}
+
 Before trying to log into the Apollo cluster, please make sure you are part of a DashR project that has been [granted cluster access](https://sydneyuni.atlassian.net/wiki/spaces/RC/pages/4794843139/Apollo+-+set+up+a+project#1.-Enable-Apollo-for-the-DashR-project.).
-:::
+
+Then, follow the [instructions for logging into the Apollo cluster.](https://sydney-informatics-hub.github.io/gpu-cluster-onboarding-guide/notebooks/login.html)
 
 ## Creating a Workload
 
