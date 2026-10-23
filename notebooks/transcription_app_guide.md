@@ -135,7 +135,7 @@ Do not skip this step if you plan to use the transcript/translation in your rese
 
 ## Why use it to check your transcription?
 
-Automated transcription is accurate but not perfect. Background noise, overlapping speech, strong accents, or technical terminology can all cause errors that are easy to miss when reading a transcript on its own. Aegisub solves this by keeping your audio and your text in sync — you can click on any line, hear exactly what was said at that moment, and correct it immediately without losing your place.
+Automated transcription is accurate but not perfect. Background noise, overlapping speech, strong accents, or technical terminology can all cause errors that are easy to miss when reading a transcript on its own. Subtitle Edit solves this by keeping your audio and your text in sync — you can click on any line, hear exactly what was said at that moment, and correct it immediately without losing your place.
 
 This is especially important when:
 
@@ -165,7 +165,7 @@ This is especially important when:
 
     ![select_audio](../fig/transcription_select_audio.png)
 
-8. Edit the text directly in the edit box below the waveform, then move on to the next line.
+8. Edit the text directly in the edit box above the waveform, then move on to the next line.
 
     ![edit_text](../fig/transcription_edit_text.png)
 
@@ -173,13 +173,10 @@ This is especially important when:
 
     ![export_as](../fig/transcription_export_as.png)
 
-10. Enter a name for your file and choose a location to save it. Ensure the **File format** is **SubRip**
+10. Enter a name for your file and choose a location to save it. Ensure the **File format** is **SubRip**. Finally click **Save**
 
     ![export_srt](../fig/transcription_export_srt.png)
 
-12. Finally click **Save**
-
-    ![save_srt](../fig/transcription_save_srt.png)
 
 # Human validation of your translation
 
