@@ -173,22 +173,22 @@ This is especially important when:
 
     ![export_as](../fig/transcription_export_as.png)
 
-10. Enter a name for your file and choose a location to save it. Ensure the **File format** is **SubRip**. Finally click **Save**
+10. Enter a name for your file and choose a location to save it. Ensure the **File format** is **SubRip**. Finally click **Save**.
 
     ![export_srt](../fig/transcription_export_srt.png)
 
 
 # Human validation of your translation
 
-Before validating your translation, first follow the steps above to check and correct the .srt transcript in the original language.
+Before validating your translation, first follow the steps above to check and correct the `.srt` transcript in the original language.
 
 Once you are satisfied that the original-language transcript is accurate:
 
-1. Open the checked .srt file in the original language in your preferred text editor.
+1. Open the checked `.srt` file in the original language in your preferred text editor.
 Open the English translation .srt file in a second window and place the two files side by side.
 
 2. Work through the files line by line, comparing the English translation with the checked original-language transcript.
 
 3. Correct any translation errors, missing information, or wording that does not accurately reflect the meaning of the original transcript.
 
-4. Save the corrected English translation as a new .srt file.
+4. Save the corrected English translation as a new `.srt` file.
