@@ -134,9 +134,13 @@ verdict. It never changes the job.
 The verdicts are checked in that order, and the first match wins. The thresholds are starting
 heuristics, not laws: the evidence printed with the verdict matters more than the label.
 
-**Watch whole GPUs, not fractions.** On a fractional GPU, the utilisation `nvidia-smi` reports
-probably covers every workload sharing that GPU (*unverified*), so a verdict there says little
-about your job. MIG instances report utilisation as `[N/A]`, which yields `unclear`.
+**On a fraction, the GPU's figures are not your job's.** On a fractional GPU, the utilisation and
+power `nvidia-smi` reports cover every workload sharing that GPU; only the memory is your job's
+own (*verified* 2026-10-14 and 2026-11-05: a 0.1-GPU job read 100 % busy at 448 W while its only
+process slept). So a high or uneven reading says nothing about your job, while an idle one still
+holds. Check the job's own processes with `top -bn1`: all of them near 0 % of a core means it is
+idle, whatever the GPU shows. MIG instances report utilisation as `[N/A]`, which yields
+`unclear`.
 
 **The reference case** is a 1-GPU job measured at 35–51 % utilisation, ~200 W of a 700 W card,
 17 of 141 GB, with the main Python process at 100 % of one core (*verified*). That is `host-bound`

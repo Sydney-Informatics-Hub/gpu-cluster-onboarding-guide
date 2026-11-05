@@ -1392,8 +1392,10 @@ a few times, plus `top -bn1`, and read them against this table:
 
 The reference case is a 1-GPU job at 35–51 % utilisation, ~200 W of 700 W, 17 of 141 GB, with its
 main Python process at 100 % of one core (*verified* 2026-09-29). That is `host-bound` with
-`memory-headroom`: an H200 paid for to wait on the host. Watch whole-GPU jobs. On a fraction, the
-utilisation probably includes the other workloads sharing the GPU (*unverified*).
+`memory-headroom`: an H200 paid for to wait on the host. On a fraction, utilisation and power
+cover the whole GPU, other workloads included (*verified* 2026-10-14 and 2026-11-05): a high
+reading says nothing about your job, an idle one still holds. Check the job's own processes with
+`top -bn1`.
 
 ### 11.4 Diagnose by measuring, then fix
 
