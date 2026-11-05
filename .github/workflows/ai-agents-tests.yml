@@ -1,0 +1,39 @@
+# Tests for the AI-agent guides, scripts and Claude skill bundles in ai-agents/.
+# No cluster and no network: the runai and globus CLIs and copyparty are faked (ai-agents/tests/fakes).
+name: ai-agents tests
+
+on:
+  push:
+    paths:
+      - "ai-agents/**"
+      - ".github/workflows/ai-agents-tests.yml"
+  pull_request:
+    paths:
+      - "ai-agents/**"
+      - ".github/workflows/ai-agents-tests.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # 3.12 is the reference version; 3.9 is the minimum the scripts support (Python >= 3.9).
+        python-version: ["3.12", "3.9"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Shell syntax
+        run: for f in ai-agents/scripts/*.sh ai-agents/*.sh; do bash -n "$f"; done
+
+      - name: shellcheck
+        run: shellcheck -x -P ai-agents/scripts ai-agents/scripts/*.sh ai-agents/*.sh
+
+      - name: Unit tests
+        run: python -m unittest discover -s ai-agents/tests -v
+
+      - name: Build the skill bundles
+        run: ai-agents/build_claude_skills.sh

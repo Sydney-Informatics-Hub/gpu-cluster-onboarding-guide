@@ -1,0 +1,21 @@
+{
+  "name": "train-long",
+  "type": "Training",
+  "project": "example-project",
+  "phase": "Running",
+  "createdAt": "2026-10-14T05:58:00Z",
+  "compute": {
+    "requestedResources": {"gpuCompute": 2, "cpu": 16, "memory": "128G"},
+    "allocatedResources": {"gpuCompute": 2, "cpu": 16, "memory": "128G"}
+  },
+  "podsInfo": {
+    "pods": [
+      {"name": "train-long-0-0", "phase": "Running", "nodeName": "node-4"}
+    ]
+  },
+  "events": [
+    {"reason": "Submitted", "createdAt": "2026-10-14T05:58:00Z", "type": "Normal", "message": "workload submitted"},
+    {"reason": "Scheduled", "createdAt": "2026-10-14T06:00:00Z", "type": "Normal", "message": "assigned to node-4"},
+    {"reason": "Started", "createdAt": "2026-10-14T06:02:00Z", "type": "Normal", "message": "container started"}
+  ]
+}

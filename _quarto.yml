@@ -1,6 +1,12 @@
 project:
   type: website
   output-dir: docs
+  # ai-agents/ holds instructions for AI coding agents, not pages of this site. Without this
+  # list, Quarto would render its Markdown files into docs/ as pages nothing links to.
+  render:
+    - "*.qmd"
+    - "notebooks/*"
+    - "!ai-agents/"
 
 website:
   title: "Apollo GPU Cluster Onboarding Guide"
@@ -30,6 +36,8 @@ website:
           href: notebooks/marimo_tutorial.html
         - text: "How to transfer data to/from the Apollo GPU Cluster"
           href: notebooks/data_transfer.html
+        - text: "Running long jobs and using GPU time well"
+          href: notebooks/long_jobs_and_gpu_time.html
         - text: "How to run a terminal using the Command Line Interface (CLI)"
           href: notebooks/CLI.html
         - text: "How to self-install R packages"
