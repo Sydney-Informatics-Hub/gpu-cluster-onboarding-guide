@@ -5,6 +5,12 @@ description: Operate the University of Sydney Apollo GPU cluster (NVIDIA Run:ai 
 
 # Operating the Apollo GPU cluster
 
+> **With HPC Navigator installed, use its `hpcnav-apollo` skill instead of this one.** It carries
+> this skill's know-how, written to act through the `hpcnav` command, which adds what this skill
+> can only ask for: approval of large requests in a system dialog, guards inside every job, and a
+> record of what the agent did. This skill is for working with the `runai` CLI alone. Don't
+> install both: their instructions for submitting differ.
+
 Apollo is the University of Sydney's DGX H200 cluster, managed by the Sydney Informatics Hub. It
 is a **Kubernetes cluster scheduled by NVIDIA Run:ai**, and it behaves nothing like a traditional
 HPC cluster. Most mistakes here come from pattern-matching it to Slurm, so start from what it is

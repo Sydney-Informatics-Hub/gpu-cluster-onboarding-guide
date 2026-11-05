@@ -5,6 +5,11 @@ description: Get the most out of each paid GPU-hour on a shared cluster (Run:ai,
 
 # Getting the most out of each GPU-hour
 
+> **With HPC Navigator installed, use its `hpcnav-<site>` skill instead of this one** (on Apollo,
+> `hpcnav-apollo`). It carries this skill's know-how as its `gpu-efficiency` how-to page, with
+> verdicts from `hpcnav verdict` in place of the scripts here. This skill is for working without
+> HPC Navigator.
+
 On a fee-for-service cluster an allocated GPU is billed whether it computes or not. Most waste is
 not slow kernels but GPUs **held without computing**: a pod stuck starting, a crash loop the
 scheduler keeps restarting, an idle notebook, a job waiting on one host core, NaN batches skipped

@@ -140,6 +140,13 @@ ai-agents/build_claude_skills.sh           # writes ai-agents/dist/<skill>/ and 
 cp -r ai-agents/dist/apollo-gpu ai-agents/dist/gpu-efficiency ~/.claude/skills/
 ```
 
+**With HPC Navigator.** HPC Navigator, the Sydney Informatics Hub's tool for running cluster work
+through an AI agent, generates its own skill for Apollo, `hpcnav-apollo`, and `AGENTS.md` for Codex.
+They carry the know-how of these guides as how-to pages, written to act through the `hpcnav` command
+(approvals in a system dialog, guards in every job, a record of what the agent did). If you use it,
+install its files instead of these two skills, not beside them. These guides and skills stay for
+working with the `runai` CLI alone.
+
 There is a build step because a skill needs its guide under `references/` and its scripts under
 `scripts/`. Committing second copies would let them drift apart. `dist/` is git ignored. The
 sources are what gets reviewed, and anyone can rebuild the bundles from them.
