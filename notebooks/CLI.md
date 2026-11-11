@@ -49,7 +49,7 @@ Here is a brief rundown of the arguments of the command above:
 
 - `runai workspace submit <workspace-name>` will run a new workspace and give it the name specified in `<workspace-name>`
 
-- `--image sydneyinformaticshub/dgx-interactive-terminal` will run the base Docker image located at `sydneyinformaticshub/dgx-interactive-terminal`, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base
+- `--image sydneyinformaticshub/dgx-interactive-terminal` will run the base Docker image located at `sydneyinformaticshub/dgx-interactive-terminal` (see [what's installed](docker_image_reference.html#sydneyinformaticshubdgx-interactive-terminal)), you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base
 
 - `--gpu-devices-request 1 --cpu-core-request 1.0` requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see [here](https://run-ai-docs.nvidia.com/self-hosted/2.24/reference/cli/runai/runai_workspace_submit) or use `runai workspace submit --help` for a full list of options
 
