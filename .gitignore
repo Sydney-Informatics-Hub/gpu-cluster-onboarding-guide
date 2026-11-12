@@ -11,3 +11,6 @@ __pycache__/
 */.ipynb_checkpoints/*
 docs
 **/*.quarto_ipynb
+
+# built Claude skill bundles, reproduce with ai-agents/build_claude_skill.sh
+ai-agents/dist/
