@@ -16,7 +16,7 @@ To set up the CLI in your terminal:
 
 3. Follow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using `runai login` at the command line.
 
-Once the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (`sydneyinformaticshub/dgx-interactive-gpu`) and CPU (`sydneyinformaticshub/dgx-interactive-cpu`) workflows on [dockerhub](https://hub.docker.com/u/sydneyinformaticshub), including basic packages for interactive use (e.g. ipython).
+Once the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH provides base docker images with a pre-installed set of common dependencies for interactive use on [dockerhub](https://hub.docker.com/u/sydneyinformaticshub) — see the [Docker image reference](docker_image_reference.html) for what's available, such as `sydneyinformaticshub/dgx-interactive-terminal` used in the example below.
 
 
 ## How to Run a Terminal Environment at the Command Line
