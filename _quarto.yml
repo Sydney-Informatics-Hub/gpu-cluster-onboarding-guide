@@ -41,7 +41,11 @@ website:
         - text: "Transcription and translation tool: Getting started"
           href: notebooks/transcription_workspace.html
         - text: "Transcription and translation tool: User guide"
-          href: notebooks/transcription_app_guide.html 
+          href: notebooks/transcription_app_guide.html
+      - section: "Appendix"
+        contents:
+        - text: "What's inside each Docker image"
+          href: notebooks/docker_image_reference.html
   page-footer: "All materials copyright Sydney Informatics Hub, University of Sydney"
 
 format:

@@ -4,6 +4,8 @@ This tutorial walks you through building a custom Docker image based on the SIH 
 
 If you are new to workloads and Jupyter Lab on the cluster, read [Tutorial: Running a Jupyter Lab Workload](jupyter_tutorial.md) first.
 
+Not sure what's already installed in the base image? See [Appendix: What's inside each Docker image](docker_image_reference.md) for a full list of pre-installed libraries.
+
 ::: {.callout-important}
 The exact steps in this tutorial may not cover every use case. Depending on the application you are building, you may need to adjust the Dockerfile, the environment configuration, or other workload settings. 
 

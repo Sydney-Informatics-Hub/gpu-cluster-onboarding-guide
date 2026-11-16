@@ -1,6 +1,6 @@
 ## Description
 
-[DGXC-XXX](https://sydneyuni.atlassian.net/browse/DGXC-XXX): <Include a summary of the changes and how it relates to the JIRA ticket>
+[GPU-XXX](https://ctdshub.atlassian.net/browse/GPU-XXX): <Include a summary of the changes and how it relates to the JIRA ticket>
 
 ## Changes
 
@@ -9,7 +9,7 @@
 - ...
 ---
 
-## Checklist
+## Checklist for Quarto doc update
 
 - [ ] My changes build successfully with **Quarto** (`quarto preview` or `quarto render`)  
 - [ ] No broken links (`quarto check`)

@@ -25,7 +25,7 @@ Define the necessary information for your workload:
 
     ![Project and Template](../fig/workload_definition.png)
 
-* Under "Environment", select the `jupyter-notebook` environment to create the workload. This environment pulls a [pre-built image](https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab) (`sydneyinformatics/dgx-interactive-jupyterlab`) that has Jupyter Lab and commonly used data science/AI packages installed, including Tensorflow, pytorch, pandas, and ollama. The `jupyter-notebook` environment is also configured to intialise the Jupyter Lab server directly from the PVC.
+* Under "Environment", select the `jupyter-notebook` environment to create the workload. This environment pulls a [pre-built image](https://hub.docker.com/r/sydneyinformaticshub/dgx-interactive-jupyterlab) (`sydneyinformatics/dgx-interactive-jupyterlab`) that has Jupyter Lab and commonly used data science/AI packages installed, including Tensorflow, pytorch, pandas, and ollama (see [the full library list](docker_image_reference.html#sydneyinformaticshubdgx-interactive-jupyterlab)). The `jupyter-notebook` environment is also configured to intialise the Jupyter Lab server directly from the PVC.
     ![Software environment](../fig/workload_environment.png)
 
 * Under "Compute resources", select the amount of compute resources to run the workload. In this tutorial, we will select the `small-fraction` option that requires 1 H200 GPU with 10% of its memory (~14GB). Depending on the actual workload you're running, this option can be adjusted accordingly.

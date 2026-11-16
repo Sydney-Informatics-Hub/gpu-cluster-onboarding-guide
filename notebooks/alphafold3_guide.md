@@ -14,7 +14,7 @@ Splitting the work this way means the GPU is only reserved for the shorter predi
 :::{.callout-note}
 **What SIH provides (no action needed):**
 
-- A ready-to-use AlphaFold3 container image
+- A ready-to-use AlphaFold3 container image ([what's installed](docker_image_reference.html#sydneyinformaticshubalphafold3))
 
 **What you need to set up once before your first prediction:**
 
