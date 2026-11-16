@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-53771c2f2081e002b9e6d3799915f0e7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-fa03899a1b95e87de26b265592969236.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -254,6 +254,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
       </ul>
   </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Appendix</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../notebooks/docker_image_reference.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">What’s inside each Docker image</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
     </ul>
     </div>
 </nav>
@@ -299,7 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol start="3" type="1">
 <li>Follow the prompts in your terminal to set up the CLI. Once complete you should now be able to start the CLI in a terminal using <code>runai login</code> at the command line.</li>
 </ol>
-<p>Once the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH have provided base docker images with a pre-installed set of common dependencies for GPU (<code>sydneyinformaticshub/dgx-interactive-gpu</code>) and CPU (<code>sydneyinformaticshub/dgx-interactive-cpu</code>) workflows on <a href="https://hub.docker.com/u/sydneyinformaticshub">dockerhub</a>, including basic packages for interactive use (e.g.&nbsp;ipython).</p>
+<p>Once the Run:AI CLI is set up - you can start a workflow by running a saved docker image of your choice. SIH provides base docker images with a pre-installed set of common dependencies for interactive use on <a href="https://hub.docker.com/u/sydneyinformaticshub">dockerhub</a> — see the <a href="docker_image_reference.html">Docker image reference</a> for what’s available, such as <code>sydneyinformaticshub/dgx-interactive-terminal</code> used in the example below.</p>
 </section>
 <section id="how-to-run-a-terminal-environment-at-the-command-line" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-run-a-terminal-environment-at-the-command-line">How to Run a Terminal Environment at the Command Line</h2>
@@ -322,7 +336,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Here is a brief rundown of the arguments of the command above:</p>
 <ul>
 <li><p><code>runai workspace submit &lt;workspace-name&gt;</code> will run a new workspace and give it the name specified in <code>&lt;workspace-name&gt;</code></p></li>
-<li><p><code>--image sydneyinformaticshub/dgx-interactive-terminal</code> will run the base Docker image located at <code>sydneyinformaticshub/dgx-interactive-terminal</code>, you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base</p></li>
+<li><p><code>--image sydneyinformaticshub/dgx-interactive-terminal</code> will run the base Docker image located at <code>sydneyinformaticshub/dgx-interactive-terminal</code> (see <a href="docker_image_reference.html#sydneyinformaticshubdgx-interactive-terminal">what’s installed</a>), you can replace this image with your own, perhaps built yourself with extra package installs and using this image as a base</p></li>
 <li><p><code>--gpu-devices-request 1 --cpu-core-request 1.0</code> requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see <a href="https://run-ai-docs.nvidia.com/self-hosted/2.24/reference/cli/runai/runai_workspace_submit">here</a> or use <code>runai workspace submit --help</code> for a full list of options</p></li>
 <li><p><code>--run-as-user</code> will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace</p></li>
 <li><p><code>--existing-pvc claimname=&lt;pvc-name&gt;,path=/scratch</code> will mount an existing PVC associated with your project into the running workload. Replace <pvc-name> with the name of your PVC. This will mount the PVC into <code>/scratch</code> inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.</pvc-name></p></li>
