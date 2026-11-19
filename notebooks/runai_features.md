@@ -41,6 +41,9 @@ You may also further adjust the requested resources during workload configuratio
 [**Data sources**](https://run-ai-docs.nvidia.com/self-hosted/2.24/workloads-in-nvidia-run-ai/assets/datasources) in Run:ai provide a way to connect storage to your workloads, making datasets, model weights, and output directories accessible inside the container at runtime.
 
 Persistent Volume Claims (PVCs) are currently the only supported data source type. By default, 1 TB of PVC is provisioned when the Run:ai project is created and can be reused across multiple workloads, avoiding the need to reconfigure storage paths each time. When submitting a workload, users attach the PVC at a specified path within the container.
+
+When [submitting workloads through the CLI](./CLI.md#how-to-run-a-terminal-environment-at-the-command-line), use the PVC's "Kubernetes name" (shown below) in your Run:ai command.
+
 ![Project PVC under "Data sources"](../fig/data_sources.png)
 
 :::{.callout-important}
