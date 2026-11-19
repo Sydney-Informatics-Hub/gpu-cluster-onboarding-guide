@@ -42,7 +42,7 @@ runai project set <my_project>
 3. To run an `sydneyinformaticshub/dgx-interactive-terminal` container with an interactive terminal session including mounting your projects existing PVC in /scratch inside the container you can use the following command (be sure to replace everything in brackets `<...>` with values specific to your requirements):
 
 ```bash
-runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=<pvc-name>,path=/scratch/<my_project> --pod-running-timeout 10m --attach
+runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --user-group-source fromIdpToken --existing-pvc claimname=<pvc-name>,path=/scratch --pod-running-timeout 10m --attach
 ```
 
 Here is a brief rundown of the arguments of the command above:
@@ -53,9 +53,9 @@ Here is a brief rundown of the arguments of the command above:
 
 - `--gpu-devices-request 1 --cpu-core-request 1.0` requests 1 GPU and 1 CPU for the workflow. There are multiple options for selecting GPU and CPU RAM and devices, see [here](https://run-ai-docs.nvidia.com/self-hosted/2.24/reference/cli/runai/runai_workspace_submit) or use `runai workspace submit --help` for a full list of options
 
-- `--run-as-user` will run the workflow using your user id and group ids inherited from DashR for your project. These will be the user and groups for the account you logged into Run:AI with in step 1 above. You should normally use this option otherwise user and group ids may not be set up correctly inside your workspace
+- `--user-group-source fromIdpToken` sets the user id and group ids inside the container from your identity provider (*i.e.* Okta), rather than from the container image. These will be the user and groups for the account you logged into Run:AI with in step 1 above, which are inherited from DashR for your project. You should always use this option, otherwise user and group ids may not be set up correctly inside your workspace and you may not have permission to access files on your PVC.
 
-- `--existing-pvc claimname=<pvc-name>,path=/scratch` will mount an existing PVC associated with your project into the running workload. Replace <pvc-name> with the name of your PVC. This will mount the PVC into `/scratch` inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.
+- `--existing-pvc claimname=<pvc-name>,path=/scratch` will mount an existing PVC associated with your project into the running workload. Replace `<pvc-name>` with the name of your PVC, which you can find in the "Kubernetes name" column on the ["Data sources" page](./runai_features.md#runai-data-sources). By default, your project's PVC is named `exa-pvc-<my_project>`. This will mount the PVC into `/scratch` inside the running container - you can change this mount point to whatever you prefer inside the running workload. You can also omit this flag entirely if you do not intend to use a PVC in your workspace.
 
 - `--pod-running-timeout 10m` will wait 10m for the pod to start running. Sometimes - especially when mounting a PVC into your container - the workflow can take a couple of minutes to start running.
 
@@ -68,7 +68,7 @@ Using the CLI it is also possible to set up a workflow that persists in the back
 To set this up follow the steps 1 and 2 above, then change the command in step 3 to:
 
 ```bash
-runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --run-as-user --existing-pvc claimname=<pvc-name>,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'
+runai workspace submit <workspace-name> --image sydneyinformaticshub/dgx-interactive-terminal --gpu-devices-request 1 --cpu-core-request 1.0 --user-group-source fromIdpToken --existing-pvc claimname=<pvc-name>,path=/scratch --command -- bash -c 'trap : TERM INT; sleep infinity & wait'
 ```
 
 This will run the workload and keep it persisting in the background. You can then connect to this container whenever you like using:
