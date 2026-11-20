@@ -32,7 +32,7 @@ To run the `data-transfer` environment from a template:
 
 ![Terminal](../fig/terminal_jupyterlab.png)
 
-8. In the open terminal app you can now use the sftp command to copy data to/from your project space in RDS.
+8. In the open terminal app you can now use the rsync command to copy data to/from your project space in RDS.
 
 To copy data from RDS to the GPU cluster, you can type the following into the open terminal:
 
@@ -51,7 +51,7 @@ Be sure to replace everything in brackets `<` `>` with values specific to the da
 :::
 
 ```bash
-sftp -r <your_unikey>@research-data-ext.sydney.edu.au:/rds/PRJ-<Project Short ID>/<Path to File or Folder> <pvc_mount_point>/<path_to_pvc_data>
+rsync -rlctP <your_unikey>@research-data-int.sydney.edu.au:/rds/PRJ-<rds_project>/<path_to_project_data> <pvc_mount_point>/<path_to_pvc_data>
 ```
 
 After you execute this command, you will be prompted for the password associated with your unikey to establish a connection to RDS. 
@@ -59,8 +59,9 @@ After you execute this command, you will be prompted for the password associated
 To copy data from the GPU cluster to RDS, reverse the order of source and destination in the above command:
 
 ```bash
-sftp <your_unikey>@research-data-ext.sydney.edu.au:/rds/PRJ-<Project Short ID>/<Path to File or Folder> <<< $"put -r <pvc_mount_point>/<path_to_pvc_data>"
+rsync -rlctP <pvc_mount_point>/<path_to_pvc_data> <your_unikey>@research-data-int.sydney.edu.au:/rds/PRJ-<rds_project>/<path_to_project_data> s
 ```
+The above rsync will also perform integrity checking using a *checksum*, comparing the original and copied files to make sure they are identical.
 
 During file transfer, for larger files, you can close the browser and leave things running in the background. You can then reconnect to check its status by logging back into the web UI at [gpu.sydney.edu.au](https://gpu.sydney.edu.au).
 
