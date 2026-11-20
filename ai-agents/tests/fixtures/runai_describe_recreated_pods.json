@@ -1,0 +1,32 @@
+{
+  "name": "train-crashing",
+  "type": "Training",
+  "project": "example-project",
+  "phase": "Failed",
+  "createdAt": "2026-09-22T08:59:00Z",
+  "compute": {
+    "requestedResources": {"gpuCompute": 1, "cpu": 8, "memory": "64G"},
+    "allocatedResources": {"gpuCompute": 1, "cpu": 8, "memory": "64G"}
+  },
+  "podsInfo": {
+    "pods": [
+      {"name": "train-crashing-0-0", "phase": "Failed", "nodeName": "node-3", "startedAt": "2026-09-22T09:00:30Z", "completedAt": "2026-09-22T09:10:30Z"},
+      {"name": "train-crashing-0-1", "phase": "Failed", "nodeName": "node-3", "startedAt": "2026-09-22T09:11:00Z", "completedAt": "2026-09-22T09:21:00Z"},
+      {"name": "train-crashing-0-2", "phase": "Failed", "nodeName": "node-3", "startedAt": "2026-09-22T09:20:00Z", "completedAt": "2026-09-22T09:30:00Z"},
+      {"name": "train-crashing-0-3", "phase": "Failed", "nodeName": "node-3", "startedAt": "2026-09-22T09:31:00Z", "completedAt": "2026-09-22T09:41:00Z"},
+      {"name": "train-crashing-0-4", "phase": "Failed", "nodeName": "node-3", "startedAt": "2026-09-22T09:42:00Z", "completedAt": "2026-09-22T09:52:00Z"}
+    ]
+  },
+  "events": [
+    {"reason": "Submitted", "createdAt": "2026-09-22T08:59:00Z", "type": "Normal", "message": "workload submitted"},
+    {"reason": "Scheduled", "createdAt": "2026-09-22T09:00:00Z", "type": "Normal", "message": "assigned to node-3"},
+    {"reason": "Started", "createdAt": "2026-09-22T09:00:30Z", "type": "Normal", "message": "container started"},
+    {"reason": "BackOff", "createdAt": "2026-09-22T09:10:40Z", "type": "Warning", "message": "pod failed, re-creating"},
+    {"reason": "Started", "createdAt": "2026-09-22T09:11:00Z", "type": "Normal", "message": "container started"},
+    {"reason": "BackOff", "createdAt": "2026-09-22T09:21:10Z", "type": "Warning", "message": "pod failed, re-creating"},
+    {"reason": "Started", "createdAt": "2026-09-22T09:31:00Z", "type": "Normal", "message": "container started"},
+    {"reason": "BackOff", "createdAt": "2026-09-22T09:41:10Z", "type": "Warning", "message": "pod failed, re-creating"},
+    {"reason": "Started", "createdAt": "2026-09-22T09:42:00Z", "type": "Normal", "message": "container started"},
+    {"reason": "Failed", "createdAt": "2026-09-22T09:52:00Z", "type": "Warning", "message": "workload failed"}
+  ]
+}

@@ -1,0 +1,176 @@
+{
+ "general": {
+  "name": "job-a",
+  "phase": "Completed",
+  "phaseMessage": null,
+  "createdAt": "2026-10-14T05:17:37.536675Z",
+  "updatedAt": "2026-10-14T05:18:24.082121Z",
+  "project": "test-proj",
+  "submittedBy": "user@example.org",
+  "type": "Training"
+ },
+ "compute": {
+  "requestedResources": {
+   "gpuCompute": {
+    "requested": 0.1
+   },
+   "cpuCores": {
+    "requested": 2
+   },
+   "gpuMemory": {
+    "request": "",
+    "limit": ""
+   },
+   "cpuMemory": {
+    "request": "8G",
+    "limit": ""
+   }
+  },
+  "allocatedResources": {
+   "gpuCompute": 0,
+   "cpuCores": 0,
+   "gpuMemory": "",
+   "cpuMemory": ""
+  },
+  "requestedNodePools": [
+   "default"
+  ],
+  "currentNodePools": [
+   "default"
+  ]
+ },
+ "podsInfo": {
+  "pods": [
+   {
+    "name": "job-a-0-0",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:17:47Z"
+   },
+   {
+    "name": "job-a-0-1",
+    "k8sPhase": "Error",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:17:57Z"
+   },
+   {
+    "name": "job-a-0-2",
+    "k8sPhase": "Succeeded",
+    "nodeName": "node-a",
+    "completedAt": "2026-10-14T05:18:06Z"
+   }
+  ]
+ },
+ "events": [
+  {
+   "createdAt": "2026-10-14T05:17:39Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-0"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:43Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-0 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:43Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:44Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:44Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:44Z",
+   "reason": "Pulled",
+   "message": "Container image \"nvcr.io/nvidia/pytorch:25.06-py3\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:46Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:49Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-1"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:53Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-1 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:53Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:54Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:54Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:54Z",
+   "reason": "Pulled",
+   "message": "Container image \"nvcr.io/nvidia/pytorch:25.06-py3\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:56Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:17:59Z",
+   "reason": "SuccessfulCreate",
+   "message": "Created pod: job-a-0-2"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:03Z",
+   "reason": "Scheduled",
+   "message": "Successfully assigned pod runai-test-proj/job-a-0-2 to node node-a at node-pool default"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:04Z",
+   "reason": "AddedInterface",
+   "message": "Add eth0 [10.0.0.1/32] from k8s-pod-network"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:04Z",
+   "reason": "Bound",
+   "message": "Pod bound successfully to node node-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:05Z",
+   "reason": "Created",
+   "message": "Created container: job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:05Z",
+   "reason": "Pulled",
+   "message": "Container image \"nvcr.io/nvidia/pytorch:25.06-py3\" already present on machine"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:06Z",
+   "reason": "Started",
+   "message": "Started container job-a"
+  },
+  {
+   "createdAt": "2026-10-14T05:18:09Z",
+   "reason": "Completed",
+   "message": "RunaiJob completed"
+  }
+ ]
+}

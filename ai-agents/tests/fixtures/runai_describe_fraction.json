@@ -1,0 +1,22 @@
+{
+  "name": "train-small",
+  "type": "Training",
+  "project": "example-project",
+  "phase": "Succeeded",
+  "createdAt": "2026-09-21T09:58:00Z",
+  "compute": {
+    "requestedResources": {"gpuCompute": 0.1, "cpu": 4, "memory": "32G"},
+    "allocatedResources": {"gpuCompute": 0, "cpu": 0, "memory": "0"}
+  },
+  "podsInfo": {
+    "pods": [
+      {"name": "train-small-0-0", "phase": "Succeeded", "nodeName": "node-2"}
+    ]
+  },
+  "events": [
+    {"reason": "Submitted", "createdAt": "2026-09-21T09:58:00Z", "type": "Normal", "message": "workload submitted"},
+    {"reason": "Scheduled", "createdAt": "2026-09-21T10:00:00.123456789Z", "type": "Normal", "message": "assigned to node-2"},
+    {"reason": "Started", "createdAt": "2026-09-21T10:00:40Z", "type": "Normal", "message": "container started"},
+    {"reason": "Succeeded", "createdAt": "2026-09-21T14:00:00.123456789Z", "type": "Normal", "message": "workload succeeded"}
+  ]
+}
